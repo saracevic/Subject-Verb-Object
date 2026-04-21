@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>S + V + O — Sıraya Diz</title>
+<title>SVO — İngilizce Cümle Kurma</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -17,7 +17,6 @@
   --red: #c1121f;
   --red-light: #fce4e4;
   --yellow: #e9c46a;
-  --yellow-light: #fdf3d0;
   --text: #1a1a2e;
   --muted: #8a8578;
   --s-color: #0077b6;
@@ -28,6 +27,8 @@
   --o-bg: #f3d9fa;
   --shadow: 0 2px 12px rgba(0,0,0,0.08);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --radius: 14px;
+  --radius-lg: 22px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,12 +41,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle paper texture */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9c4ba' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23c9c4ba' fill-opacity='0.18'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
 }
@@ -53,474 +53,563 @@ body::before {
 .container {
   position: relative;
   z-index: 1;
-  max-width: 720px;
+  max-width: 740px;
   margin: 0 auto;
-  padding: 36px 20px 80px;
+  padding: 32px 18px 80px;
 }
 
-/* Header */
-.header {
-  text-align: center;
-  margin-bottom: 36px;
-}
+/* ── HEADER ── */
+.header { text-align: center; margin-bottom: 28px; }
 
 .level-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--accent);
   color: var(--yellow);
   font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
+  font-size: 9px;
+  letter-spacing: 0.22em;
   padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: clamp(26px, 5vw, 42px);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
-
 .h1-s { color: var(--s-color); }
 .h1-v { color: var(--v-color); }
 .h1-o { color: var(--o-color); }
 
-.subtitle {
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 14px;
-}
+.subtitle { margin-top: 8px; color: var(--muted); font-size: 13px; }
 
-/* Stats row */
-.stats {
+/* ── MODE BAR ── */
+.mode-bar {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 6px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
+.mode-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: 9px 10px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  line-height: 1.3;
+}
+.mode-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+.mode-btn.active {
+  background: var(--accent);
+  color: var(--yellow);
+  border-color: var(--accent);
+}
+.mode-btn .m-num { display: block; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.mode-btn .m-label { display: block; font-size: 9px; opacity: 0.8; }
+
+.mode-desc {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+/* ── STATS ── */
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
 .stat {
   flex: 1;
-  min-width: 80px;
   background: var(--card);
   border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 16px;
+  border-radius: var(--radius);
+  padding: 10px 8px;
   text-align: center;
   box-shadow: var(--shadow);
 }
-
 .stat-val {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 26px;
+  font-size: 24px;
   display: block;
 }
-
 .stat-val.g { color: var(--green); }
 .stat-val.r { color: var(--red); }
 .stat-val.b { color: var(--s-color); }
-
+.stat-val.y { color: #b07d00; }
 .stat-key {
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
+  font-size: 8px;
   letter-spacing: 0.12em;
   color: var(--muted);
-  margin-top: 2px;
   display: block;
+  margin-top: 1px;
 }
 
-/* Progress */
+/* ── PROGRESS ── */
 .progress-wrap {
   background: var(--border);
   border-radius: 6px;
-  height: 6px;
-  margin-bottom: 6px;
+  height: 5px;
+  margin-bottom: 5px;
   overflow: hidden;
 }
-
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--s-color), var(--o-color));
   border-radius: 6px;
   transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
 }
-
 .progress-label {
   display: flex;
   justify-content: space-between;
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   color: var(--muted);
-  margin-bottom: 24px;
-}
-
-/* Legend */
-.legend {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
-}
-
-/* Quiz Card */
+/* ── QUIZ CARD ── */
 .q-card {
   background: var(--card);
   border: 2px solid var(--border);
-  border-radius: 24px;
-  padding: 32px;
+  border-radius: var(--radius-lg);
+  padding: 28px;
   box-shadow: var(--shadow-lg);
   position: relative;
 }
-
 .q-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 4px;
   background: linear-gradient(90deg, var(--s-color), var(--v-color), var(--o-color));
-  border-radius: 24px 24px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .q-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
-
 .q-num {
   font-family: 'DM Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--muted);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
+.q-emoji { font-size: 36px; line-height: 1; }
 
-.q-emoji {
-  font-size: 40px;
-  line-height: 1;
-}
-
-/* Turkish sentence */
 .tr-sentence {
   text-align: center;
   font-family: 'Syne', sans-serif;
-  font-size: clamp(18px, 3.5vw, 26px);
+  font-size: clamp(17px, 3.5vw, 24px);
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   line-height: 1.3;
 }
-
 .tr-hint {
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
-/* Formula chips */
+/* ── SVO LEGEND CHIPS ── */
 .formula {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
-
 .fchip {
   padding: 3px 12px;
   border-radius: 20px;
   font-family: 'DM Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
 }
-
 .fchip-s { background: var(--s-bg); color: var(--s-color); }
 .fchip-v { background: var(--v-bg); color: var(--v-color); }
 .fchip-o { background: var(--o-bg); color: var(--o-color); }
-.fplus { color: var(--muted); font-size: 16px; }
+.fplus { color: var(--muted); font-size: 14px; }
 
-/* Drop zones */
+/* ── DROP ZONES ── */
 .drop-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   min-height: 64px;
-  flex-wrap: wrap;
 }
-
 .drop-zone {
   flex: 1;
-  min-width: 80px;
-  min-height: 60px;
-  border: 2.5px dashed var(--border);
-  border-radius: 14px;
+  min-height: 58px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  transition: background 0.2s, border-color 0.2s;
+  gap: 3px;
+  transition: background 0.15s, border-color 0.15s;
   position: relative;
-  padding: 8px;
+  padding: 6px;
+  cursor: pointer;
 }
-
-.drop-zone.drag-over {
-  border-color: var(--accent);
-  background: rgba(26,26,46,0.05);
-}
-
-.drop-zone.filled-s { border-color: var(--s-color); background: var(--s-bg); border-style: solid; }
-.drop-zone.filled-v { border-color: var(--v-color); background: var(--v-bg); border-style: solid; }
-.drop-zone.filled-o { border-color: var(--o-color); background: var(--o-bg); border-style: solid; }
-
-.drop-zone.correct-zone { border-color: var(--green) !important; background: var(--green-light) !important; }
-.drop-zone.wrong-zone { border-color: var(--red) !important; background: var(--red-light) !important; }
+.drop-zone.drag-over { border-color: var(--accent); background: rgba(26,26,46,0.05); }
+.drop-zone.filled-s { border: 2px solid var(--s-color); background: var(--s-bg); }
+.drop-zone.filled-v { border: 2px solid var(--v-color); background: var(--v-bg); }
+.drop-zone.filled-o { border: 2px solid var(--o-color); background: var(--o-bg); }
+.drop-zone.correct-zone { border: 2px solid var(--green) !important; background: var(--green-light) !important; }
+.drop-zone.wrong-zone { border: 2px solid var(--red) !important; background: var(--red-light) !important; }
 
 .zone-label {
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
+  font-size: 8px;
   letter-spacing: 0.15em;
   font-weight: 500;
   position: absolute;
-  top: 5px;
-  left: 10px;
+  top: 4px; left: 8px;
   opacity: 0.5;
 }
-
 .zone-label.s { color: var(--s-color); }
 .zone-label.v { color: var(--v-color); }
 .zone-label.o { color: var(--o-color); }
 
 .zone-word {
   font-family: 'Syne', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
 }
+.zone-empty-hint { font-size: 10px; color: var(--muted); font-style: italic; }
 
-.zone-empty-hint {
-  font-size: 11px;
-  color: var(--muted);
-  font-style: italic;
-}
-
-/* Word bank */
+/* ── WORD BANK ── */
 .bank-label {
   font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  font-size: 9px;
+  letter-spacing: 0.14em;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
-
 .word-bank {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  min-height: 52px;
+  gap: 8px;
+  min-height: 48px;
   background: var(--surface);
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 20px;
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-bottom: 18px;
 }
 
-/* Word chip */
+/* ── WORD CHIPS ── */
 .word-chip {
-  padding: 10px 18px;
-  border-radius: 10px;
+  padding: 8px 16px;
+  border-radius: 9px;
   font-family: 'Syne', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   cursor: grab;
   user-select: none;
-  border: 2px solid transparent;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: 1.5px solid transparent;
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.09);
   touch-action: none;
 }
-
 .word-chip:active { cursor: grabbing; }
-
 .word-chip.type-s { background: var(--s-bg); color: var(--s-color); border-color: var(--s-color); }
 .word-chip.type-v { background: var(--v-bg); color: var(--v-color); border-color: var(--v-color); }
 .word-chip.type-o { background: var(--o-bg); color: var(--o-color); border-color: var(--o-color); }
-.word-chip.type-d { background: var(--yellow-light); color: #7a5c00; border-color: var(--yellow); }
-
-.word-chip.dragging {
-  opacity: 0.4;
-  transform: scale(0.95);
-}
-
+.word-chip.type-d { background: #fdf3d0; color: #7a5c00; border-color: #e9c46a; }
+.word-chip.dragging { opacity: 0.35; transform: scale(0.94); }
 .word-chip.placed { display: none; }
+.word-chip.selected { outline: 2.5px solid var(--accent); outline-offset: 2px; }
 
-/* Check button */
-.btn-check {
-  width: 100%;
-  padding: 16px;
-  background: var(--accent);
-  color: var(--yellow);
-  border: none;
-  border-radius: 14px;
+/* ── CLOZE MODE ── */
+.cloze-sent {
+  font-size: 19px;
+  font-weight: 500;
   font-family: 'Syne', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 16px rgba(26,26,46,0.2);
-}
-
-.btn-check:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,26,46,0.25); }
-.btn-check:active { transform: translateY(0); }
-.btn-check:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
-
-/* Feedback */
-.feedback {
-  margin-top: 16px;
-  padding: 16px 18px;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 600;
-  display: none;
-  align-items: center;
-  gap: 12px;
-  line-height: 1.5;
-}
-
-.feedback.show { display: flex; }
-.feedback.ok { background: var(--green-light); border: 1.5px solid var(--green); color: var(--green); }
-.feedback.bad { background: var(--red-light); border: 1.5px solid var(--red); color: var(--red); }
-.feedback-icon { font-size: 22px; flex-shrink: 0; }
-.feedback-text { flex: 1; }
-.feedback-answer { font-size: 12px; margin-top: 4px; color: var(--text); font-weight: 400; }
-
-/* Next button */
-.btn-next {
-  width: 100%;
-  margin-top: 12px;
-  padding: 14px;
-  background: transparent;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 16px;
   color: var(--text);
-  border: 2px solid var(--border);
-  border-radius: 14px;
+}
+.blank-box {
+  display: inline-block;
+  min-width: 90px;
+  border-bottom: 2.5px solid var(--o-color);
+  padding: 0 6px;
+  margin: 0 4px;
+  text-align: center;
+  vertical-align: bottom;
+  color: var(--o-color);
+  font-weight: 700;
+}
+.cloze-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.cloze-opt {
+  padding: 9px 20px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
   font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.cloze-opt:hover { border-color: var(--accent); background: var(--surface); }
+.cloze-opt.selected { border-color: var(--o-color); background: var(--o-bg); color: var(--o-color); }
+.cloze-opt.right-ans { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
+.cloze-opt.wrong-ans { border-color: var(--red) !important; background: var(--red-light) !important; color: var(--red) !important; }
+
+/* ── TYPE MODE ── */
+.svo-slots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.svo-slot {
+  flex: 1;
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--border);
+  padding: 8px 6px;
+  font-size: 12px;
+  text-align: center;
+  transition: all 0.15s;
+  background: var(--surface);
+}
+.svo-slot.active-slot { border-style: solid; border-color: var(--accent); background: rgba(26,26,46,0.04); }
+.svo-slot.done-s { border-style: solid; border-color: var(--s-color); background: var(--s-bg); color: var(--s-color); }
+.svo-slot.done-v { border-style: solid; border-color: var(--v-color); background: var(--v-bg); color: var(--v-color); }
+.svo-slot.done-o { border-style: solid; border-color: var(--o-color); background: var(--o-bg); color: var(--o-color); }
+.svo-slot.slot-ok { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
+.svo-slot.slot-bad { border-color: var(--red) !important; background: var(--red-light) !important; color: var(--red) !important; }
+.slot-label { font-family: 'DM Mono', monospace; font-size: 8px; opacity: 0.55; margin-bottom: 3px; letter-spacing: 0.1em; }
+.slot-val { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
+.type-hint { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 8px; }
+
+.type-input {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: var(--card);
+  outline: none;
+  transition: border 0.15s;
+  margin-bottom: 16px;
+}
+.type-input:focus { border-color: var(--accent); }
+.type-input.right-input { border-color: var(--green); background: var(--green-light); }
+.type-input.wrong-input { border-color: var(--red); }
+
+/* ── TRANSLATE MODE ── */
+.tr-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 14px;
+  border: 1.5px solid var(--border);
+}
+.tr-sent-big {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.tr-wc-hint { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; }
+
+/* ── BUTTONS ── */
+.btn-check {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: var(--yellow);
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+  box-shadow: 0 4px 16px rgba(26,26,46,0.2);
+}
+.btn-check:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,26,46,0.25); }
+.btn-check:active:not(:disabled) { transform: translateY(0); }
+.btn-check:disabled { opacity: 0.35; cursor: default; transform: none; box-shadow: none; }
+
+.btn-next {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
   display: none;
 }
-
 .btn-next:hover { border-color: var(--accent); background: var(--accent); color: var(--yellow); }
 .btn-next.show { display: block; }
 
-/* Summary */
+/* ── FEEDBACK ── */
+.feedback {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.feedback.show { display: flex; }
+.feedback.ok { background: var(--green-light); border: 1.5px solid var(--green); color: var(--green); }
+.feedback.bad { background: var(--red-light); border: 1.5px solid var(--red); color: var(--red); }
+.fb-icon { font-size: 20px; flex-shrink: 0; }
+.fb-body { flex: 1; }
+.fb-correct { font-size: 12px; margin-top: 4px; color: var(--text); font-weight: 400; opacity: 0.8; }
+
+/* ── SUMMARY ── */
 .summary {
   display: none;
   text-align: center;
   background: var(--card);
   border: 2px solid var(--border);
-  border-radius: 24px;
-  padding: 48px 32px;
+  border-radius: var(--radius-lg);
+  padding: 48px 28px;
   box-shadow: var(--shadow-lg);
 }
-
 .summary.show { display: block; }
-
-.summary-emoji { font-size: 64px; margin-bottom: 16px; }
-
-.summary-score {
-  font-family: 'Syne', sans-serif;
-  font-size: 72px;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--green);
+.sum-emoji { font-size: 60px; margin-bottom: 14px; }
+.sum-score { font-family: 'Syne', sans-serif; font-size: 68px; font-weight: 800; line-height: 1; color: var(--green); }
+.sum-text { color: var(--muted); margin: 10px 0 24px; font-size: 14px; }
+.sum-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.sum-tag {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
 }
-
-.summary p { color: var(--muted); margin: 12px 0 28px; font-size: 15px; }
-
 .btn-restart {
   padding: 14px 36px;
   background: var(--accent);
   color: var(--yellow);
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius);
   font-family: 'Syne', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.12s, box-shadow 0.12s;
   box-shadow: 0 4px 16px rgba(26,26,46,0.2);
 }
-
 .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,26,46,0.25); }
 
-/* Tap-to-place for mobile */
-@media (max-width: 600px) {
-  .word-chip { padding: 10px 14px; font-size: 13px; }
-  .q-card { padding: 20px; }
-  .drop-row { gap: 8px; }
-}
+/* ── ANIMATE ── */
+@keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)} }
+.celebrate { animation: pop 0.28s ease; }
 
-/* Celebration animation */
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+/* ── RESPONSIVE ── */
+@media (max-width: 580px) {
+  .q-card { padding: 18px; }
+  .word-chip { padding: 7px 12px; font-size: 12px; }
+  .drop-row { gap: 7px; }
+  .mode-btn { min-width: 70px; padding: 8px 6px; }
+  .cloze-opt { padding: 8px 14px; font-size: 13px; }
 }
-
-.celebrate { animation: pop 0.3s ease; }
 </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- HEADER -->
   <div class="header">
-    <div class="level-badge">LEVEL 0 — DRAG & DROP</div>
+    <div class="level-badge">OXFORD METHOD · 4 MOD</div>
     <h1><span class="h1-s">Subject</span> + <span class="h1-v">Verb</span> + <span class="h1-o">Object</span></h1>
-    <p class="subtitle">Kelimeleri doğru sıraya sürükle veya tıkla 👇</p>
+    <p class="subtitle">İngilizce cümle kurma — tanımadan üretime 4 adım</p>
   </div>
 
+  <!-- MODE BAR -->
+  <div class="mode-bar" id="mode-bar">
+    <button class="mode-btn active" onclick="setMode(0)">
+      <span class="m-num">①</span>
+      <span class="m-label">SÜRÜKLE-BIRAK</span>
+    </button>
+    <button class="mode-btn" onclick="setMode(1)">
+      <span class="m-num">②</span>
+      <span class="m-label">BOŞLUK DOLDUR</span>
+    </button>
+    <button class="mode-btn" onclick="setMode(2)">
+      <span class="m-num">③</span>
+      <span class="m-label">SIFIRDAN YAZ</span>
+    </button>
+    <button class="mode-btn" onclick="setMode(3)">
+      <span class="m-num">④</span>
+      <span class="m-label">TÜRKÇE→İNG</span>
+    </button>
+  </div>
+  <div class="mode-desc" id="mode-desc">Kelimeleri doğru sıraya sürükle veya tıkla — tanıma modu</div>
+
+  <!-- STATS -->
   <div class="stats">
-    <div class="stat"><span class="stat-val b" id="stat-total">500</span><span class="stat-key">TOPLAM</span></div>
-    <div class="stat"><span class="stat-val g" id="stat-correct">0</span><span class="stat-key">DOĞRU</span></div>
-    <div class="stat"><span class="stat-val r" id="stat-wrong">0</span><span class="stat-key">YANLIŞ</span></div>
+    <div class="stat"><span class="stat-val b" id="st-total">0</span><span class="stat-key">TOPLAM</span></div>
+    <div class="stat"><span class="stat-val g" id="st-correct">0</span><span class="stat-key">DOĞRU</span></div>
+    <div class="stat"><span class="stat-val r" id="st-wrong">0</span><span class="stat-key">YANLIŞ</span></div>
+    <div class="stat"><span class="stat-val y" id="st-streak">0</span><span class="stat-key">SERİ 🔥</span></div>
   </div>
 
+  <!-- PROGRESS -->
   <div class="progress-wrap"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-  <div class="progress-label"><span id="prog-txt">0 / 500</span><span id="prog-pct">0%</span></div>
-
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--s-color)"></div><span style="color:var(--s-color)">Subject (Kim?)</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--v-color)"></div><span style="color:var(--v-color)">Verb (Ne yapıyor?)</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--o-color)"></div><span style="color:var(--o-color)">Object (Neyi?)</span></div>
+  <div class="progress-label">
+    <span id="prog-txt">0 / 500</span>
+    <span id="prog-pct">0%</span>
   </div>
 
+  <!-- QUIZ CARD -->
   <div class="q-card" id="q-card">
     <div class="q-meta">
       <span class="q-num" id="q-num">SORU 1 / 500</span>
@@ -528,9 +617,9 @@ h1 {
     </div>
 
     <div class="tr-sentence" id="tr-sentence">—</div>
-    <div class="tr-hint">↓ Aşağıdaki kelimeleri doğru sıraya diz</div>
+    <div class="tr-hint" id="tr-hint">↓ Kelimeleri doğru sıraya diz</div>
 
-    <div class="formula">
+    <div class="formula" id="svo-formula">
       <span class="fchip fchip-s">S · Subject</span>
       <span class="fplus">+</span>
       <span class="fchip fchip-v">V · Verb</span>
@@ -538,55 +627,82 @@ h1 {
       <span class="fchip fchip-o">O · Object</span>
     </div>
 
-    <!-- Drop zones -->
-    <div class="drop-row" id="drop-row">
-      <div class="drop-zone" id="zone-0" data-zone="0" ondragover="onDragOver(event)" ondrop="onDrop(event,0)" onclick="onZoneClick(0)">
-        <span class="zone-label s">SUBJECT</span>
-        <span class="zone-word" id="zone-word-0"></span>
-        <span class="zone-empty-hint" id="zone-hint-0">buraya bırak</span>
+    <!-- MODE 0: Drag & Drop -->
+    <div id="mode0">
+      <div class="drop-row" id="drop-row">
+        <div class="drop-zone" id="zone-0" ondragover="onDragOver(event)" ondrop="onDrop(event,0)" onclick="onZoneClick(0)">
+          <span class="zone-label s">SUBJECT</span>
+          <span class="zone-word" id="zone-word-0"></span>
+          <span class="zone-empty-hint" id="zone-hint-0">buraya bırak</span>
+        </div>
+        <div class="drop-zone" id="zone-1" ondragover="onDragOver(event)" ondrop="onDrop(event,1)" onclick="onZoneClick(1)">
+          <span class="zone-label v">VERB</span>
+          <span class="zone-word" id="zone-word-1"></span>
+          <span class="zone-empty-hint" id="zone-hint-1">buraya bırak</span>
+        </div>
+        <div class="drop-zone" id="zone-2" ondragover="onDragOver(event)" ondrop="onDrop(event,2)" onclick="onZoneClick(2)">
+          <span class="zone-label o">OBJECT</span>
+          <span class="zone-word" id="zone-word-2"></span>
+          <span class="zone-empty-hint" id="zone-hint-2">buraya bırak</span>
+        </div>
       </div>
-      <div class="drop-zone" id="zone-1" data-zone="1" ondragover="onDragOver(event)" ondrop="onDrop(event,1)" onclick="onZoneClick(1)">
-        <span class="zone-label v">VERB</span>
-        <span class="zone-word" id="zone-word-1"></span>
-        <span class="zone-empty-hint" id="zone-hint-1">buraya bırak</span>
-      </div>
-      <div class="drop-zone" id="zone-2" data-zone="2" ondragover="onDragOver(event)" ondrop="onDrop(event,2)" onclick="onZoneClick(2)">
-        <span class="zone-label o">OBJECT</span>
-        <span class="zone-word" id="zone-word-2"></span>
-        <span class="zone-empty-hint" id="zone-hint-2">buraya bırak</span>
-      </div>
+      <div class="bank-label">KELİME HAVUZU — sürükle veya tıkla:</div>
+      <div class="word-bank" id="word-bank"></div>
     </div>
 
-    <div class="bank-label">KELİME HAVUZU — sürükle veya tıkla:</div>
-    <div class="word-bank" id="word-bank"></div>
+    <!-- MODE 1: Cloze -->
+    <div id="mode1" style="display:none">
+      <div class="cloze-sent" id="cloze-sent"></div>
+      <div class="cloze-opts" id="cloze-opts"></div>
+    </div>
+
+    <!-- MODE 2: Type each part -->
+    <div id="mode2" style="display:none">
+      <div class="svo-slots" id="svo-slots">
+        <div class="svo-slot" id="slot-s"><div class="slot-label">SUBJECT</div><div class="slot-val" id="slot-s-val">—</div></div>
+        <div class="svo-slot" id="slot-v"><div class="slot-label">VERB</div><div class="slot-val" id="slot-v-val">—</div></div>
+        <div class="svo-slot" id="slot-o"><div class="slot-label">OBJECT</div><div class="slot-val" id="slot-o-val">—</div></div>
+      </div>
+      <div class="type-hint" id="type-hint">Subject (Kim?) yaz, Enter ile geç</div>
+      <input type="text" class="type-input" id="type-input" placeholder="yaz..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+
+    <!-- MODE 3: Full translate -->
+    <div id="mode3" style="display:none">
+      <div class="tr-box">
+        <div class="tr-sent-big" id="tr-sent-big">—</div>
+        <div class="tr-wc-hint" id="tr-wc-hint"></div>
+      </div>
+      <input type="text" class="type-input" id="tr-input" placeholder="Tam cümleyi İngilizce yaz..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
 
     <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>KONTROL ET →</button>
 
     <div class="feedback" id="feedback">
-      <span class="feedback-icon" id="fb-icon"></span>
-      <div class="feedback-text">
+      <span class="fb-icon" id="fb-icon"></span>
+      <div class="fb-body">
         <div id="fb-msg"></div>
-        <div class="feedback-answer" id="fb-answer"></div>
+        <div class="fb-correct" id="fb-correct"></div>
       </div>
     </div>
 
-    <button class="btn-next btn-next" id="btn-next" onclick="nextQuestion()">SONRAKİ SORU ›</button>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">SONRAKİ SORU ›</button>
   </div>
 
+  <!-- SUMMARY -->
   <div class="summary" id="summary">
-    <div class="summary-emoji" id="sum-emoji">🎉</div>
-    <div class="summary-score" id="sum-score">—</div>
-    <p id="sum-text">Tebrikler!</p>
+    <div class="sum-emoji" id="sum-emoji">🎉</div>
+    <div class="sum-score" id="sum-score">—</div>
+    <p class="sum-text" id="sum-text">—</p>
+    <div class="sum-tags" id="sum-tags"></div>
     <button class="btn-restart" onclick="restart()">TEKRAR BAŞLA ↺</button>
   </div>
 
 </div>
 
 <script>
-// ─── 500 sentences ─────────────────────────────────────────────────────────
-// [emoji, turkish, subject, verb, object|null]
+// ─── 500 CÜMLE VERİ TABANI ─────────────────────────────────────────────────
 const ALL = [
-  // YEMEK & İÇECEK
   ["🍎","Ben elma yiyorum.","i","eat","an apple"],
   ["🍕","Ben pizza yiyorum.","i","eat","pizza"],
   ["🍞","Ben ekmek yiyorum.","i","eat","bread"],
@@ -612,7 +728,6 @@ const ALL = [
   ["🍞","O ekmeği kesiyor.","she","cuts","the bread"],
   ["🍎","O meyveyi yıkıyor.","he","washes","the fruit"],
   ["🥗","Biz yemek hazırlıyoruz.","we","prepare","the food"],
-  // OKUL
   ["📚","Ben kitap okuyorum.","i","read","a book"],
   ["📖","O ders kitabı okuyor.","she","reads","a textbook"],
   ["✏️","O not yazıyor.","he","writes","notes"],
@@ -632,7 +747,6 @@ const ALL = [
   ["📖","O sayfayı okuyor.","he","reads","the page"],
   ["🎒","Onlar çantalarını açıyor.","they","open","their bags"],
   ["✏️","O tahtaya yazıyor.","he","writes","on the board"],
-  // TEKNOLOJİ
   ["📱","Ben telefonu kullanıyorum.","i","use","the phone"],
   ["📱","O mesaj gönderiyor.","she","sends","a message"],
   ["💻","O bilgisayar kullanıyor.","he","uses","a computer"],
@@ -648,7 +762,6 @@ const ALL = [
   ["📱","Ben mesajı okuyorum.","i","read","the message"],
   ["💻","O ekrana bakıyor.","he","looks at","the screen"],
   ["📱","Ben telefonu şarj ediyorum.","i","charge","the phone"],
-  // EV
   ["🚪","Ben kapıyı açıyorum.","i","open","the door"],
   ["🪟","O pencereyi açıyor.","she","opens","the window"],
   ["🚪","O kapıyı kapatıyor.","he","closes","the door"],
@@ -664,7 +777,6 @@ const ALL = [
   ["🛋️","Biz televizyon izliyoruz.","we","watch","television"],
   ["🛏️","O yatağı düzeltiyor.","she","makes","the bed"],
   ["🍽️","Onlar kahvaltı yapıyor.","they","have","breakfast"],
-  // HAYVANLAR
   ["🐱","Kedi süt içiyor.","the cat","drinks","milk"],
   ["🐶","Köpek et yiyor.","the dog","eats","meat"],
   ["🐦","Kuş ekmek yiyor.","the bird","eats","bread"],
@@ -680,7 +792,6 @@ const ALL = [
   ["🐾","Biz balığı besliyoruz.","we","feed","the fish"],
   ["🐶","Onlar köpeği yürütüyor.","they","walk","the dog"],
   ["🐱","O kediye bakıyor.","he","looks after","the cat"],
-  // SPOR
   ["⚽","Ben futbol oynuyorum.","i","play","football"],
   ["🎾","O tenis oynuyor.","she","plays","tennis"],
   ["🏀","O basketbol oynuyor.","he","plays","basketball"],
@@ -696,7 +807,6 @@ const ALL = [
   ["🚴","Biz bisiklet yarışı yapıyoruz.","we","race","bikes"],
   ["⚽","Onlar maçı kazanıyor.","they","win","the match"],
   ["⚽","Biz maç izliyoruz.","we","watch","the match"],
-  // ALIŞVERİŞ
   ["🛒","Ben süt alıyorum.","i","buy","milk"],
   ["🛒","O ekmek alıyor.","she","buys","bread"],
   ["🛒","O elma alıyor.","he","buys","apples"],
@@ -712,7 +822,6 @@ const ALL = [
   ["💳","Biz kartla ödüyoruz.","we","pay","by card"],
   ["🛍️","Onlar alışveriş yapıyor.","they","go","shopping"],
   ["👗","O elbise seçiyor.","she","chooses","a dress"],
-  // BAHÇE & DOĞA
   ["🌸","Ben çiçek suluyorum.","i","water","the flowers"],
   ["🌸","O çiçek topluyor.","he","picks","flowers"],
   ["🌳","Biz ağaç dikiyoruz.","we","plant","a tree"],
@@ -723,12 +832,11 @@ const ALL = [
   ["🍃","Onlar meyve topluyor.","they","pick","fruit"],
   ["☀️","Güneş ışık veriyor.","the sun","gives","light"],
   ["🌧️","Yağmur çiçekleri suluyor.","the rain","waters","the flowers"],
-  ["🌸","Ben çiçeği kokluyor.","i","smell","the flower"],
+  ["🌸","Ben çiçeği kokluyorum.","i","smell","the flower"],
   ["🌳","O parkta yürüyor.","she","walks in","the park"],
   ["🌳","Biz ormanı seviyoruz.","we","love","the forest"],
   ["❄️","Onlar karda oynuyor.","they","play in","the snow"],
   ["🌧️","Biz yağmurda yürüyoruz.","we","walk in","the rain"],
-  // AİLE & SOSYAL
   ["👨","Ben babamı seviyorum.","i","love","my father"],
   ["👩","Ben annemi arıyorum.","i","call","my mom"],
   ["👧","O kız kardeşini seviyor.","he","loves","his sister"],
@@ -744,7 +852,6 @@ const ALL = [
   ["😊","Ben arkadaşıma yardım ediyorum.","i","help","my friend"],
   ["👩","O ablasını görüyor.","she","sees","her sister"],
   ["👦","Biz kardeşimizi görüyoruz.","we","see","our brother"],
-  // ULAŞIM
   ["🚗","Ben arabaya biniyorum.","i","get in","the car"],
   ["🚌","O otobüse biniyor.","she","takes","the bus"],
   ["🚂","O trene biniyor.","he","takes","the train"],
@@ -760,7 +867,6 @@ const ALL = [
   ["✈️","Ben biletimi kontrol ediyorum.","i","check","my ticket"],
   ["🚌","O otobüsü bekliyor.","he","waits for","the bus"],
   ["✈️","Onlar pasaportunu gösteriyor.","they","show","their passport"],
-  // MÜZİK & EĞLENCE
   ["🎵","Ben müzik dinliyorum.","i","listen to","music"],
   ["🎸","O gitar çalıyor.","she","plays","the guitar"],
   ["🎹","O piyano çalıyor.","he","plays","the piano"],
@@ -776,14 +882,12 @@ const ALL = [
   ["🎵","Ben şarkı öğreniyorum.","i","learn","a song"],
   ["🎵","O müziği açıyor.","she","plays","music"],
   ["🎙️","Biz birlikte şarkı söylüyoruz.","we","sing","together"],
-  // GÜNLÜK HAYAT
   ["🦷","O dişini fırçalıyor.","she","brushes","her teeth"],
   ["🚿","O duş alıyor.","he","takes","a shower"],
   ["🍳","Onlar kahvaltı yapıyor.","they","have","breakfast"],
   ["🦷","O yüzünü yıkıyor.","she","washes","her face"],
   ["🚿","O sabun kullanıyor.","he","uses","soap"],
   ["👕","Biz mont giyiyoruz.","we","wear","a coat"],
-  ["😴","O kitap okuyor geceleri.","she","reads","a book"],
   ["⏰","O saate bakıyor.","he","checks","the clock"],
   ["🦷","Biz dişlerimizi fırçalıyoruz.","we","brush","our teeth"],
   ["🍳","Onlar öğle yemeği yiyor.","they","eat","lunch"],
@@ -792,7 +896,6 @@ const ALL = [
   ["🍳","O omlet yiyor.","he","eats","an omelet"],
   ["🍞","Onlar reçel yiyor.","they","eat","jam"],
   ["⏰","Ben alarmı kuruyorum.","i","set","the alarm"],
-  // GİYSİLER
   ["👕","Ben tişört giyiyorum.","i","wear","a t-shirt"],
   ["👗","O elbise giyiyor.","she","wears","a dress"],
   ["👖","O pantolon giyiyor.","he","wears","pants"],
@@ -808,7 +911,6 @@ const ALL = [
   ["👗","Ben elbise seviyorum.","i","love","dresses"],
   ["🧥","Onlar ceket giyiyor.","they","wear","a jacket"],
   ["👜","O çantayı seviyor.","she","loves","the bag"],
-  // YERLER
   ["🏫","Ben okula gidiyorum.","i","go to","school"],
   ["🏥","O hastaneye gidiyor.","she","goes to","the hospital"],
   ["🏪","O markete gidiyor.","he","goes to","the market"],
@@ -824,7 +926,6 @@ const ALL = [
   ["🏪","Ben kafeteryayı buluyorum.","i","find","the cafe"],
   ["🏫","O okuldan çıkıyor.","she","leaves","school"],
   ["🌳","O parkı seviyor.","he","loves","the park"],
-  // SAĞLIK
   ["💊","Ben ilaç içiyorum.","i","take","medicine"],
   ["🩺","O doktoru ziyaret ediyor.","she","visits","the doctor"],
   ["💊","O vitamin alıyor.","he","takes","vitamins"],
@@ -835,7 +936,6 @@ const ALL = [
   ["🩺","Onlar hastaneye gidiyor.","they","go to","the hospital"],
   ["🏃","Ben spor yapıyorum.","i","do","sports"],
   ["💊","Ben vitamini alıyorum.","i","take","a vitamin"],
-  // SEYAHAT
   ["✈️","Ben çantamı hazırlıyorum.","i","pack","my bag"],
   ["🗺️","O haritaya bakıyor.","she","looks at","the map"],
   ["📸","O fotoğraf çekiyor.","he","takes","a photo"],
@@ -847,11 +947,9 @@ const ALL = [
   ["✈️","Onlar valizini taşıyor.","they","carry","their suitcase"],
   ["🏖️","O plajı seviyor.","she","loves","the beach"],
   ["🏨","Biz odayı alıyoruz.","we","book","the room"],
-  ["✈️","Ben seyahat ediyorum.","i","enjoy","travel"],
   ["🗺️","O şehri geziyor.","she","explores","the city"],
   ["📸","Biz hatıra fotoğrafı çekiyoruz.","we","take","a photo"],
   ["✈️","Onlar uçağı bekliyor.","they","wait for","the plane"],
-  // SANAT & HOBİ
   ["🎨","Ben resim yapıyorum.","i","draw","a picture"],
   ["✂️","O kağıt kesiyor.","she","cuts","the paper"],
   ["🎨","O renkleri karıştırıyor.","he","mixes","the colors"],
@@ -859,10 +957,9 @@ const ALL = [
   ["🎨","O tablo yapıyor.","he","paints","a picture"],
   ["📸","Biz video çekiyoruz.","we","record","a video"],
   ["🎨","O resim seviyor.","she","loves","painting"],
-  ["✂️","Ben kağıt kesiyor.","i","cut","the paper"],
+  ["✂️","Ben kağıt kesiyorum.","i","cut","the paper"],
   ["🎨","Biz sanatı seviyoruz.","we","love","art"],
   ["📸","Onlar video izliyor.","they","watch","a video"],
-  // HAVA
   ["☀️","Güneş ısıtıyor.","the sun","warms","the ground"],
   ["🌧️","Yağmur ıslatıyor.","the rain","wets","the ground"],
   ["❄️","Kar yeri kaplıyor.","the snow","covers","the ground"],
@@ -873,7 +970,6 @@ const ALL = [
   ["☀️","Biz güneşi görüyoruz.","we","see","the sun"],
   ["🌧️","Ben şemsiye alıyorum.","i","take","an umbrella"],
   ["❄️","O karda oynuyor.","he","plays in","the snow"],
-  // MİX A1/A2 TEKRAR
   ["🌟","Ben İngilizce öğreniyorum.","i","learn","English"],
   ["📚","O ders çalışıyor.","she","studies","English"],
   ["✏️","O alıştırma yapıyor.","he","does","an exercise"],
@@ -889,7 +985,6 @@ const ALL = [
   ["🌟","Ben İngilizceyi seviyorum.","i","love","English"],
   ["📝","O yazmayı seviyor.","she","loves","writing"],
   ["🎨","O çizmeyi seviyor.","he","loves","drawing"],
-  // SABAH RUTINI
   ["🌅","Ben güne başlıyorum.","i","start","the day"],
   ["☕","O kahvaltı yapıyor.","she","has","breakfast"],
   ["🍳","O yumurta pişiriyor.","he","cooks","eggs"],
@@ -900,7 +995,6 @@ const ALL = [
   ["🌅","Ben pencereyi açıyorum.","i","open","the window"],
   ["🍞","O reçel alıyor.","he","buys","jam"],
   ["🌅","Onlar sabah yürüyüşü yapıyor.","they","go for","a morning walk"],
-  // DUYGULAR & ARZULAR
   ["🌟","Ben mutlu hissediyorum.","i","feel","happy"],
   ["🍎","Ben bir elma istiyorum.","i","want","an apple"],
   ["💧","O su istiyor.","she","wants","water"],
@@ -911,7 +1005,6 @@ const ALL = [
   ["👫","O arkadaşına yardım ediyor.","she","helps","her friend"],
   ["📚","O öğrenciye yardım ediyor.","he","helps","the student"],
   ["😊","Onlar komşuya yardım ediyor.","they","help","the neighbor"],
-  // ÇEVRE & RENK
   ["🔴","Ben kırmızı kalem kullanıyorum.","i","use","a red pen"],
   ["📕","O kırmızı kitap okuyor.","she","reads","the red book"],
   ["💙","O mavi kalem alıyor.","he","buys","a blue pen"],
@@ -927,7 +1020,6 @@ const ALL = [
   ["🖊️","Biz kalemi paylaşıyoruz.","we","share","the pen"],
   ["📓","Onlar defteri kapıyor.","they","close","the notebook"],
   ["🖊️","Ben defteri kaybediyorum.","i","lose","the notebook"],
-  // RESTORAN
   ["🍽️","Ben sipariş veriyorum.","i","order","food"],
   ["🍕","O pizza sipariş ediyor.","she","orders","pizza"],
   ["🍔","O hamburger yiyor.","he","eats","a burger"],
@@ -938,7 +1030,6 @@ const ALL = [
   ["🍝","Onlar masayı seçiyor.","they","choose","the table"],
   ["🍕","O garsonı çağırıyor.","she","calls","the waiter"],
   ["🍔","O hesabı istiyor.","he","asks for","the bill"],
-  // SON GRUP
   ["🐱","Ben kediyi seviyorum.","i","love","the cat"],
   ["🐶","O köpeği seviyor.","she","loves","the dog"],
   ["📱","O telefona bakıyor.","he","looks at","the phone"],
@@ -964,9 +1055,6 @@ const ALL = [
   ["🏃","Biz koşmayı seviyoruz.","we","love","running"],
   ["🌟","Ben her gün çalışıyorum.","i","study","every day"],
   ["😊","Onlar birlikte çalışıyor.","they","study","together"],
-
-  // EK CÜMLELER ─────────────────────────────────────
-  // Yemek tekrar
   ["🍎","O elma yiyor.","he","eats","an apple"],
   ["🍌","Ben muz yiyorum.","i","eat","a banana"],
   ["🥕","O havuç yiyor.","she","eats","a carrot"],
@@ -982,10 +1070,9 @@ const ALL = [
   ["🍊","O meyve suyu yapıyor.","she","makes","juice"],
   ["🍕","Ben pizza seviyorum.","i","love","pizza"],
   ["🍔","O hamburger istiyor.","he","wants","a burger"],
-  // Okul tekrar
   ["📚","Biz kitap okuyoruz.","we","read","books"],
   ["✏️","Ben kalem alıyorum.","i","buy","a pen"],
-  ["📝","O ödevi bitirir.","she","finishes","the homework"],
+  ["📝","O ödevi bitiriyor.","she","finishes","the homework"],
   ["🎒","Ben çantamı hazırlıyorum.","i","pack","my bag"],
   ["📖","O dersi tekrar ediyor.","he","reviews","the lesson"],
   ["✏️","Biz sınav yapıyoruz.","we","take","an exam"],
@@ -993,7 +1080,6 @@ const ALL = [
   ["🖊️","Ben kelime öğreniyorum.","i","learn","a word"],
   ["📝","O notu kaybediyor.","she","loses","the note"],
   ["✏️","O tahtayı siliyor.","he","cleans","the board"],
-  // Teknoloji tekrar
   ["📱","Ben aramayı kapatıyorum.","i","end","the call"],
   ["💻","O bilgisayarı kapatıyor.","she","turns off","the computer"],
   ["📺","Onlar programı izliyor.","they","watch","the program"],
@@ -1004,7 +1090,6 @@ const ALL = [
   ["💻","Biz müzik indiriyoruz.","we","download","music"],
   ["📱","O uygulamayı kullanıyor.","he","uses","the app"],
   ["💻","Ben oyun oynuyorum.","i","play","a game"],
-  // Ev tekrar
   ["🚪","Biz kapıyı açıyoruz.","we","open","the door"],
   ["🪟","Onlar pencereyi kapatıyor.","they","close","the window"],
   ["🛋️","Ben masayı taşıyorum.","i","move","the table"],
@@ -1015,18 +1100,15 @@ const ALL = [
   ["🛋️","Ben sandalyeyi çekiyorum.","i","pull","the chair"],
   ["🚿","O suyu açıyor.","she","turns on","the water"],
   ["🏠","O ışığı kapatıyor.","he","turns off","the light"],
-  // Spor tekrar
   ["⚽","Biz topu sürüyoruz.","we","dribble","the ball"],
   ["🏀","Onlar topu atıyor.","they","throw","the ball"],
   ["🎾","Ben raketi alıyorum.","i","take","the racket"],
   ["⚽","O gol istiyor.","she","wants","a goal"],
-  ["🏃","Ben koşuyorum.","i","run","every day"],
   ["🏊","O yüzme öğreniyor.","she","learns","swimming"],
   ["🚴","Biz bisiklet seviyoruz.","we","love","cycling"],
   ["⚽","Onlar takım seçiyor.","they","choose","a team"],
   ["🎾","O tenis topu alıyor.","he","buys","a tennis ball"],
   ["🏀","Ben basketbol izliyorum.","i","watch","basketball"],
-  // Alışveriş tekrar
   ["🛒","O mağazaya gidiyor.","she","goes to","the store"],
   ["👗","Ben elbise seviyorum.","i","love","dresses"],
   ["👟","Biz ayakkabı alıyoruz.","we","buy","shoes"],
@@ -1034,21 +1116,16 @@ const ALL = [
   ["🛒","Ben fiyata bakıyorum.","i","look at","the price"],
   ["👕","O kazak alıyor.","she","buys","a sweater"],
   ["🛍️","Biz torba alıyoruz.","we","take","a bag"],
-  ["💳","O para alıyor.","he","takes","money"],
   ["🛒","Onlar marketten çıkıyor.","they","leave","the market"],
   ["🛒","Ben alışveriş listesi yapıyorum.","i","make","a shopping list"],
-  // Aile tekrar
   ["👨","O babasını seviyor.","she","loves","her father"],
   ["👩","Ben annemi görüyorum.","i","see","my mother"],
-  ["👧","O kız kardeşine hediye veriyor.","he","gives","his sister a gift"],
   ["👦","Biz erkek kardeşimizi arıyoruz.","we","call","our brother"],
   ["👫","Onlar aileyi seviyor.","they","love","the family"],
   ["🎂","Ben pasta yapıyorum.","i","make","a cake"],
-  ["🎁","O hediye aldı.","she","bought","a gift"],
   ["📞","Biz aileyi arıyoruz.","we","call","the family"],
   ["👨‍👩‍👧","Onlar birlikte yemek yiyor.","they","eat","together"],
   ["😊","Ben komşuya yardım ediyorum.","i","help","the neighbor"],
-  // Ulaşım tekrar
   ["🚗","O arabayı park ediyor.","he","parks","the car"],
   ["🚌","Biz durağı bekliyoruz.","we","wait at","the stop"],
   ["✈️","Onlar biletlerini alıyor.","they","buy","their tickets"],
@@ -1059,10 +1136,8 @@ const ALL = [
   ["✈️","Ben valizimi taşıyorum.","i","carry","my suitcase"],
   ["🚗","O benzin alıyor.","he","buys","petrol"],
   ["🚴","Biz bisikletle gidiyoruz.","we","go by","bike"],
-  // Müzik tekrar
   ["🎵","Ben yeni şarkı dinliyorum.","i","listen to","a new song"],
   ["🎸","Biz gitar çalıyoruz.","we","play","the guitar"],
-  ["🎹","Onlar piyano izliyor.","they","watch","a piano concert"],
   ["🎙️","O şarkıyı öğreniyor.","she","learns","the song"],
   ["🎬","Ben komedi izliyorum.","i","watch","a comedy"],
   ["🎵","O radyoyu açıyor.","he","turns on","the radio"],
@@ -1070,7 +1145,6 @@ const ALL = [
   ["🎵","Onlar şarkı söylüyor.","they","sing","a song"],
   ["🎹","Ben nota öğreniyorum.","i","learn","music notes"],
   ["🎙️","O mikrofonu alıyor.","she","takes","the microphone"],
-  // Sağlık tekrar
   ["💊","Biz vitamin alıyoruz.","we","take","vitamins"],
   ["🩺","Onlar doktora gidiyor.","they","go to","the doctor"],
   ["🏃","Ben yürüyüş yapıyorum.","i","go for","a walk"],
@@ -1081,10 +1155,8 @@ const ALL = [
   ["🏃","Ben bisiklet sürüyorum.","i","ride","a bike"],
   ["🩺","O doktoru dinliyor.","she","listens to","the doctor"],
   ["💊","Biz sağlıklı yiyoruz.","we","eat","healthy food"],
-  // Seyahat tekrar
   ["✈️","O pasaportunu kontrol ediyor.","she","checks","her passport"],
   ["🏨","Ben otel istiyorum.","i","want","a hotel"],
-  ["🗺️","O yol buluyor.","she","finds","the road"],
   ["📸","Biz anı fotoğrafı çekiyoruz.","we","take","a memory photo"],
   ["🏖️","Onlar kumda oturuyor.","they","sit on","the sand"],
   ["✈️","Ben uçağa bakıyorum.","i","look at","the plane"],
@@ -1092,10 +1164,7 @@ const ALL = [
   ["🗺️","Biz şehri geziyoruz.","we","explore","the city"],
   ["📸","Onlar fotoğraf albümü yapıyor.","they","make","a photo album"],
   ["🏨","Ben odayı beğeniyorum.","i","like","the room"],
-
-  // Son 31
   ["🌟","Ben güzel bir gün istiyorum.","i","want","a good day"],
-  ["😊","O gülümsüyor.","she","has","a smile"],
   ["🌟","Biz sabah kahvaltı yapıyoruz.","we","have","breakfast"],
   ["🎒","Ben okul çantamı taşıyorum.","i","carry","my school bag"],
   ["📚","O ders notlarını alıyor.","she","takes","class notes"],
@@ -1116,79 +1185,118 @@ const ALL = [
   ["🌸","Ben bahçeyi seviyorum.","i","love","the garden"],
   ["☀️","O güzel hava seviyor.","she","loves","nice weather"],
   ["🎨","Biz renkleri seviyoruz.","we","love","colors"],
-  ["🏃","Onlar sporcu.","they","love","sports"],
-  ["💊","Ben sağlıklıyım.","i","feel","healthy"],
+  ["💊","Ben sağlıklı hissediyorum.","i","feel","healthy"],
   ["🌍","O dünyayı seviyor.","she","loves","the world"],
   ["📝","Biz not alıyoruz.","we","take","notes"],
   ["🎮","Onlar oyunu bitiriyor.","they","finish","the game"],
   ["🌟","Ben her gün çalışıyorum.","i","study","every day"],
   ["🍕","Biz akşam yemeği yapıyoruz.","we","make","dinner"],
   ["📚","Onlar kütüphaneye gidiyor.","they","go to","the library"],
-  ["😊","Ben mutlu hissediyorum.","i","feel","happy"],
+  ["😊","Ben mutlu hissediyorum.","i","feel","happy"]
 ];
 
+// ─── Yardımcılar ──────────────────────────────────────────────────────────────
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+function norm(s) { return s?.trim().toLowerCase() || ''; }
 
-// ─── State ──────────────────────────────────────────────────────────────────
-function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
-
+// ─── Durum ────────────────────────────────────────────────────────────────────
 let queue = shuffle(ALL);
-let cur = 0, correctCount = 0, wrongCount = 0, answered = false;
-let zoneData = [null, null, null]; // which chipId is in each zone
-let chipData = {}; // chipId -> {word, type, zoneOrNull}
-let dragSrc = null;
-let tapSelected = null; // chipId currently selected for tap-to-place
+let cur = 0, correctCount = 0, wrongCount = 0, streak = 0, answered = false;
+let currentMode = 0;
 
-// ─── Load question ───────────────────────────────────────────────────────────
-function loadQ(){
-  if(cur >= queue.length){ showSummary(); return; }
-  answered = false;
-  zoneData = [null, null, null];
-  chipData = {};
-  dragSrc = null;
-  tapSelected = null;
+// Mode 0: Drag & Drop
+let zoneData = [null, null, null], chipData = {}, dragSrc = null, tapSelected = null;
 
-  const [emoji, tr, subj, verb, obj] = queue[cur];
-  const hasObj = obj !== null;
+// Mode 1: Cloze
+let clozeTarget = null, clozeSelected = null;
 
-  // Header
-  document.getElementById('q-num').textContent = `SORU ${cur+1} / ${queue.length}`;
-  document.getElementById('q-emoji').textContent = emoji;
+// Mode 2: Type step-by-step
+let typeStep = 0, typeAnswers = [], typeParts = [];
+
+// Mode 3: Full translate
+let trFull = '';
+
+const DESCS = [
+  "Kelimeleri doğru sıraya sürükle veya tıkla — tanıma modu",
+  "Boştaki kelimeyi seç — hatırlama modu",
+  "Her parçayı sırayla yaz, Enter ile geç — üretim modu",
+  "Türkçeyi gör, tam cümleyi İngilizce yaz — çeviri modu"
+];
+
+// ─── Mod değiştir ─────────────────────────────────────────────────────────────
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => b.classList.toggle('active', i === m));
+  document.getElementById('mode-desc').textContent = DESCS[m];
+  cur = 0; correctCount = 0; wrongCount = 0; streak = 0;
+  queue = shuffle(ALL);
+  loadQ();
+}
+
+// ─── Soru yükle ───────────────────────────────────────────────────────────────
+function loadQ() {
+  if (cur >= queue.length) { showSummary(); return; }
+  answered = false; tapSelected = null; dragSrc = null;
+
+  const [em, tr, s, v, o] = queue[cur];
+
+  document.getElementById('q-num').textContent = `SORU ${cur + 1} / ${queue.length}`;
+  document.getElementById('q-emoji').textContent = em;
   document.getElementById('tr-sentence').textContent = tr;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('btn-next').className = 'btn-next';
+  document.getElementById('btn-check').disabled = true;
+  document.getElementById('svo-formula').style.display = currentMode === 0 ? 'flex' : 'none';
 
-  // Zone 2 visibility
-  const zone2 = document.getElementById('zone-2');
-  zone2.style.display = hasObj ? '' : 'none';
+  ['mode0','mode1','mode2','mode3'].forEach((id, i) => {
+    document.getElementById(id).style.display = i === currentMode ? '' : 'none';
+  });
 
-  // Reset zones
-  for(let i=0;i<3;i++){
+  updateStats(); updateProgress();
+
+  if (currentMode === 0) loadDrag();
+  else if (currentMode === 1) loadCloze();
+  else if (currentMode === 2) loadType();
+  else loadTranslate();
+}
+
+// ─── MODE 0: Drag & Drop ──────────────────────────────────────────────────────
+function loadDrag() {
+  document.getElementById('tr-hint').textContent = '↓ Kelimeleri doğru sıraya sürükle veya tıkla';
+  const [, , s, v, o] = queue[cur];
+  zoneData = [null, null, null]; chipData = {};
+
+  for (let i = 0; i < 3; i++) {
     const z = document.getElementById(`zone-${i}`);
     z.className = 'drop-zone';
     document.getElementById(`zone-word-${i}`).textContent = '';
     document.getElementById(`zone-hint-${i}`).style.display = '';
-    z.style.cursor = '';
   }
-  // Zone color labels
-  const labels = ['s','v','o'];
-  for(let i=0;i<3;i++) document.getElementById(`zone-${i}`).querySelector('.zone-label').className = `zone-label ${labels[i]}`;
+  document.getElementById('zone-2').style.display = o ? '' : 'none';
 
-  // Build shuffled word bank
   const words = [
-    {id:'s', word: subj, type:'type-s'},
-    {id:'v', word: verb, type:'type-v'},
+    { id: 's', word: s, type: 'type-s' },
+    { id: 'v', word: v, type: 'type-v' },
   ];
-  if(hasObj) words.push({id:'o', word: obj, type:'type-o'});
+  if (o) words.push({ id: 'o', word: o, type: 'type-o' });
 
-  // Add 1-2 distractor words (same type variety)
-  const distractors = ["she","he","they","we","i","the dog","the cat",
-    "eats","drinks","opens","reads","buys","watches","loves","takes",
-    "a book","the door","music","water","a phone","the ball","a sandwich","tea","coffee"];
-  const used = [subj, verb, obj].map(w=>w&&w.toLowerCase());
-  const dPool = shuffle(distractors.filter(d => !used.includes(d.toLowerCase())));
-  for(let i=0;i<2;i++) if(dPool[i]) words.push({id:`d${i}`, word:dPool[i], type:'type-d'});
+  const distractors = shuffle(["she","he","they","we","the dog","the cat",
+    "eats","drinks","opens","reads","buys","watches","loves",
+    "a book","the door","music","water","a phone","the ball","coffee","tea"]);
+  const used = [s, v, o].map(w => w && w.toLowerCase());
+  distractors.filter(d => !used.includes(d.toLowerCase())).slice(0, 2).forEach((d, i) => {
+    words.push({ id: `d${i}`, word: d, type: 'type-d' });
+  });
 
-  shuffle(words).forEach(w => { chipData[w.id] = {word:w.word, type:w.type, zone:null}; });
+  shuffle(words).forEach(w => { chipData[w.id] = { word: w.word, type: w.type, zone: null }; });
 
-  // Render bank
   const bank = document.getElementById('word-bank');
   bank.innerHTML = '';
   Object.entries(chipData).forEach(([id, data]) => {
@@ -1197,239 +1305,327 @@ function loadQ(){
     el.id = `chip-${id}`;
     el.textContent = data.word;
     el.draggable = true;
-    el.addEventListener('dragstart', e => onDragStart(e, id));
-    el.addEventListener('dragend', e => onDragEnd(e, id));
+    el.addEventListener('dragstart', e => {
+      dragSrc = id;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => el.classList.add('dragging'), 10);
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
     el.addEventListener('click', () => onChipClick(id));
     bank.appendChild(el);
   });
-
-  // Feedback & buttons
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('btn-next').className = 'btn-next';
-  document.getElementById('btn-check').disabled = true;
-
-  updateStats();
-  updateProgress();
 }
 
-// ─── Drag & Drop ─────────────────────────────────────────────────────────────
-function onDragStart(e, id){
-  dragSrc = id;
-  e.dataTransfer.effectAllowed = 'move';
-  setTimeout(()=> document.getElementById(`chip-${id}`)?.classList.add('dragging'), 10);
-}
-function onDragEnd(e, id){
-  document.getElementById(`chip-${id}`)?.classList.remove('dragging');
-}
-function onDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over'); }
+function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
 
-function onDrop(e, zoneIdx){
+function onDrop(e, zi) {
   e.preventDefault();
   e.currentTarget.classList.remove('drag-over');
-  if(dragSrc === null) return;
-  placeChip(dragSrc, zoneIdx);
-  dragSrc = null;
+  if (dragSrc !== null) { placeChip(dragSrc, zi); dragSrc = null; }
 }
 
-// ─── Tap to place ─────────────────────────────────────────────────────────────
-function onChipClick(id){
-  if(answered) return;
-  const chip = document.getElementById(`chip-${id}`);
-  // If chip is already in a zone, return it to bank
-  const inZone = chipData[id].zone;
-  if(inZone !== null){
-    removeFromZone(inZone);
-    // Deselect
+function onChipClick(id) {
+  if (answered) return;
+  if (chipData[id].zone !== null) { removeFromZone(chipData[id].zone); tapSelected = null; return; }
+  if (tapSelected === id) {
     tapSelected = null;
-    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
-    return;
-  }
-  // Select/deselect
-  if(tapSelected === id){
-    tapSelected = null;
-    chip.style.outline = '';
+    document.getElementById(`chip-${id}`).classList.remove('selected');
   } else {
+    if (tapSelected) document.getElementById(`chip-${tapSelected}`)?.classList.remove('selected');
     tapSelected = id;
-    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
-    chip.style.outline = `3px solid var(--accent)`;
+    document.getElementById(`chip-${id}`).classList.add('selected');
   }
 }
 
-function onZoneClick(zoneIdx){
-  if(answered) return;
-  if(tapSelected !== null){
-    placeChip(tapSelected, zoneIdx);
+function onZoneClick(zi) {
+  if (answered) return;
+  if (tapSelected !== null) {
+    placeChip(tapSelected, zi);
     tapSelected = null;
-    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
+    document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
   } else {
-    // Return zone's chip to bank
-    if(zoneData[zoneIdx] !== null) removeFromZone(zoneIdx);
+    if (zoneData[zi] !== null) removeFromZone(zi);
   }
 }
 
-// ─── Place chip in zone ───────────────────────────────────────────────────────
-function placeChip(chipId, zoneIdx){
-  if(answered) return;
-  // If zone already has a chip, swap back to bank
-  if(zoneData[zoneIdx] !== null){
-    const prev = zoneData[zoneIdx];
+function placeChip(id, zi) {
+  if (answered) return;
+  if (zoneData[zi] !== null) {
+    const prev = zoneData[zi];
     chipData[prev].zone = null;
     document.getElementById(`chip-${prev}`)?.classList.remove('placed');
   }
-  // If chip was in another zone, clear that zone
-  const prevZone = chipData[chipId].zone;
-  if(prevZone !== null){
-    zoneData[prevZone] = null;
-    renderZone(prevZone, null);
-  }
-  // Place
-  zoneData[zoneIdx] = chipId;
-  chipData[chipId].zone = zoneIdx;
-  document.getElementById(`chip-${chipId}`)?.classList.add('placed');
-  renderZone(zoneIdx, chipId);
-  checkIfReady();
+  const prevZone = chipData[id].zone;
+  if (prevZone !== null) { zoneData[prevZone] = null; renderZone(prevZone, null); }
+  zoneData[zi] = id; chipData[id].zone = zi;
+  document.getElementById(`chip-${id}`)?.classList.add('placed');
+  renderZone(zi, id); checkDragReady();
 }
 
-function removeFromZone(zoneIdx){
-  const chipId = zoneData[zoneIdx];
-  if(!chipId) return;
-  chipData[chipId].zone = null;
-  document.getElementById(`chip-${chipId}`)?.classList.remove('placed');
-  zoneData[zoneIdx] = null;
-  renderZone(zoneIdx, null);
-  checkIfReady();
+function removeFromZone(zi) {
+  const id = zoneData[zi]; if (!id) return;
+  chipData[id].zone = null;
+  document.getElementById(`chip-${id}`)?.classList.remove('placed');
+  zoneData[zi] = null; renderZone(zi, null); checkDragReady();
 }
 
-function renderZone(zoneIdx, chipId){
-  const z = document.getElementById(`zone-${zoneIdx}`);
-  const wordEl = document.getElementById(`zone-word-${zoneIdx}`);
-  const hintEl = document.getElementById(`zone-hint-${zoneIdx}`);
-  const typeMap = {0:'filled-s', 1:'filled-v', 2:'filled-o'};
+function renderZone(zi, id) {
+  const z = document.getElementById(`zone-${zi}`);
+  const wEl = document.getElementById(`zone-word-${zi}`);
+  const hEl = document.getElementById(`zone-hint-${zi}`);
   z.classList.remove('filled-s','filled-v','filled-o','correct-zone','wrong-zone');
-  if(chipId){
-    wordEl.textContent = chipData[chipId].word;
-    hintEl.style.display = 'none';
-    z.classList.add(typeMap[zoneIdx]);
-    z.style.cursor = 'pointer';
+  const cls = ['filled-s','filled-v','filled-o'];
+  if (id) {
+    wEl.textContent = chipData[id].word;
+    hEl.style.display = 'none';
+    z.classList.add(cls[zi]);
   } else {
-    wordEl.textContent = '';
-    hintEl.style.display = '';
-    z.style.cursor = '';
+    wEl.textContent = '';
+    hEl.style.display = '';
   }
 }
 
-function checkIfReady(){
-  const [,,,,obj] = queue[cur];
-  const needed = obj !== null ? 3 : 2;
-  const filled = zoneData.slice(0, needed).filter(x=>x!==null).length;
-  document.getElementById('btn-check').disabled = (filled < needed);
+function checkDragReady() {
+  const o = queue[cur][4];
+  const need = o ? 3 : 2;
+  const filled = zoneData.slice(0, need).filter(x => x !== null).length;
+  document.getElementById('btn-check').disabled = filled < need;
 }
 
-// ─── Drag over zone feedback ──────────────────────────────────────────────────
-document.querySelectorAll('.drop-zone').forEach(z=>{
+// Drop zone dragleave
+document.querySelectorAll('.drop-zone').forEach(z => {
   z.addEventListener('dragleave', e => e.currentTarget.classList.remove('drag-over'));
 });
 
-// ─── Check answer ─────────────────────────────────────────────────────────────
-function checkAnswer(){
-  if(answered) return;
-  const [emoji, tr, subj, verb, obj] = queue[cur];
-  const hasObj = obj !== null;
+// ─── MODE 1: Cloze ────────────────────────────────────────────────────────────
+function loadCloze() {
+  document.getElementById('tr-hint').textContent = '↓ Boştaki kelimeyi seç';
+  const [, , s, v, o] = queue[cur];
+  const blanks = ['s', 'v', 'o'];
+  const pick = blanks[Math.floor(Math.random() * (o ? 3 : 2))];
+  clozeTarget = pick; clozeSelected = null;
 
-  const sChip = zoneData[0] ? chipData[zoneData[0]].word : null;
-  const vChip = zoneData[1] ? chipData[zoneData[1]].word : null;
-  const oChip = zoneData[2] ? chipData[zoneData[2]].word : null;
+  const correctWord = pick === 's' ? s : pick === 'v' ? v : o;
+  const display = pick === 's'
+    ? `<span class="blank-box">___</span> ${v}${o ? ' ' + o : ''}`
+    : pick === 'v'
+    ? `${s} <span class="blank-box">___</span>${o ? ' ' + o : ''}`
+    : `${s} ${v} <span class="blank-box">___</span>`;
+  document.getElementById('cloze-sent').innerHTML = display;
 
-  const norm = s => s?.trim().toLowerCase();
-  const sOk = norm(sChip) === norm(subj);
-  const vOk = norm(vChip) === norm(verb);
-  const oOk = hasObj ? norm(oChip) === norm(obj) : true;
-  const allOk = sOk && vOk && oOk;
+  const distractors = shuffle(["she","he","they","we","the dog","eats","drinks","opens","reads","buys","watches","loves","a book","music","water","coffee","a sandwich","the door"]);
+  const opts = shuffle([correctWord, ...distractors.filter(d => norm(d) !== norm(correctWord)).slice(0, 3)]);
 
-  // Color zones
-  colorZone(0, sOk);
-  colorZone(1, vOk);
-  if(hasObj) colorZone(2, oOk);
+  const cont = document.getElementById('cloze-opts');
+  cont.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'cloze-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => {
+      if (answered) return;
+      document.querySelectorAll('.cloze-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      clozeSelected = opt;
+      document.getElementById('btn-check').disabled = false;
+    });
+    cont.appendChild(btn);
+  });
+}
 
-  // Feedback
-  const fb = document.getElementById('feedback');
-  const icon = document.getElementById('fb-icon');
-  const msg = document.getElementById('fb-msg');
-  const ans = document.getElementById('fb-answer');
+// ─── MODE 2: Type step-by-step ────────────────────────────────────────────────
+function loadType() {
+  document.getElementById('tr-hint').textContent = '↓ Her parçayı sırayla yaz, Enter ile geç';
+  const [, , s, v, o] = queue[cur];
+  typeParts = o ? [{ k: 's', w: s }, { k: 'v', w: v }, { k: 'o', w: o }]
+                : [{ k: 's', w: s }, { k: 'v', w: v }];
+  typeStep = 0; typeAnswers = [];
 
-  if(allOk){
-    fb.className = 'feedback ok show';
-    icon.textContent = '✅';
-    msg.textContent = 'Mükemmel! Doğru sıra!';
-    ans.innerHTML = `<span style="color:var(--s-color)">${subj}</span> + <span style="color:var(--v-color)">${verb}</span>${hasObj ? ` + <span style="color:var(--o-color)">${obj}</span>` : ''}`;
-    correctCount++;
-    document.getElementById('q-card').classList.add('celebrate');
-    setTimeout(()=>document.getElementById('q-card').classList.remove('celebrate'),300);
+  document.getElementById('slot-o').style.display = o ? '' : 'none';
+  ['s','v','o'].forEach(k => {
+    const sl = document.getElementById(`slot-${k}`);
+    sl.className = 'svo-slot';
+    document.getElementById(`slot-${k}-val`).textContent = '—';
+  });
+
+  const inp = document.getElementById('type-input');
+  inp.value = ''; inp.className = 'type-input'; inp.disabled = false;
+  document.getElementById('btn-check').disabled = true;
+  updateTypeUI();
+  inp.focus();
+
+  inp.onkeydown = (e) => { if (e.key === 'Enter') advanceType(); };
+  inp.oninput = null;
+}
+
+function advanceType() {
+  const inp = document.getElementById('type-input');
+  const val = inp.value.trim();
+  if (!val) return;
+
+  typeAnswers.push(val);
+  const part = typeParts[typeStep];
+  const slotEl = document.getElementById(`slot-${part.k}`);
+  slotEl.className = `svo-slot done-${part.k}`;
+  document.getElementById(`slot-${part.k}-val`).textContent = val;
+  typeStep++;
+  inp.value = '';
+
+  if (typeStep >= typeParts.length) {
+    document.getElementById('type-hint').textContent = 'Tamamlandı! Kontrol Et.';
+    document.getElementById('btn-check').disabled = false;
   } else {
-    fb.className = 'feedback bad show';
-    icon.textContent = '❌';
-    msg.textContent = 'Yanlış sıra. Doğrusu:';
-    ans.innerHTML = `<span style="color:var(--s-color)">${subj}</span> + <span style="color:var(--v-color)">${verb}</span>${hasObj ? ` + <span style="color:var(--o-color)">${obj}</span>` : ''}`;
-    wrongCount++;
+    updateTypeUI();
+  }
+}
+
+function updateTypeUI() {
+  if (typeStep >= typeParts.length) return;
+  const part = typeParts[typeStep];
+  const hintMap = { s: 'Subject (Kim?) yaz, Enter ile geç', v: 'Verb (Ne yapıyor?) yaz, Enter ile geç', o: 'Object (Neyi?) yaz, Enter ile geç' };
+  document.getElementById('type-hint').textContent = hintMap[part.k];
+  const sl = document.getElementById(`slot-${part.k}`);
+  sl.className = 'svo-slot active-slot';
+  document.getElementById('type-input').focus();
+}
+
+// ─── MODE 3: Full Translate ───────────────────────────────────────────────────
+function loadTranslate() {
+  document.getElementById('tr-hint').textContent = '↓ Türkçeyi görüyorsun, İngilizceyi yaz';
+  const [, tr, s, v, o] = queue[cur];
+  trFull = o ? `${s} ${v} ${o}` : `${s} ${v}`;
+  document.getElementById('tr-sent-big').textContent = tr;
+  document.getElementById('tr-wc-hint').textContent = `İpucu: ${o ? 3 : 2} kelime grubu · S + V${o ? ' + O' : ''}`;
+
+  const inp = document.getElementById('tr-input');
+  inp.value = ''; inp.className = 'type-input';
+  inp.oninput = () => { document.getElementById('btn-check').disabled = inp.value.trim().length < 2; };
+  inp.onkeydown = (e) => { if (e.key === 'Enter' && !document.getElementById('btn-check').disabled) checkAnswer(); };
+  document.getElementById('btn-check').disabled = true;
+  inp.focus();
+}
+
+// ─── Cevap kontrol ────────────────────────────────────────────────────────────
+function checkAnswer() {
+  if (answered) return;
+  const [, , s, v, o] = queue[cur];
+  let ok = false;
+
+  if (currentMode === 0) {
+    const sOk = norm(zoneData[0] ? chipData[zoneData[0]].word : null) === norm(s);
+    const vOk = norm(zoneData[1] ? chipData[zoneData[1]].word : null) === norm(v);
+    const oOk = o ? norm(zoneData[2] ? chipData[zoneData[2]].word : null) === norm(o) : true;
+    ok = sOk && vOk && oOk;
+    for (let i = 0; i < (o ? 3 : 2); i++) {
+      const z = document.getElementById(`zone-${i}`);
+      z.classList.remove('filled-s','filled-v','filled-o');
+      const partOk = i === 0 ? sOk : i === 1 ? vOk : oOk;
+      z.classList.add(partOk ? 'correct-zone' : 'wrong-zone');
+    }
+  } else if (currentMode === 1) {
+    const tgt = clozeTarget === 's' ? s : clozeTarget === 'v' ? v : o;
+    ok = norm(clozeSelected) === norm(tgt);
+    document.querySelectorAll('.cloze-opt').forEach(btn => {
+      if (norm(btn.textContent) === norm(tgt)) btn.classList.add('right-ans');
+      else if (btn.classList.contains('selected') && !ok) btn.classList.add('wrong-ans');
+    });
+  } else if (currentMode === 2) {
+    const matches = typeParts.map((p, i) => norm(typeAnswers[i]) === norm(p.w));
+    ok = matches.every(Boolean);
+    typeParts.forEach((p, i) => {
+      const sl = document.getElementById(`slot-${p.k}`);
+      sl.className = 'svo-slot ' + (matches[i] ? 'slot-ok' : 'slot-bad');
+    });
+    const inp = document.getElementById('type-input');
+    inp.disabled = true;
+    inp.className = 'type-input ' + (ok ? 'right-input' : 'wrong-input');
+  } else {
+    const userAns = document.getElementById('tr-input').value.trim();
+    const exactOk = norm(userAns) === norm(trFull);
+    const wordsCorrect = trFull.toLowerCase().split(' ');
+    const wordsUser = userAns.toLowerCase().split(' ');
+    const overlap = wordsUser.filter(w => wordsCorrect.some(c => c.includes(w) || w.includes(c)));
+    ok = exactOk || (overlap.length >= Math.ceil(wordsCorrect.length * 0.75) && Math.abs(wordsUser.length - wordsCorrect.length) <= 1);
+    document.getElementById('tr-input').className = 'type-input ' + (ok ? 'right-input' : 'wrong-input');
   }
 
   answered = true;
+  if (ok) { correctCount++; streak++; } else { wrongCount++; streak = 0; queue.push(queue[cur]); }
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${ok ? 'ok' : 'bad'}`;
+  document.getElementById('fb-icon').textContent = ok ? '✅' : '❌';
+  document.getElementById('fb-msg').textContent = ok ? 'Mükemmel! Doğru!' : 'Yanlış — doğrusu:';
+  document.getElementById('fb-correct').innerHTML =
+    `<span style="color:var(--s-color);font-weight:600">${s}</span> + <span style="color:var(--v-color);font-weight:600">${v}</span>${o ? ` + <span style="color:var(--o-color);font-weight:600">${o}</span>` : ''}`;
+
+  if (ok) {
+    document.getElementById('q-card').classList.add('celebrate');
+    setTimeout(() => document.getElementById('q-card').classList.remove('celebrate'), 300);
+  }
+
   document.getElementById('btn-check').disabled = true;
   document.getElementById('btn-next').className = 'btn-next show';
   updateStats();
 }
 
-function colorZone(idx, ok){
-  const z = document.getElementById(`zone-${idx}`);
-  z.classList.remove('filled-s','filled-v','filled-o');
-  z.classList.add(ok ? 'correct-zone' : 'wrong-zone');
+// ─── Sonraki soru ─────────────────────────────────────────────────────────────
+function nextQuestion() { cur++; loadQ(); }
+
+// ─── İstatistikler ────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('st-total').textContent = cur;
+  document.getElementById('st-correct').textContent = correctCount;
+  document.getElementById('st-wrong').textContent = wrongCount;
+  document.getElementById('st-streak').textContent = streak;
 }
 
-function nextQuestion(){
-  cur++;
-  loadQ();
-}
-
-function updateStats(){
-  document.getElementById('stat-correct').textContent = correctCount;
-  document.getElementById('stat-wrong').textContent = wrongCount;
-}
-
-function updateProgress(){
-  const pct = Math.round((cur / queue.length) * 100);
+function updateProgress() {
+  const total = queue.length;
+  const pct = Math.round((cur / Math.max(total, 1)) * 100);
   document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-txt').textContent = `${cur} / ${queue.length}`;
+  document.getElementById('prog-txt').textContent = `${cur} / ${total}`;
   document.getElementById('prog-pct').textContent = pct + '%';
 }
 
-function showSummary(){
+// ─── Özet ─────────────────────────────────────────────────────────────────────
+function showSummary() {
   document.getElementById('q-card').style.display = 'none';
-  const pct = Math.round((correctCount / queue.length) * 100);
-  document.getElementById('sum-score').textContent = pct + '%';
-  document.getElementById('sum-text').textContent = `${queue.length} sorudan ${correctCount} doğru, ${wrongCount} yanlış!`;
+  const pct = cur > 0 ? Math.round((correctCount / cur) * 100) : 0;
   document.getElementById('sum-emoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '💪' : '📚';
+  document.getElementById('sum-score').textContent = pct + '%';
+  document.getElementById('sum-text').textContent = `${cur} sorudan ${correctCount} doğru, ${wrongCount} yanlış`;
+
+  const modeLabels = ['Sürükle-bırak','Boşluk doldur','Sıfırdan yaz','Çeviri'];
+  const colors = ['background:#caf0f8;color:#0077b6','background:#fde8e8;color:#d62828','background:#f3d9fa;color:#7b2d8b','background:#d8f3dc;color:#2d6a4f'];
+  document.getElementById('sum-tags').innerHTML =
+    `<span class="sum-tag" style="${colors[currentMode]}">${modeLabels[currentMode]}</span>` +
+    `<span class="sum-tag" style="background:#fdf3d0;color:#7a5c00">🔥 Seri: ${streak}</span>`;
+
   document.getElementById('summary').className = 'summary show';
   document.getElementById('prog-fill').style.width = '100%';
-  document.getElementById('prog-txt').textContent = `${queue.length} / ${queue.length}`;
+  document.getElementById('prog-txt').textContent = `${cur} / ${cur}`;
   document.getElementById('prog-pct').textContent = '100%';
 }
 
-function restart(){
-  queue = shuffle(ALL);
-  cur = 0; correctCount = 0; wrongCount = 0; answered = false;
+function restart() {
   document.getElementById('q-card').style.display = 'block';
   document.getElementById('summary').className = 'summary';
+  cur = 0; correctCount = 0; wrongCount = 0; streak = 0;
+  queue = shuffle(ALL);
   loadQ();
 }
 
-// Enter = check or next
+// ─── Klavye kısayolları ───────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if(e.key === 'Enter'){
-    if(!answered && !document.getElementById('btn-check').disabled) checkAnswer();
-    else if(answered) nextQuestion();
+  if (currentMode === 2 || currentMode === 3) return;
+  if (e.key === 'Enter') {
+    if (!answered && !document.getElementById('btn-check').disabled) checkAnswer();
+    else if (answered) nextQuestion();
   }
 });
 
+// ─── Başlat ───────────────────────────────────────────────────────────────────
 loadQ();
 </script>
 </body>
