@@ -456,7 +456,7 @@
 
   <div class="stats">
     <div class="stat-item">
-      <span class="stat-val blue" id="stat-total">100</span>
+      <span class="stat-val blue" id="stat-total">500</span>
       <span class="stat-key">TOPLAM SORU</span>
     </div>
     <div class="stat-item">
@@ -488,7 +488,8 @@
 
   <!-- Quiz card -->
   <div class="q-card" id="quiz-card">
-    <div class="q-number" id="q-number">SORU 1 / 100</div>
+    <div class="q-number" id="q-number">SORU 1 / 500</div>
+    <div id="q-icon" style="font-size:48px;margin-bottom:12px;line-height:1;min-height:56px"></div>
 
     <div id="intrans-tag" class="tag-intrans" style="display:none">⚠ Nesne gerektirmez (intransitive)</div>
 
@@ -528,138 +529,594 @@
   <!-- Summary -->
   <div class="summary" id="summary">
     <div class="big-score" id="final-score">—</div>
-    <p>100 soruyu tamamladın! İşte sonuçların.</p>
+    <p id="summary-text">500 soruyu tamamladın! İşte sonuçların.</p>
     <button class="btn-restart" onclick="restart()">TEKRAR BAŞLA ↺</button>
   </div>
 
 </div>
 
 <script>
-// ─── 100 S+V+O sentences (Turkish prompts) ───────────────────────────────────
+// ─── 500 S+V+O sentences — A1/A2 level, emoji icons in Turkish prompts ──────
 // Format: [turkish_prompt, subject, verb, object_or_null]
-// object null = intransitive (no object required)
 const sentences = [
-  // Basic I/She/He/They + common verbs
-  ["Ben kitap okuyorum.", "i", "read", "books"],
-  ["O müzik dinliyor.", "she", "listens", "music"],
-  ["O kod yazıyor.", "he", "writes", "code"],
-  ["Biz film izliyoruz.", "we", "watch", "movies"],
-  ["Onlar futbol oynuyor.", "they", "play", "football"],
-  ["Ben elma yiyorum.", "i", "eat", "an apple"],
-  ["O su içiyor.", "she", "drinks", "water"],
-  ["Ben mektup yazıyorum.", "i", "write", "a letter"],
-  ["O gazete okuyor.", "he", "reads", "the newspaper"],
-  ["Biz şarkı söylüyoruz.", "we", "sing", "a song"],
-  // Animals
-  ["Kedi fare avlıyor.", "the cat", "chases", "the mouse"],
-  ["Köpek kemiği çiğniyor.", "the dog", "chews", "a bone"],
-  ["Kuş tohum yiyor.", "the bird", "eats", "seeds"],
-  ["Balık böcek yiyor.", "the fish", "eats", "insects"],
-  ["At çim yiyor.", "the horse", "eats", "grass"],
-  // Jobs / roles
-  ["Öğretmen ders anlatıyor.", "the teacher", "explains", "the lesson"],
-  ["Doktor hastayı muayene ediyor.", "the doctor", "examines", "the patient"],
-  ["Aşçı yemek pişiriyor.", "the chef", "cooks", "the meal"],
-  ["Sürücü arabayı kullanıyor.", "the driver", "drives", "the car"],
-  ["Fotoğrafçı fotoğraf çekiyor.", "the photographer", "takes", "photos"],
-  // More everyday actions
-  ["Ben kahve yapıyorum.", "i", "make", "coffee"],
-  ["O evi temizliyor.", "she", "cleans", "the house"],
-  ["O arabayı tamir ediyor.", "he", "fixes", "the car"],
-  ["Biz bahçeyi suluyoruz.", "we", "water", "the garden"],
-  ["Onlar bisiklet sürüyor.", "they", "ride", "bicycles"],
-  ["Ben gitar çalıyorum.", "i", "play", "the guitar"],
-  ["O resim yapıyor.", "she", "paints", "a picture"],
-  ["O ağaç kesiyor.", "he", "cuts", "the tree"],
-  ["Biz masa taşıyoruz.", "we", "carry", "the table"],
-  ["Onlar topu tekmeliyor.", "they", "kick", "the ball"],
-  // School / work
-  ["Öğrenci ödevi yapıyor.", "the student", "does", "homework"],
-  ["Ben e-posta gönderiyorum.", "i", "send", "an email"],
-  ["O raporu yazıyor.", "she", "writes", "the report"],
-  ["O toplantıyı organize ediyor.", "he", "organizes", "the meeting"],
-  ["Biz projeyi tamamlıyoruz.", "we", "finish", "the project"],
-  // Food & drink
-  ["Ben pizza yiyorum.", "i", "eat", "pizza"],
-  ["O çay içiyor.", "she", "drinks", "tea"],
-  ["O sandviç yapıyor.", "he", "makes", "a sandwich"],
-  ["Biz pastayı paylaşıyoruz.", "we", "share", "the cake"],
-  ["Onlar çorba içiyor.", "they", "drink", "soup"],
-  // Technology
-  ["Ben mesaj gönderiyorum.", "i", "send", "a message"],
-  ["O fotoğraf paylaşıyor.", "she", "shares", "a photo"],
-  ["O uygulamayı indiriyor.", "he", "downloads", "the app"],
-  ["Biz videoyu izliyoruz.", "we", "watch", "the video"],
-  ["Onlar oyun oynuyor.", "they", "play", "a game"],
-  // Shopping / money
-  ["Ben kitap satın alıyorum.", "i", "buy", "a book"],
-  ["O elbise seçiyor.", "she", "chooses", "a dress"],
-  ["O faturayı ödüyor.", "he", "pays", "the bill"],
-  ["Biz marketi ziyaret ediyoruz.", "we", "visit", "the market"],
-  ["Onlar hediye alıyor.", "they", "buy", "a gift"],
-  // Nature / outdoor
-  ["Ben çiçek topluyorum.", "i", "collect", "flowers"],
-  ["O yıldızları izliyor.", "she", "watches", "the stars"],
-  ["O balık tutuyor.", "he", "catches", "fish"],
-  ["Biz kamp ateşi yakıyoruz.", "we", "light", "a campfire"],
-  ["Onlar meyve topluyor.", "they", "pick", "fruit"],
-  // Sports
-  ["Ben tenis oynuyorum.", "i", "play", "tennis"],
-  ["O havuz kucağı yüzüyor.", "she", "swims", "laps"],
-  ["O ağırlık kaldırıyor.", "he", "lifts", "weights"],
-  ["Biz maçı kazanıyoruz.", "we", "win", "the match"],
-  ["Onlar parkuru koşuyor.", "they", "run", "the track"],
-  // Household
-  ["Ben yatak yapıyorum.", "i", "make", "the bed"],
-  ["O bulaşıkları yıkıyor.", "she", "washes", "the dishes"],
-  ["O çamaşırı katlıyor.", "he", "folds", "the laundry"],
-  ["Biz zemin süpürüyoruz.", "we", "sweep", "the floor"],
-  ["Onlar pencereyi açıyor.", "they", "open", "the window"],
-  // Art & music
-  ["Ben şiir yazıyorum.", "i", "write", "a poem"],
-  ["O müzik besteler.", "she", "composes", "music"],
-  ["O heykel yapıyor.", "he", "sculpts", "a statue"],
-  ["Biz dansı öğreniyoruz.", "we", "learn", "the dance"],
-  ["Onlar oyunu sergiliyor.", "they", "perform", "the play"],
-  // Emotions / social
-  ["Ben arkadaşımı arıyorum.", "i", "call", "my friend"],
-  ["O misafirleri ağırlıyor.", "she", "hosts", "the guests"],
-  ["O hediyeyi veriyor.", "he", "gives", "the gift"],
-  ["Biz soruyu soruyoruz.", "we", "ask", "the question"],
-  ["Onlar anlaşmazlığı çözüyor.", "they", "solve", "the disagreement"],
-  // Verbs with different subjects
-  ["Güneş ışığı aydınlatıyor.", "the sun", "lights", "the room"],
-  ["Rüzgar yaprakları savuruyor.", "the wind", "blows", "the leaves"],
-  ["Yağmur çiçekleri suluyor.", "the rain", "waters", "the flowers"],
-  ["Nehir taşları taşıyor.", "the river", "carries", "stones"],
-  ["Çocuk top fırlatıyor.", "the child", "throws", "the ball"],
-  // More everyday
-  ["Ben şapka takıyorum.", "i", "wear", "a hat"],
-  ["O çantayı taşıyor.", "she", "carries", "the bag"],
-  ["O kapıyı açıyor.", "he", "opens", "the door"],
-  ["Biz masayı düzenliyoruz.", "we", "arrange", "the table"],
-  ["Onlar ateşi söndürüyor.", "they", "put out", "the fire"],
-  ["Ben belgeyi kaydediyorum.", "i", "save", "the document"],
-  ["O müziği durduryor.", "she", "stops", "the music"],
-  ["O arabayı park ediyor.", "he", "parks", "the car"],
-  ["Biz şirketi kuruyoruz.", "we", "found", "the company"],
-  ["Onlar köprüyü inşa ediyor.", "they", "build", "the bridge"],
-  // Tricky but simple
-  ["Ben kazağı yıkıyorum.", "i", "wash", "the sweater"],
-  ["O reçeli kesiyor.", "she", "cuts", "the jam"],
-  ["O faturayı kontrol ediyor.", "he", "checks", "the bill"],
-  ["Biz yolu temizliyoruz.", "we", "clear", "the road"],
-  ["Onlar anlaşmayı imzalıyor.", "they", "sign", "the agreement"],
-  ["Ben ödevimi bitiriyorum.", "i", "finish", "my homework"],
-  ["O dersi kaydediyor.", "she", "records", "the lesson"],
-  ["O arabayı boyuyor.", "he", "paints", "the car"],
-  ["Biz bahçeye bakıyoruz.", "we", "tend", "the garden"],
-  ["Onlar haberleri takip ediyor.", "they", "follow", "the news"],
-  ["Ben çantayı paketliyorum.", "i", "pack", "the bag"],
-  ["O mektubu okuyor.", "she", "reads", "the letter"],
-  ["O programı yazıyor.", "he", "writes", "the program"],
-  ["Biz dünyayı geziyoruz.", "we", "travel", "the world"],
-  ["Onlar denizi seyrediyor.", "they", "watch", "the sea"],
+  // 🍎 YEMEK & İÇECEK
+  ["🍎 Ben elma yiyorum.", "i", "eat", "an apple"],
+  ["🍕 Ben pizza yiyorum.", "i", "eat", "pizza"],
+  ["🍞 Ben ekmek yiyorum.", "i", "eat", "bread"],
+  ["🍌 O muz yiyor.", "she", "eats", "a banana"],
+  ["🍊 O portakal yiyor.", "he", "eats", "an orange"],
+  ["🥕 Biz havuç yiyoruz.", "we", "eat", "carrots"],
+  ["🍰 Onlar kek yiyor.", "they", "eat", "cake"],
+  ["🥗 Ben salata yiyorum.", "i", "eat", "a salad"],
+  ["🍚 O pirinç yiyor.", "she", "eats", "rice"],
+  ["🥪 O sandviç yiyor.", "he", "eats", "a sandwich"],
+  ["💧 Ben su içiyorum.", "i", "drink", "water"],
+  ["🍵 O çay içiyor.", "she", "drinks", "tea"],
+  ["☕ O kahve içiyor.", "he", "drinks", "coffee"],
+  ["🥛 Biz süt içiyoruz.", "we", "drink", "milk"],
+  ["🍊 Onlar meyve suyu içiyor.", "they", "drink", "juice"],
+  ["🍺 Ben soda içiyorum.", "i", "drink", "soda"],
+  ["🍵 O çorba içiyor.", "she", "drinks", "soup"],
+  ["☕ Ben kahve yapıyorum.", "i", "make", "coffee"],
+  ["🥪 O sandviç yapıyor.", "he", "makes", "a sandwich"],
+  ["🍳 Biz yumurta pişiriyoruz.", "we", "cook", "eggs"],
+  ["🍕 Onlar pizza pişiriyor.", "they", "cook", "pizza"],
+  ["🍰 Ben kek yapıyorum.", "i", "make", "a cake"],
+  ["🍞 O ekmek kesiyor.", "she", "cuts", "the bread"],
+  ["🍎 O meyve yıkıyor.", "he", "washes", "the fruit"],
+  ["🥗 Biz yemek hazırlıyoruz.", "we", "prepare", "the food"],
+
+  // 📚 OKUL & DERS
+  ["📚 Ben kitap okuyorum.", "i", "read", "a book"],
+  ["📖 O ders kitabı okuyor.", "she", "reads", "a textbook"],
+  ["✏️ O not yazıyor.", "he", "writes", "notes"],
+  ["📝 Biz ödev yapıyoruz.", "we", "do", "homework"],
+  ["🎒 Onlar okula gidiyor.", "they", "go", "to school"],
+  ["📝 Ben test çözüyorum.", "i", "do", "a test"],
+  ["📏 O dersi öğreniyor.", "she", "learns", "the lesson"],
+  ["✏️ O soru soruyor.", "he", "asks", "a question"],
+  ["📚 Biz cevabı buluyoruz.", "we", "find", "the answer"],
+  ["📖 Onlar hikaye okuyor.", "they", "read", "a story"],
+  ["🖊️ Ben adımı yazıyorum.", "i", "write", "my name"],
+  ["✏️ O kelimeyi yazıyor.", "she", "writes", "the word"],
+  ["📚 O İngilizce öğreniyor.", "he", "learns", "English"],
+  ["🖊️ Biz cümle yazıyoruz.", "we", "write", "a sentence"],
+  ["📝 Onlar kelime öğreniyor.", "they", "learn", "words"],
+  ["📚 Ben roman okuyorum.", "i", "read", "a novel"],
+  ["✏️ O resim çiziyor.", "she", "draws", "a picture"],
+  ["📖 O sayfayı okuyor.", "he", "reads", "the page"],
+  ["📝 Biz sınava çalışıyoruz.", "we", "study", "for the exam"],
+  ["🎒 Onlar çantalarını taşıyor.", "they", "carry", "their bags"],
+
+  // 📱 TEKNOLOJİ
+  ["📱 Ben telefonu kullanıyorum.", "i", "use", "the phone"],
+  ["📱 O mesaj gönderiyor.", "she", "sends", "a message"],
+  ["💻 O bilgisayar kullanıyor.", "he", "uses", "a computer"],
+  ["📸 Biz fotoğraf çekiyoruz.", "we", "take", "a photo"],
+  ["🎮 Onlar oyun oynuyor.", "they", "play", "a game"],
+  ["📱 Ben müzik indiriyorum.", "i", "download", "music"],
+  ["📺 O film izliyor.", "she", "watches", "a movie"],
+  ["💻 O video izliyor.", "he", "watches", "a video"],
+  ["📱 Biz fotoğraf paylaşıyoruz.", "we", "share", "a photo"],
+  ["🎮 Onlar bilgisayar oyunu oynuyor.", "they", "play", "a computer game"],
+  ["📱 Ben uygulama açıyorum.", "i", "open", "the app"],
+  ["💻 O e-posta okuyor.", "she", "reads", "an email"],
+  ["📺 O diziyi izliyor.", "he", "watches", "the show"],
+  ["📱 Biz video izliyoruz.", "we", "watch", "a video"],
+  ["💻 Onlar müzik dinliyor.", "they", "listen", "to music"],
+
+  // 🏠 EV
+  ["🚪 Ben kapıyı açıyorum.", "i", "open", "the door"],
+  ["🪟 O pencereyi açıyor.", "she", "opens", "the window"],
+  ["🚪 O kapıyı kapatıyor.", "he", "closes", "the door"],
+  ["🛏️ Biz yatağı düzeltiyoruz.", "we", "fix", "the bed"],
+  ["🍽️ Onlar tabakları yıkıyor.", "they", "wash", "the plates"],
+  ["🛋️ Ben masayı temizliyorum.", "i", "clean", "the table"],
+  ["🪟 O pencereyi kapatıyor.", "she", "closes", "the window"],
+  ["🏠 O evi temizliyor.", "he", "cleans", "the house"],
+  ["🛏️ Biz odayı toparlıyoruz.", "we", "tidy", "the room"],
+  ["🚿 Onlar bulaşıkları yıkıyor.", "they", "wash", "the dishes"],
+  ["🛋️ Ben sandalyeyi taşıyorum.", "i", "carry", "the chair"],
+  ["🏠 O evi boyuyor.", "she", "paints", "the house"],
+  ["🛏️ O yatağı topluyor.", "he", "makes", "the bed"],
+  ["🍽️ Biz masayı hazırlıyoruz.", "we", "set", "the table"],
+  ["🚪 Onlar kapıyı boyuyor.", "they", "paint", "the door"],
+  ["🛋️ Ben koltuğu taşıyorum.", "i", "move", "the sofa"],
+  ["🪟 O perdeyi çekiyor.", "she", "closes", "the curtain"],
+  ["🏠 O lambayı yakıyor.", "he", "turns on", "the lamp"],
+  ["🛋️ Biz mobilyayı taşıyoruz.", "we", "move", "the furniture"],
+  ["🚿 Onlar banyoyu temizliyor.", "they", "clean", "the bathroom"],
+
+  // 🐱 HAYVANLAR
+  ["🐱 Kedi sütü içiyor.", "the cat", "drinks", "milk"],
+  ["🐶 Köpek et yiyor.", "the dog", "eats", "meat"],
+  ["🐦 Kuş ekmek yiyor.", "the bird", "eats", "bread"],
+  ["🐟 Balık yem yiyor.", "the fish", "eats", "food"],
+  ["🐹 Hamster peynir yiyor.", "the hamster", "eats", "cheese"],
+  ["🐱 Kedi topu oyuyor.", "the cat", "plays", "with the ball"],
+  ["🐶 Köpek kemiği çiğniyor.", "the dog", "chews", "a bone"],
+  ["🐦 Kuş tohum yiyor.", "the bird", "eats", "seeds"],
+  ["🐱 Kedi balık istiyor.", "the cat", "wants", "fish"],
+  ["🐶 Köpek topu getiriyor.", "the dog", "brings", "the ball"],
+  ["🐾 Ben kedimi besliyorum.", "i", "feed", "my cat"],
+  ["🐶 O köpeğini seviyor.", "she", "loves", "her dog"],
+  ["🐱 O kediyi seviyor.", "he", "loves", "the cat"],
+  ["🐾 Biz balığı besliyoruz.", "we", "feed", "the fish"],
+  ["🐶 Onlar köpeği yürütüyor.", "they", "walk", "the dog"],
+
+  // 🏃 SPOR & AKTİVİTE
+  ["⚽ Ben futbol oynuyorum.", "i", "play", "football"],
+  ["🎾 O tenis oynuyor.", "she", "plays", "tennis"],
+  ["🏀 O basketbol oynuyor.", "he", "plays", "basketball"],
+  ["🏊 Biz yüzüyoruz.", "we", "swim", null],
+  ["🚴 Onlar bisiklet sürüyor.", "they", "ride", "bikes"],
+  ["⚽ Ben topu tekmeliyorum.", "i", "kick", "the ball"],
+  ["🎾 O topu vuruyor.", "she", "hits", "the ball"],
+  ["🏀 O topu fırlatıyor.", "he", "throws", "the ball"],
+  ["🏃 Biz parkta koşuyoruz.", "we", "run", "in the park"],
+  ["⚽ Onlar maç oynuyor.", "they", "play", "a match"],
+  ["🏊 Ben her gün yüzüyorum.", "i", "swim", null],
+  ["🚴 O bisiklet sürüyor.", "she", "rides", "a bike"],
+  ["⚽ O futbol seviyor.", "he", "loves", "football"],
+  ["🏃 Biz sabah koşuyoruz.", "we", "run", null],
+  ["🎾 Onlar tenis izliyor.", "they", "watch", "tennis"],
+  ["⚽ Ben topu tutuyorum.", "i", "catch", "the ball"],
+  ["🏀 O basketbol izliyor.", "she", "watches", "basketball"],
+  ["🏊 O yüzmeyi öğreniyor.", "he", "learns", "swimming"],
+  ["🚴 Biz bisiklet yarışı yapıyoruz.", "we", "have", "a bike race"],
+  ["⚽ Onlar maçı kazanıyor.", "they", "win", "the match"],
+
+  // 🛒 ALIŞVERİŞ
+  ["🛒 Ben süt alıyorum.", "i", "buy", "milk"],
+  ["🛒 O ekmek alıyor.", "she", "buys", "bread"],
+  ["🛒 O elma alıyor.", "he", "buys", "apples"],
+  ["🛒 Biz meyve alıyoruz.", "we", "buy", "fruit"],
+  ["🛒 Onlar sebze alıyor.", "they", "buy", "vegetables"],
+  ["🛒 Ben kitap alıyorum.", "i", "buy", "a book"],
+  ["👕 O gömlek alıyor.", "she", "buys", "a shirt"],
+  ["👟 O ayakkabı alıyor.", "he", "buys", "shoes"],
+  ["🛒 Biz hediye alıyoruz.", "we", "buy", "a gift"],
+  ["🛒 Onlar para ödüyor.", "they", "pay", "money"],
+  ["👜 Ben çanta alıyorum.", "i", "buy", "a bag"],
+  ["👒 O şapka alıyor.", "she", "buys", "a hat"],
+  ["🛒 O market geziyor.", "he", "visits", "the market"],
+  ["💳 Biz para ödüyoruz.", "we", "pay", "the money"],
+  ["🛒 Onlar fiyata bakıyor.", "they", "check", "the price"],
+  ["🛒 Ben süpermarket geziyorum.", "i", "visit", "the supermarket"],
+  ["👗 O elbise seçiyor.", "she", "chooses", "a dress"],
+  ["👟 O ayakkabı seçiyor.", "he", "chooses", "shoes"],
+  ["💳 Biz kart ile ödüyoruz.", "we", "pay", "by card"],
+  ["🛍️ Onlar alışveriş yapıyor.", "they", "go", "shopping"],
+
+  // 🌳 DOĞA & BAHÇE
+  ["🌸 Ben çiçek suluyorum.", "i", "water", "the flowers"],
+  ["🌳 O ağaca bakıyor.", "she", "looks at", "the tree"],
+  ["🌸 O çiçek topluyor.", "he", "picks", "flowers"],
+  ["🌳 Biz ağaç dikiyoruz.", "we", "plant", "a tree"],
+  ["🍃 Onlar yaprakları topluyor.", "they", "collect", "the leaves"],
+  ["🌸 Ben gülü suluyorum.", "i", "water", "the rose"],
+  ["🌳 O bahçeye gidiyor.", "she", "goes", "to the garden"],
+  ["🌻 O çiçeği kesiyor.", "he", "cuts", "the flower"],
+  ["🌳 Biz bahçeyi temizliyoruz.", "we", "clean", "the garden"],
+  ["🍃 Onlar meyve topluyor.", "they", "pick", "fruit"],
+  ["☀️ Güneş ışık veriyor.", "the sun", "gives", "light"],
+  ["🌧️ Yağmur çiçekleri suluyor.", "the rain", "waters", "the flowers"],
+  ["🌳 Ben ağacı seviyorum.", "i", "love", "the tree"],
+  ["🌸 O gülü seviyor.", "she", "loves", "the rose"],
+  ["🌳 O bahçeyi seviyor.", "he", "loves", "the garden"],
+
+  // 👨‍👩‍👧 AİLE & SOSYAL
+  ["👨‍👩‍👧 Ben anneми arıyorum.", "i", "call", "my mom"],
+  ["👨 O babasını görüyor.", "she", "sees", "her father"],
+  ["👧 O kız kardeşini seviyor.", "he", "loves", "his sister"],
+  ["👨‍👩‍👧 Biz aileyi ziyaret ediyoruz.", "we", "visit", "the family"],
+  ["👫 Onlar arkadaşlarını görüyor.", "they", "see", "their friends"],
+  ["📞 Ben arkadaşımı arıyorum.", "i", "call", "my friend"],
+  ["👨 O annesine yardım ediyor.", "she", "helps", "her mother"],
+  ["👧 O kardeşine bakıyor.", "he", "looks after", "his brother"],
+  ["👫 Biz arkadaşı bekliyoruz.", "we", "wait for", "the friend"],
+  ["👨‍👩‍👧 Onlar aileyi seviyor.", "they", "love", "the family"],
+  ["🎁 Ben hediye veriyorum.", "i", "give", "a gift"],
+  ["📞 O annesini arıyor.", "she", "calls", "her mother"],
+  ["🎂 O pastayı kesiyor.", "he", "cuts", "the cake"],
+  ["🎁 Biz hediye alıyoruz.", "we", "buy", "a gift"],
+  ["👫 Onlar doğum günü kutluyor.", "they", "celebrate", "a birthday"],
+
+  // 🚗 ULAŞIM
+  ["🚗 Ben arabaya biniyorum.", "i", "get in", "the car"],
+  ["🚌 O otobüse biniyor.", "she", "takes", "the bus"],
+  ["🚂 O trene biniyor.", "he", "takes", "the train"],
+  ["✈️ Biz uçağa biniyoruz.", "we", "take", "the plane"],
+  ["🚕 Onlar taksiye biniyor.", "they", "take", "a taxi"],
+  ["🚗 Ben arabayı kullanıyorum.", "i", "drive", "the car"],
+  ["🚴 O bisiklete biniyor.", "she", "rides", "the bike"],
+  ["🚌 O otobüsü bekliyor.", "he", "waits for", "the bus"],
+  ["🚗 Biz arabayı yıkıyoruz.", "we", "wash", "the car"],
+  ["✈️ Onlar uçağı bekliyor.", "they", "wait for", "the plane"],
+  ["🚗 Ben arabanın kapısını açıyorum.", "i", "open", "the car door"],
+  ["🚌 O bilet alıyor.", "she", "buys", "a ticket"],
+  ["🚂 O tren biletini kontrol ediyor.", "he", "checks", "the train ticket"],
+  ["✈️ Biz uçak bileti alıyoruz.", "we", "buy", "a plane ticket"],
+  ["🚕 Onlar taksiye para veriyor.", "they", "pay", "the taxi driver"],
+
+  // 🎵 MÜZİK & EĞLENCE
+  ["🎵 Ben müzik dinliyorum.", "i", "listen to", "music"],
+  ["🎸 O gitar çalıyor.", "she", "plays", "the guitar"],
+  ["🎹 O piyano çalıyor.", "he", "plays", "the piano"],
+  ["🎵 Biz şarkı söylüyoruz.", "we", "sing", "a song"],
+  ["🎬 Onlar film izliyor.", "they", "watch", "a movie"],
+  ["🎵 Ben şarkı seviyorum.", "i", "love", "music"],
+  ["🎸 O gitar öğreniyor.", "she", "learns", "guitar"],
+  ["🎹 O piyano öğreniyor.", "he", "learns", "piano"],
+  ["🎵 Biz konser izliyoruz.", "we", "watch", "a concert"],
+  ["🎬 Onlar dizi izliyor.", "they", "watch", "a TV show"],
+  ["🎙️ Ben şarkı söylüyorum.", "i", "sing", "a song"],
+  ["🎸 O müzik dinliyor.", "she", "listens to", "music"],
+  ["🎵 O albüm dinliyor.", "he", "listens to", "an album"],
+  ["🎬 Biz film seviyor.", "we", "love", "movies"],
+  ["🎵 Onlar müzik yapıyor.", "they", "make", "music"],
+
+  // ⏰ GÜNLÜK HAYAT
+  ["⏰ Ben erken uyanıyorum.", "i", "wake up", null],
+  ["🦷 O dişini fırçalıyor.", "she", "brushes", "her teeth"],
+  ["🚿 O duş alıyor.", "he", "takes", "a shower"],
+  ["👕 Biz giyiniyoruz.", "we", "get dressed", null],
+  ["🍳 Onlar kahvaltı yapıyor.", "they", "have", "breakfast"],
+  ["⏰ Ben erken kalkıyorum.", "i", "get up", null],
+  ["🦷 O ağzını yıkıyor.", "she", "washes", "her face"],
+  ["🚿 O sabun kullanıyor.", "he", "uses", "soap"],
+  ["👕 Biz mont giyiyoruz.", "we", "wear", "a coat"],
+  ["🍳 Onlar yemek yiyor.", "they", "eat", "breakfast"],
+  ["😴 Ben kitap okuyorum geceleri.", "i", "read", "a book"],
+  ["🛌 O yatıyor.", "she", "goes to", "bed"],
+  ["⏰ O saate bakıyor.", "he", "checks", "the clock"],
+  ["🦷 Biz dişlerimizi fırçalıyoruz.", "we", "brush", "our teeth"],
+  ["🍳 Onlar öğle yemeği yiyor.", "they", "eat", "lunch"],
+
+  // 🌍 RENKLER & EŞYALAR (çok A1)
+  ["🔴 Ben kırmızı kalem kullanıyorum.", "i", "use", "a red pen"],
+  ["📕 O kırmızı kitap okuyor.", "she", "reads", "the red book"],
+  ["💙 O mavi kalem alıyor.", "he", "buys", "a blue pen"],
+  ["🟢 Biz yeşil elma yiyoruz.", "we", "eat", "green apples"],
+  ["⭐ Onlar sarı çiçek seviyor.", "they", "love", "yellow flowers"],
+  ["📦 Ben kutuyu açıyorum.", "i", "open", "the box"],
+  ["🎒 O çantayı açıyor.", "she", "opens", "the bag"],
+  ["📦 O paketi teslim ediyor.", "he", "delivers", "the package"],
+  ["🎒 Biz çantayı taşıyoruz.", "we", "carry", "the bag"],
+  ["📦 Onlar kutuyu taşıyor.", "they", "carry", "the box"],
+  ["🖊️ Ben kalemi buluyorum.", "i", "find", "the pen"],
+  ["📓 O defteri açıyor.", "she", "opens", "the notebook"],
+  ["📏 O cetvelini kullanıyor.", "he", "uses", "the ruler"],
+  ["🖊️ Biz kalemi paylaşıyoruz.", "we", "share", "the pen"],
+  ["📓 Onlar defteri kapıyor.", "they", "close", "the notebook"],
+
+  // 🍽️ KAFETERYA & RESTORAN
+  ["🍽️ Ben sipariş veriyorum.", "i", "order", "food"],
+  ["🍕 O pizza sipariş ediyor.", "she", "orders", "pizza"],
+  ["🍔 O hamburger yiyor.", "he", "eats", "a burger"],
+  ["🍝 Biz makarna yiyoruz.", "we", "eat", "pasta"],
+  ["🍣 Onlar balık yiyor.", "they", "eat", "fish"],
+  ["🍽️ Ben menüye bakıyorum.", "i", "look at", "the menu"],
+  ["🍕 O garsonı çağırıyor.", "she", "calls", "the waiter"],
+  ["🍔 O hesabı istiyor.", "he", "asks for", "the bill"],
+  ["💳 Biz yemeği ödüyoruz.", "we", "pay for", "the food"],
+  ["🍝 Onlar masayı seçiyor.", "they", "choose", "the table"],
+
+  // 🌤️ HAVA DURUMU
+  ["☀️ Güneş parlıyor.", "the sun", "shines", null],
+  ["🌧️ Yağmur yağıyor.", "the rain", "falls", null],
+  ["❄️ Kar yağıyor.", "the snow", "falls", null],
+  ["💨 Rüzgar esiyor.", "the wind", "blows", null],
+  ["⛅ Bulut geçiyor.", "the cloud", "moves", null],
+  ["☀️ Güneş ısıtıyor.", "the sun", "warms", "the ground"],
+  ["🌧️ Yağmur ıslatıyor.", "the rain", "wets", "the ground"],
+  ["❄️ Kar kapıyor.", "the snow", "covers", "the ground"],
+  ["💨 Rüzgar yaprakları uçuruyor.", "the wind", "blows", "the leaves"],
+  ["🌈 Gökkuşağı görünüyor.", "the rainbow", "appears", null],
+
+  // 👕 GİYSİLER
+  ["👕 Ben tişört giyiyorum.", "i", "wear", "a t-shirt"],
+  ["👗 O elbise giyiyor.", "she", "wears", "a dress"],
+  ["👖 O pantolon giyiyor.", "he", "wears", "pants"],
+  ["🧥 Biz mont giyiyoruz.", "we", "wear", "a coat"],
+  ["👟 Onlar ayakkabı giyiyor.", "they", "wear", "shoes"],
+  ["👒 Ben şapka takıyorum.", "i", "wear", "a hat"],
+  ["🧤 O eldiven takıyor.", "she", "wears", "gloves"],
+  ["🧣 O atkı takıyor.", "he", "wears", "a scarf"],
+  ["👕 Biz üniforma giyiyoruz.", "we", "wear", "a uniform"],
+  ["👟 Onlar spor ayakkabı giyiyor.", "they", "wear", "sneakers"],
+
+  // 📍 YER & KONUM
+  ["🏫 Ben okula gidiyorum.", "i", "go to", "school"],
+  ["🏥 O hastaneye gidiyor.", "she", "goes to", "the hospital"],
+  ["🏪 O markete gidiyor.", "he", "goes to", "the market"],
+  ["🏖️ Biz plaja gidiyoruz.", "we", "go to", "the beach"],
+  ["🏔️ Onlar dağa gidiyor.", "they", "go to", "the mountain"],
+  ["🏫 Ben okulu seviyorum.", "i", "love", "school"],
+  ["🏥 O doktoru ziyaret ediyor.", "she", "visits", "the doctor"],
+  ["🏪 O dükkanı buluyor.", "he", "finds", "the shop"],
+  ["🏖️ Biz kumsalı seviyoruz.", "we", "love", "the beach"],
+  ["🏔️ Onlar manzarayı izliyor.", "they", "watch", "the view"],
+  ["🏠 Ben eve dönüyorum.", "i", "return to", "home"],
+  ["🏫 O okuldan çıkıyor.", "she", "leaves", "school"],
+  ["🏪 O kafeteryayı buluyor.", "he", "finds", "the cafe"],
+  ["🌳 Biz parka gidiyoruz.", "we", "go to", "the park"],
+  ["🏖️ Onlar denizi görüyor.", "they", "see", "the sea"],
+
+  // 🎨 SANAT & HOBİ
+  ["🎨 Ben resim yapıyorum.", "i", "draw", "a picture"],
+  ["✂️ O kağıt kesiyor.", "she", "cuts", "the paper"],
+  ["🎨 O renkleri karıştırıyor.", "he", "mixes", "the colors"],
+  ["📸 Biz fotoğraf çekiyoruz.", "we", "take", "a photo"],
+  ["🎭 Onlar oyun oynuyor.", "they", "play", "a game"],
+  ["🎨 Ben boya kullanıyorum.", "i", "use", "paint"],
+  ["✂️ O kolaj yapıyor.", "she", "makes", "a collage"],
+  ["🎨 O tablo yapıyor.", "he", "paints", "a picture"],
+  ["📸 Biz video çekiyoruz.", "we", "record", "a video"],
+  ["🎭 Onlar dans ediyor.", "they", "dance", null],
+
+  // 💊 SAĞLIK
+  ["💊 Ben ilaç içiyorum.", "i", "take", "medicine"],
+  ["🩺 O doktoru ziyaret ediyor.", "she", "visits", "the doctor"],
+  ["💊 O vitamin alıyor.", "he", "takes", "vitamins"],
+  ["🏃 Biz egzersiz yapıyoruz.", "we", "do", "exercise"],
+  ["😴 Onlar çok uyuyor.", "they", "sleep", null],
+  ["💊 Ben aspirin içiyorum.", "i", "take", "aspirin"],
+  ["🩺 O hasta hissediyor.", "she", "feels", "sick"],
+  ["💊 O ateşini ölçüyor.", "he", "checks", "his temperature"],
+  ["🏃 Biz yürüyüş yapıyoruz.", "we", "go for", "a walk"],
+  ["😴 Onlar dinleniyor.", "they", "rest", null],
+
+  // 🔢 SAYILAR & ZAMAN (çok A1)
+  ["⏰ Ben saate bakıyorum.", "i", "check", "the clock"],
+  ["📅 O takvime bakıyor.", "she", "looks at", "the calendar"],
+  ["⏰ O alarmı kuruyor.", "he", "sets", "the alarm"],
+  ["📅 Biz tarihi öğreniyoruz.", "we", "learn", "the date"],
+  ["⏱️ Onlar zamanı takip ediyor.", "they", "track", "the time"],
+
+  // 🌟 MİX - çok temel tekrar cümleler
+  ["🌟 Ben İngilizce öğreniyorum.", "i", "learn", "English"],
+  ["📚 O ders çalışıyor.", "she", "studies", null],
+  ["✏️ O alıştırma yapıyor.", "he", "does", "an exercise"],
+  ["🌟 Biz pratik yapıyoruz.", "we", "practice", "English"],
+  ["📚 Onlar ders tekrarlıyor.", "they", "review", "the lesson"],
+  ["🌟 Ben her gün çalışıyorum.", "i", "study", null],
+  ["📖 O kitabı bitiriyor.", "she", "finishes", "the book"],
+  ["✏️ O yeni kelime öğreniyor.", "he", "learns", "a new word"],
+  ["🌟 Biz İngilizce konuşuyoruz.", "we", "speak", "English"],
+  ["📚 Onlar gramer öğreniyor.", "they", "learn", "grammar"],
+  ["🌟 Ben soru soruyorum.", "i", "ask", "a question"],
+  ["📖 O cevabı buluyor.", "she", "finds", "the answer"],
+  ["✏️ O cümle yazıyor.", "he", "writes", "a sentence"],
+  ["🌟 Biz konuşma yapıyoruz.", "we", "have", "a conversation"],
+  ["📚 Onlar test çözüyor.", "they", "do", "a test"],
+
+  // 🍳 SABAH RUTINI tekrar
+  ["🌅 Ben güne başlıyorum.", "i", "start", "the day"],
+  ["☕ O kahvaltı yapıyor.", "she", "has", "breakfast"],
+  ["🍳 O yumurta pişiriyor.", "he", "cooks", "eggs"],
+  ["🥛 Biz süt içiyoruz.", "we", "drink", "milk"],
+  ["🍞 Onlar ekmek yiyor.", "they", "eat", "bread"],
+  ["🌅 Ben güneşi görüyorum.", "i", "see", "the sun"],
+  ["☕ O çay yapıyor.", "she", "makes", "tea"],
+  ["🍳 O omlet yiyor.", "he", "eats", "an omelet"],
+  ["🥛 Biz kahvaltıyı seviyoruz.", "we", "love", "breakfast"],
+  ["🍞 Onlar reçel yiyor.", "they", "eat", "jam"],
+
+  // 🏪 DÜKKAN isim tekrarları
+  ["🏪 Ben pastaneden kek alıyorum.", "i", "buy", "a cake"],
+  ["🥖 O fırından ekmek alıyor.", "she", "buys", "bread"],
+  ["📚 O kitapçıdan kitap alıyor.", "he", "buys", "a book"],
+  ["🏪 Biz marketten süt alıyoruz.", "we", "buy", "milk"],
+  ["💊 Onlar eczaneden ilaç alıyor.", "they", "buy", "medicine"],
+
+  // 🎒 SEYAHAT
+  ["✈️ Ben çantamı hazırlıyorum.", "i", "pack", "my bag"],
+  ["🗺️ O haritaya bakıyor.", "she", "looks at", "the map"],
+  ["📸 O fotoğraf çekiyor.", "he", "takes", "a photo"],
+  ["🏨 Biz otele giriyoruz.", "we", "enter", "the hotel"],
+  ["✈️ Onlar pasaportunu gösteriyor.", "they", "show", "their passport"],
+  ["✈️ Ben biletimi kontrol ediyorum.", "i", "check", "my ticket"],
+  ["🗺️ O yolu buluyor.", "she", "finds", "the way"],
+  ["📸 O manzarayı çekiyor.", "he", "photographs", "the view"],
+  ["🏨 Biz odamıza gidiyoruz.", "we", "go to", "our room"],
+  ["✈️ Onlar valizini taşıyor.", "they", "carry", "their suitcase"],
+
+  // ⭐ SON 30 - karışık basit tekrar
+  ["🐱 Ben kediyi seviyorum.", "i", "love", "the cat"],
+  ["🐶 O köpeği seviyor.", "she", "loves", "the dog"],
+  ["📱 O telefona bakıyor.", "he", "looks at", "the phone"],
+  ["💻 Biz bilgisayar kullanıyoruz.", "we", "use", "the computer"],
+  ["📺 Onlar televizyon izliyor.", "they", "watch", "television"],
+  ["🎵 Ben şarkı seviyorum.", "i", "love", "songs"],
+  ["📖 O hikaye okuyor.", "she", "reads", "a story"],
+  ["🎨 O boyama yapıyor.", "he", "does", "painting"],
+  ["⚽ Biz futbol izliyoruz.", "we", "watch", "football"],
+  ["🏊 Onlar denizde yüzüyor.", "they", "swim", null],
+  ["🌸 Ben çiçek seviyorum.", "i", "love", "flowers"],
+  ["🌳 O ağacı seviyor.", "she", "loves", "the tree"],
+  ["☀️ O güneşi seviyor.", "he", "loves", "the sun"],
+  ["🌧️ Biz yağmuru seviyoruz.", "we", "love", "the rain"],
+  ["❄️ Onlar karı seviyor.", "they", "love", "snow"],
+  ["🍎 Ben meyveyi seviyorum.", "i", "love", "fruit"],
+  ["🥦 O sebzeyi seviyor.", "she", "loves", "vegetables"],
+  ["🍕 O pizzayı seviyor.", "he", "loves", "pizza"],
+  ["☕ Biz kahveyi seviyoruz.", "we", "love", "coffee"],
+  ["🍵 Onlar çayı seviyor.", "they", "love", "tea"],
+  ["📚 Ben okumayı seviyorum.", "i", "love", "reading"],
+  ["🎵 O müziği seviyor.", "she", "loves", "music"],
+  ["🎾 O sporu seviyor.", "he", "loves", "sports"],
+  ["🌍 Biz seyahati seviyoruz.", "we", "love", "travel"],
+  ["🎬 Onlar filmleri seviyor.", "they", "love", "movies"],
+  ["🌟 Ben İngilizceyi seviyorum.", "i", "love", "English"],
+  ["📝 O yazmayı seviyor.", "she", "loves", "writing"],
+  ["🎨 O çizmeyi seviyor.", "he", "loves", "drawing"],
+  ["🏃 Biz koşmayı seviyoruz.", "we", "love", "running"],
+  ["😴 Onlar uyumayı seviyor.", "they", "love", "sleeping"],
+
+  // 🌟 EK CÜMLELER — 135 adet daha
+  // Temel fiil tekrarları farklı özne ile
+  ["🍎 O elma yiyor.", "he", "eats", "an apple"],
+  ["🍞 Ben ekmek alıyorum.", "i", "buy", "bread"],
+  ["💧 O su içiyor.", "he", "drinks", "water"],
+  ["🍵 Ben çay içiyorum.", "i", "drink", "tea"],
+  ["☕ O kahve içiyor.", "she", "drinks", "coffee"],
+  ["🥛 O süt içiyor.", "he", "drinks", "milk"],
+  ["🍊 Ben portakal suyu içiyorum.", "i", "drink", "orange juice"],
+  ["🍕 Biz pizza sipariş ediyoruz.", "we", "order", "pizza"],
+  ["🍔 Onlar hamburger yiyor.", "they", "eat", "a burger"],
+  ["🍰 Ben kek istiyorum.", "i", "want", "cake"],
+
+  // Okul tekrarları
+  ["📚 O kitabı okuyor.", "he", "reads", "the book"],
+  ["✏️ Ben kalem kullanıyorum.", "i", "use", "a pen"],
+  ["📝 O not alıyor.", "she", "takes", "notes"],
+  ["📖 Biz ders çalışıyoruz.", "we", "study", null],
+  ["🎒 O okul çantasını taşıyor.", "he", "carries", "his school bag"],
+  ["✏️ Ben kağıda yazıyorum.", "i", "write", "on paper"],
+  ["📚 O ders kitabını kapıyor.", "she", "closes", "the textbook"],
+  ["📝 Biz test yapıyoruz.", "we", "take", "a test"],
+  ["🎒 Onlar kitaplarını açıyor.", "they", "open", "their books"],
+  ["✏️ O tahtaya yazıyor.", "he", "writes", "on the board"],
+
+  // Hayvan tekrarları
+  ["🐱 Kedi uyuyor.", "the cat", "sleeps", null],
+  ["🐶 Köpek çalıyor.", "the dog", "runs", null],
+  ["🐦 Kuş uçuyor.", "the bird", "flies", null],
+  ["🐟 Balık yüzüyor.", "the fish", "swims", null],
+  ["🐹 Hamster koşuyor.", "the hamster", "runs", null],
+  ["🐱 Kedi oyun oynuyor.", "the cat", "plays", null],
+  ["🐶 Köpek uyuyor.", "the dog", "sleeps", null],
+  ["🐾 Ben kedimi seviyorum.", "i", "love", "my cat"],
+  ["🐶 O köpeğini besliyor.", "she", "feeds", "her dog"],
+  ["🐱 O kedisine bakıyor.", "he", "looks after", "his cat"],
+
+  // Spor tekrarları
+  ["⚽ Ben top sürüyorum.", "i", "dribble", "the ball"],
+  ["🏀 O basketbol oynuyor.", "she", "plays", "basketball"],
+  ["🎾 O tenis topu vuruyor.", "he", "hits", "the tennis ball"],
+  ["🏊 Biz havuzda yüzüyoruz.", "we", "swim", null],
+  ["🚴 Onlar bisiklet yarışı yapıyor.", "they", "race", "bikes"],
+  ["⚽ Ben gol atıyorum.", "i", "score", "a goal"],
+  ["🏃 O her sabah koşuyor.", "she", "runs", null],
+  ["🏊 O yüzmeyi seviyor.", "he", "loves", "swimming"],
+  ["⚽ Biz maç izliyoruz.", "we", "watch", "the match"],
+  ["🏀 Onlar topu kaybediyor.", "they", "lose", "the ball"],
+
+  // Alışveriş tekrarları
+  ["🛒 Ben mağazaya giriyorum.", "i", "enter", "the store"],
+  ["🛍️ O hediyeyi seçiyor.", "she", "chooses", "a gift"],
+  ["💳 O kredi kartı kullanıyor.", "he", "uses", "a credit card"],
+  ["🛒 Biz liste yapıyoruz.", "we", "make", "a list"],
+  ["🛍️ Onlar torbayı taşıyor.", "they", "carry", "the bag"],
+  ["🛒 Ben fiyatı kontrol ediyorum.", "i", "check", "the price"],
+  ["👕 O tişört alıyor.", "she", "buys", "a t-shirt"],
+  ["👟 O spor ayakkabı alıyor.", "he", "buys", "sneakers"],
+  ["🛒 Biz markete gidiyoruz.", "we", "go to", "the market"],
+  ["💳 Onlar nakit ödüyor.", "they", "pay", "cash"],
+
+  // Aile & sosyal tekrarları
+  ["👨 Ben babamı seviyorum.", "i", "love", "my father"],
+  ["👩 O annesini arıyor.", "she", "calls", "her mother"],
+  ["👧 O kız kardeşini görüyor.", "he", "sees", "his sister"],
+  ["👦 Biz erkek kardeşimizi görüyoruz.", "we", "see", "our brother"],
+  ["👫 Onlar arkadaşlarıyla oynuyor.", "they", "play", "with their friends"],
+  ["🎂 Ben doğum günü kutluyorum.", "i", "celebrate", "a birthday"],
+  ["🎁 O hediye veriyor.", "she", "gives", "a gift"],
+  ["📞 O arkadaşını arıyor.", "he", "calls", "his friend"],
+  ["👨‍👩‍👧 Biz aileyi seviyoruz.", "we", "love", "our family"],
+  ["👫 Onlar birlikte oynuyor.", "they", "play", "together"],
+
+  // Ev tekrarları
+  ["🚪 Ben kapıyı kapatıyorum.", "i", "close", "the door"],
+  ["🪟 O pencereyi açıyor.", "she", "opens", "the window"],
+  ["🛋️ O koltuğa oturuyor.", "he", "sits on", "the sofa"],
+  ["🏠 Biz evi boyuyoruz.", "we", "paint", "the house"],
+  ["🍽️ Onlar masayı siliyoruz.", "they", "wipe", "the table"],
+  ["🛏️ Ben yatıyorum.", "i", "go to", "bed"],
+  ["🚿 O duş alıyor.", "she", "takes", "a shower"],
+  ["🏠 O ışığı yakıyor.", "he", "turns on", "the light"],
+  ["🛋️ Biz televizyon izliyoruz.", "we", "watch", "television"],
+  ["🍽️ Onlar kahvaltı yapıyor.", "they", "have", "breakfast"],
+
+  // Teknoloji tekrarları
+  ["📱 Ben telefonu şarj ediyorum.", "i", "charge", "the phone"],
+  ["💻 O bilgisayarı açıyor.", "she", "turns on", "the computer"],
+  ["📺 O televizyonu kapatıyor.", "he", "turns off", "the television"],
+  ["📱 Biz fotoğrafa bakıyoruz.", "we", "look at", "the photo"],
+  ["💻 Onlar oyun yüklüyor.", "they", "install", "a game"],
+  ["📱 Ben mesajı okuyorum.", "i", "read", "the message"],
+  ["📺 O kanala bakıyor.", "she", "watches", "the channel"],
+  ["💻 O ekrana bakıyor.", "he", "looks at", "the screen"],
+  ["📱 Biz fotoğraf alıyoruz.", "we", "take", "a photo"],
+  ["💻 Onlar müzik yüklüyor.", "they", "download", "music"],
+
+  // Müzik tekrarları
+  ["🎵 Ben şarkı öğreniyorum.", "i", "learn", "a song"],
+  ["🎸 O gitar çalıyor.", "she", "plays", "the guitar"],
+  ["🎹 O piyano öğreniyor.", "he", "learns", "piano"],
+  ["🎙️ Biz konser izliyoruz.", "we", "watch", "a concert"],
+  ["🎵 Onlar müzik açıyor.", "they", "play", "music"],
+  ["🎸 Ben şarkı söylüyorum.", "i", "sing", "a song"],
+  ["🎵 O albüm alıyor.", "she", "buys", "an album"],
+  ["🎹 O nota okuyor.", "he", "reads", "music notes"],
+  ["🎙️ Biz şarkı söylüyoruz.", "we", "sing", "together"],
+  ["🎵 Onlar dans ediyor.", "they", "dance", null],
+
+  // Doğa tekrarları
+  ["🌸 Ben çiçeğe bakıyorum.", "i", "look at", "the flower"],
+  ["🌳 O ağacın altında oturuyor.", "she", "sits under", "the tree"],
+  ["☀️ O güneşin altında oturuyor.", "he", "sits in", "the sun"],
+  ["🌧️ Biz yağmurda yürüyoruz.", "we", "walk in", "the rain"],
+  ["❄️ Onlar karda oynuyor.", "they", "play in", "the snow"],
+  ["🌸 Ben gülü kokluyor.", "i", "smell", "the rose"],
+  ["🌳 O parkta yürüyor.", "she", "walks in", "the park"],
+  ["🌻 O ayçiçeği görüyor.", "he", "sees", "a sunflower"],
+  ["🌳 Biz ormanı seviyoruz.", "we", "love", "the forest"],
+  ["🌸 Onlar çiçeği suluyoruz.", "they", "water", "the flowers"],
+
+  // Sağlık tekrarları
+  ["💊 Ben hapı yutuyorum.", "i", "swallow", "the pill"],
+  ["🩺 O doktorla konuşuyor.", "she", "talks to", "the doctor"],
+  ["🏃 O spor yapıyor.", "he", "does", "sports"],
+  ["😴 Biz erken yatıyoruz.", "we", "go to bed", null],
+  ["💊 Onlar vitamin alıyor.", "they", "take", "vitamins"],
+  ["🩺 Ben kontrole gidiyorum.", "i", "go for", "a checkup"],
+  ["🏃 O yürüyüşe çıkıyor.", "she", "goes for", "a walk"],
+  ["💊 O ilacını içiyor.", "he", "takes", "his medicine"],
+  ["😴 Biz iyi uyuyoruz.", "we", "sleep", null],
+  ["🩺 Onlar hastaneye gidiyor.", "they", "go to", "the hospital"],
+
+  // Seyahat tekrarları
+  ["✈️ Ben seyahat ediyorum.", "i", "travel", null],
+  ["🚂 O tren alıyor.", "she", "takes", "the train"],
+  ["🚌 O otobüs alıyor.", "he", "takes", "the bus"],
+  ["🏨 Biz otel arıyoruz.", "we", "look for", "a hotel"],
+  ["📸 Onlar hatıra fotoğrafı çekiyor.", "they", "take", "a photo"],
+  ["✈️ Ben pasaportumu alıyorum.", "i", "take", "my passport"],
+  ["🗺️ O şehri geziyor.", "she", "explores", "the city"],
+  ["🏖️ O plajı seviyor.", "he", "loves", "the beach"],
+  ["🏨 Biz odayı alıyoruz.", "we", "book", "the room"],
+  ["✈️ Onlar valizi taşıyor.", "they", "carry", "the suitcase"],
+
+  // Ekstra basit A1 cümleler
+  ["🌟 Ben mutluyum.", "i", "feel", "happy"],
+  ["😊 O güzel görüyor.", "she", "looks", "beautiful"],
+  ["🌟 O iyi hissediyor.", "he", "feels", "good"],
+  ["😊 Biz hazırız.", "we", "are", "ready"],
+  ["🌟 Onlar yorgun.", "they", "are", "tired"],
+
+  // Son 10 — tam 500
+  ["🍎 Ben bir elma istiyorum.", "i", "want", "an apple"],
+  ["💧 O su istiyor.", "she", "wants", "water"],
+  ["📚 O yeni kitap istiyor.", "he", "wants", "a new book"],
+  ["🎮 Biz oyun istiyoruz.", "we", "want", "a game"],
+  ["🍕 Onlar pizza istiyor.", "they", "want", "pizza"],
+  ["😊 Ben yardım ediyorum.", "i", "help", "my friend"],
+  ["👫 O arkadaşına yardım ediyor.", "she", "helps", "her friend"],
+  ["📚 O öğrenciye yardım ediyor.", "he", "helps", "the student"],
+  ["🌟 Biz birbirimize yardım ediyoruz.", "we", "help", "each other"],
+  ["😊 Onlar komşuya yardım ediyor.", "they", "help", "the neighbor"],
 ];
 
 // Shuffle
@@ -679,7 +1136,7 @@ let wrong = 0;
 let answered = false;
 
 function norm(s) {
-  return s.trim().toLowerCase().replace(/[^a-z\s']/g, '').replace(/\s+/g, ' ');
+  return s.trim().toLowerCase().replace(/[^a-z0-9\s']/g, '').replace(/\s+/g, ' ');
 }
 
 // Accept multiple valid forms
@@ -701,6 +1158,11 @@ function loadQuestion() {
   const isIntrans = obj === null;
 
   document.getElementById('q-number').textContent = `SORU ${current + 1} / ${queue.length}`;
+
+  // Extract leading emoji for the icon display
+  const emojiMatch = tr.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u);
+  document.getElementById('q-icon').textContent = emojiMatch ? emojiMatch[0] : '';
+
   document.getElementById('sentence-tr').textContent = tr;
   document.getElementById('hint-text').textContent = `Bu cümleyi İngilizce'ye çevir — parçalara bölerek yaz`;
 
@@ -808,7 +1270,7 @@ function showSummary() {
   sum.className = 'summary show';
   const pct = Math.round((correct / queue.length) * 100);
   document.getElementById('final-score').textContent = `${pct}%`;
-  document.querySelector('.summary p').textContent =
+  document.getElementById('summary-text').textContent =
     `${queue.length} sorudan ${correct} doğru, ${wrong} yanlış yaptın!`;
 
   // Update progress to 100%
