@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English S+V+O — Level 0</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --card: #1c1c22;
+    --border: #2a2a35;
+    --accent: #7fff6e;
+    --accent2: #ffdd57;
+    --accent3: #57c8ff;
+    --red: #ff5757;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --subject-color: #57c8ff;
+    --verb-color: #ff9f57;
+    --object-color: #c157ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(127,255,110,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,255,110,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 48px;
+  }
+
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(127,255,110,0.1);
+    border: 1px solid rgba(127,255,110,0.3);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .level-badge::before {
+    content: '▶';
+    font-size: 8px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 .s { color: var(--subject-color); }
+  h1 .v { color: var(--verb-color); }
+  h1 .o { color: var(--object-color); }
+
+  .subtitle {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Progress */
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 4px;
+    height: 4px;
+    margin: 32px 0 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .progress-label span:last-child { color: var(--accent); }
+
+  /* Formula strip */
+  .formula-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin: 32px 0;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    overflow-x: auto;
+  }
+
+  .formula-strip .chip {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .chip-s { background: rgba(87,200,255,0.15); color: var(--subject-color); border: 1px solid rgba(87,200,255,0.3); }
+  .chip-v { background: rgba(255,159,87,0.15); color: var(--verb-color); border: 1px solid rgba(255,159,87,0.3); }
+  .chip-o { background: rgba(193,87,255,0.15); color: var(--object-color); border: 1px solid rgba(193,87,255,0.3); }
+
+  .formula-strip .plus {
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--subject-color), var(--verb-color), var(--object-color));
+    border-radius: 20px 20px 0 0;
+  }
+
+  .q-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+  }
+
+  .sentence-display {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .translation-hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  /* Input rows */
+  .inputs-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  @media(max-width: 520px) {
+    .inputs-row { grid-template-columns: 1fr; }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .input-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .input-label.s-lbl { color: var(--subject-color); }
+  .input-label.v-lbl { color: var(--verb-color); }
+  .input-label.o-lbl { color: var(--object-color); }
+
+  .input-group input {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+  }
+
+  .input-group input:focus {
+    border-color: rgba(127,255,110,0.4);
+    background: rgba(127,255,110,0.04);
+  }
+
+  .input-group input.correct {
+    border-color: var(--accent);
+    background: rgba(127,255,110,0.07);
+    color: var(--accent);
+  }
+
+  .input-group input.wrong {
+    border-color: var(--red);
+    background: rgba(255,87,87,0.07);
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Check button */
+  .btn-check {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  }
+
+  .btn-check:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(127,255,110,0.25);
+  }
+
+  .btn-check:active { transform: translateY(0); }
+  .btn-check:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+  }
+
+  .feedback.show { display: flex; }
+
+  .feedback.correct-fb {
+    background: rgba(127,255,110,0.08);
+    border: 1px solid rgba(127,255,110,0.25);
+    color: var(--accent);
+  }
+
+  .feedback.wrong-fb {
+    background: rgba(255,87,87,0.08);
+    border: 1px solid rgba(255,87,87,0.25);
+    color: var(--red);
+  }
+
+  .feedback-icon { font-size: 20px; flex-shrink: 0; }
+
+  .feedback .answer-reveal {
+    color: var(--text);
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  .feedback .answer-reveal span { font-family: 'DM Mono', monospace; }
+
+  /* Next button */
+  .btn-next {
+    margin-top: 12px;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    display: none;
+  }
+
+  .btn-next:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-next.show { display: block; }
+
+  /* Score summary */
+  .summary {
+    display: none;
+    text-align: center;
+    padding: 48px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .summary.show { display: block; }
+
+  .summary .big-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .summary p { color: var(--muted); margin: 12px 0 28px; }
+
+  .btn-restart {
+    padding: 14px 32px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(127,255,110,0.3); }
+
+  /* Stats bar */
+  .stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+  }
+
+  .stat-val.green { color: var(--accent); }
+  .stat-val.red { color: var(--red); }
+  .stat-val.blue { color: var(--accent3); }
+
+  .stat-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  /* Tag for no-object */
+  .tag-intrans {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    background: rgba(255,221,87,0.1);
+    border: 1px solid rgba(255,221,87,0.3);
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Tooltip hint */
+  .hint-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="level-badge">LEVEL 0 — TEMEL CÜMLE YAPISI</div>
+    <h1><span class="s">Subject</span> + <span class="v">Verb</span> + <span class="o">Object</span></h1>
+    <p class="subtitle">Türkçe ipucunu oku, İngilizce cümlenin parçalarını kutulara yaz.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-val blue" id="stat-total">100</span>
+      <span class="stat-key">TOPLAM SORU</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val green" id="stat-correct">0</span>
+      <span class="stat-key">DOĞRU</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val red" id="stat-wrong">0</span>
+      <span class="stat-key">YANLIŞ</span>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span id="progress-text">0 / 100</span>
+    <span id="progress-pct">0%</span>
+  </div>
+
+  <div class="formula-strip">
+    <span class="chip chip-s">Subject</span>
+    <span class="plus">+</span>
+    <span class="chip chip-v">Verb</span>
+    <span class="plus">+</span>
+    <span class="chip chip-o">Object</span>
+    <span class="plus" style="margin-left:auto;font-size:12px;font-family:'DM Mono',monospace;letter-spacing:0.05em">= Tam Cümle ✓</span>
+  </div>
+
+  <!-- Quiz card -->
+  <div class="q-card" id="quiz-card">
+    <div class="q-number" id="q-number">SORU 1 / 100</div>
+
+    <div id="intrans-tag" class="tag-intrans" style="display:none">⚠ Nesne gerektirmez (intransitive)</div>
+
+    <div class="sentence-display" id="sentence-tr">—</div>
+    <div class="translation-hint" id="hint-text"></div>
+
+    <div class="inputs-row" id="inputs-row">
+      <div class="input-group">
+        <label class="input-label s-lbl">▸ SUBJECT (kim/ne)</label>
+        <input type="text" id="input-s" placeholder="örn: I, She, The cat…" autocomplete="off" />
+      </div>
+      <div class="input-group">
+        <label class="input-label v-lbl">▸ VERB (eylem)</label>
+        <input type="text" id="input-v" placeholder="örn: reads, eats…" autocomplete="off" />
+      </div>
+      <div class="input-group" id="group-o">
+        <label class="input-label o-lbl">▸ OBJECT (neyi/kimi)</label>
+        <input type="text" id="input-o" placeholder="örn: books, music…" autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="hint-note" id="hint-note">💡 Sadece temel kelimeleri yaz — büyük harf ve noktalama işareti gerekmez</div>
+
+    <button class="btn-check" id="btn-check" onclick="checkAnswer()">KONTROL ET →</button>
+
+    <div class="feedback" id="feedback">
+      <span class="feedback-icon" id="fb-icon"></span>
+      <div>
+        <div id="fb-msg"></div>
+        <div class="answer-reveal" id="fb-answer"></div>
+      </div>
+    </div>
+
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">SONRAKİ SORU ›</button>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary" id="summary">
+    <div class="big-score" id="final-score">—</div>
+    <p>100 soruyu tamamladın! İşte sonuçların.</p>
+    <button class="btn-restart" onclick="restart()">TEKRAR BAŞLA ↺</button>
+  </div>
+
+</div>
+
+<script>
+// ─── 100 S+V+O sentences (Turkish prompts) ───────────────────────────────────
+// Format: [turkish_prompt, subject, verb, object_or_null]
+// object null = intransitive (no object required)
+const sentences = [
+  // Basic I/She/He/They + common verbs
+  ["Ben kitap okuyorum.", "i", "read", "books"],
+  ["O müzik dinliyor.", "she", "listens", "music"],
+  ["O kod yazıyor.", "he", "writes", "code"],
+  ["Biz film izliyoruz.", "we", "watch", "movies"],
+  ["Onlar futbol oynuyor.", "they", "play", "football"],
+  ["Ben elma yiyorum.", "i", "eat", "an apple"],
+  ["O su içiyor.", "she", "drinks", "water"],
+  ["Ben mektup yazıyorum.", "i", "write", "a letter"],
+  ["O gazete okuyor.", "he", "reads", "the newspaper"],
+  ["Biz şarkı söylüyoruz.", "we", "sing", "a song"],
+  // Animals
+  ["Kedi fare avlıyor.", "the cat", "chases", "the mouse"],
+  ["Köpek kemiği çiğniyor.", "the dog", "chews", "a bone"],
+  ["Kuş tohum yiyor.", "the bird", "eats", "seeds"],
+  ["Balık böcek yiyor.", "the fish", "eats", "insects"],
+  ["At çim yiyor.", "the horse", "eats", "grass"],
+  // Jobs / roles
+  ["Öğretmen ders anlatıyor.", "the teacher", "explains", "the lesson"],
+  ["Doktor hastayı muayene ediyor.", "the doctor", "examines", "the patient"],
+  ["Aşçı yemek pişiriyor.", "the chef", "cooks", "the meal"],
+  ["Sürücü arabayı kullanıyor.", "the driver", "drives", "the car"],
+  ["Fotoğrafçı fotoğraf çekiyor.", "the photographer", "takes", "photos"],
+  // More everyday actions
+  ["Ben kahve yapıyorum.", "i", "make", "coffee"],
+  ["O evi temizliyor.", "she", "cleans", "the house"],
+  ["O arabayı tamir ediyor.", "he", "fixes", "the car"],
+  ["Biz bahçeyi suluyoruz.", "we", "water", "the garden"],
+  ["Onlar bisiklet sürüyor.", "they", "ride", "bicycles"],
+  ["Ben gitar çalıyorum.", "i", "play", "the guitar"],
+  ["O resim yapıyor.", "she", "paints", "a picture"],
+  ["O ağaç kesiyor.", "he", "cuts", "the tree"],
+  ["Biz masa taşıyoruz.", "we", "carry", "the table"],
+  ["Onlar topu tekmeliyor.", "they", "kick", "the ball"],
+  // School / work
+  ["Öğrenci ödevi yapıyor.", "the student", "does", "homework"],
+  ["Ben e-posta gönderiyorum.", "i", "send", "an email"],
+  ["O raporu yazıyor.", "she", "writes", "the report"],
+  ["O toplantıyı organize ediyor.", "he", "organizes", "the meeting"],
+  ["Biz projeyi tamamlıyoruz.", "we", "finish", "the project"],
+  // Food & drink
+  ["Ben pizza yiyorum.", "i", "eat", "pizza"],
+  ["O çay içiyor.", "she", "drinks", "tea"],
+  ["O sandviç yapıyor.", "he", "makes", "a sandwich"],
+  ["Biz pastayı paylaşıyoruz.", "we", "share", "the cake"],
+  ["Onlar çorba içiyor.", "they", "drink", "soup"],
+  // Technology
+  ["Ben mesaj gönderiyorum.", "i", "send", "a message"],
+  ["O fotoğraf paylaşıyor.", "she", "shares", "a photo"],
+  ["O uygulamayı indiriyor.", "he", "downloads", "the app"],
+  ["Biz videoyu izliyoruz.", "we", "watch", "the video"],
+  ["Onlar oyun oynuyor.", "they", "play", "a game"],
+  // Shopping / money
+  ["Ben kitap satın alıyorum.", "i", "buy", "a book"],
+  ["O elbise seçiyor.", "she", "chooses", "a dress"],
+  ["O faturayı ödüyor.", "he", "pays", "the bill"],
+  ["Biz marketi ziyaret ediyoruz.", "we", "visit", "the market"],
+  ["Onlar hediye alıyor.", "they", "buy", "a gift"],
+  // Nature / outdoor
+  ["Ben çiçek topluyorum.", "i", "collect", "flowers"],
+  ["O yıldızları izliyor.", "she", "watches", "the stars"],
+  ["O balık tutuyor.", "he", "catches", "fish"],
+  ["Biz kamp ateşi yakıyoruz.", "we", "light", "a campfire"],
+  ["Onlar meyve topluyor.", "they", "pick", "fruit"],
+  // Sports
+  ["Ben tenis oynuyorum.", "i", "play", "tennis"],
+  ["O havuz kucağı yüzüyor.", "she", "swims", "laps"],
+  ["O ağırlık kaldırıyor.", "he", "lifts", "weights"],
+  ["Biz maçı kazanıyoruz.", "we", "win", "the match"],
+  ["Onlar parkuru koşuyor.", "they", "run", "the track"],
+  // Household
+  ["Ben yatak yapıyorum.", "i", "make", "the bed"],
+  ["O bulaşıkları yıkıyor.", "she", "washes", "the dishes"],
+  ["O çamaşırı katlıyor.", "he", "folds", "the laundry"],
+  ["Biz zemin süpürüyoruz.", "we", "sweep", "the floor"],
+  ["Onlar pencereyi açıyor.", "they", "open", "the window"],
+  // Art & music
+  ["Ben şiir yazıyorum.", "i", "write", "a poem"],
+  ["O müzik besteler.", "she", "composes", "music"],
+  ["O heykel yapıyor.", "he", "sculpts", "a statue"],
+  ["Biz dansı öğreniyoruz.", "we", "learn", "the dance"],
+  ["Onlar oyunu sergiliyor.", "they", "perform", "the play"],
+  // Emotions / social
+  ["Ben arkadaşımı arıyorum.", "i", "call", "my friend"],
+  ["O misafirleri ağırlıyor.", "she", "hosts", "the guests"],
+  ["O hediyeyi veriyor.", "he", "gives", "the gift"],
+  ["Biz soruyu soruyoruz.", "we", "ask", "the question"],
+  ["Onlar anlaşmazlığı çözüyor.", "they", "solve", "the disagreement"],
+  // Verbs with different subjects
+  ["Güneş ışığı aydınlatıyor.", "the sun", "lights", "the room"],
+  ["Rüzgar yaprakları savuruyor.", "the wind", "blows", "the leaves"],
+  ["Yağmur çiçekleri suluyor.", "the rain", "waters", "the flowers"],
+  ["Nehir taşları taşıyor.", "the river", "carries", "stones"],
+  ["Çocuk top fırlatıyor.", "the child", "throws", "the ball"],
+  // More everyday
+  ["Ben şapka takıyorum.", "i", "wear", "a hat"],
+  ["O çantayı taşıyor.", "she", "carries", "the bag"],
+  ["O kapıyı açıyor.", "he", "opens", "the door"],
+  ["Biz masayı düzenliyoruz.", "we", "arrange", "the table"],
+  ["Onlar ateşi söndürüyor.", "they", "put out", "the fire"],
+  ["Ben belgeyi kaydediyorum.", "i", "save", "the document"],
+  ["O müziği durduryor.", "she", "stops", "the music"],
+  ["O arabayı park ediyor.", "he", "parks", "the car"],
+  ["Biz şirketi kuruyoruz.", "we", "found", "the company"],
+  ["Onlar köprüyü inşa ediyor.", "they", "build", "the bridge"],
+  // Tricky but simple
+  ["Ben kazağı yıkıyorum.", "i", "wash", "the sweater"],
+  ["O reçeli kesiyor.", "she", "cuts", "the jam"],
+  ["O faturayı kontrol ediyor.", "he", "checks", "the bill"],
+  ["Biz yolu temizliyoruz.", "we", "clear", "the road"],
+  ["Onlar anlaşmayı imzalıyor.", "they", "sign", "the agreement"],
+  ["Ben ödevimi bitiriyorum.", "i", "finish", "my homework"],
+  ["O dersi kaydediyor.", "she", "records", "the lesson"],
+  ["O arabayı boyuyor.", "he", "paints", "the car"],
+  ["Biz bahçeye bakıyoruz.", "we", "tend", "the garden"],
+  ["Onlar haberleri takip ediyor.", "they", "follow", "the news"],
+  ["Ben çantayı paketliyorum.", "i", "pack", "the bag"],
+  ["O mektubu okuyor.", "she", "reads", "the letter"],
+  ["O programı yazıyor.", "he", "writes", "the program"],
+  ["Biz dünyayı geziyoruz.", "we", "travel", "the world"],
+  ["Onlar denizi seyrediyor.", "they", "watch", "the sea"],
+];
+
+// Shuffle
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let queue = shuffle(sentences);
+let current = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+
+function norm(s) {
+  return s.trim().toLowerCase().replace(/[^a-z\s']/g, '').replace(/\s+/g, ' ');
+}
+
+// Accept multiple valid forms
+function acceptableAnswers(raw) {
+  const base = norm(raw);
+  const alts = [base];
+  // common contractions / variants
+  if (base === "i") alts.push("i");
+  return alts;
+}
+
+function loadQuestion() {
+  if (current >= queue.length) {
+    showSummary();
+    return;
+  }
+  answered = false;
+  const [tr, subj, verb, obj] = queue[current];
+  const isIntrans = obj === null;
+
+  document.getElementById('q-number').textContent = `SORU ${current + 1} / ${queue.length}`;
+  document.getElementById('sentence-tr').textContent = tr;
+  document.getElementById('hint-text').textContent = `Bu cümleyi İngilizce'ye çevir — parçalara bölerek yaz`;
+
+  // Intransitive
+  document.getElementById('intrans-tag').style.display = isIntrans ? 'flex' : 'none';
+  document.getElementById('group-o').style.display = isIntrans ? 'none' : 'flex';
+
+  // Reset inputs
+  ['input-s','input-v','input-o'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.classList.remove('correct','wrong');
+    el.disabled = false;
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('btn-next').className = 'btn-next';
+  document.getElementById('btn-check').disabled = false;
+
+  updateStats();
+  updateProgress();
+
+  // Focus first input
+  setTimeout(() => document.getElementById('input-s').focus(), 50);
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const [tr, subj, verb, obj] = queue[current];
+  const isIntrans = obj === null;
+
+  const sVal = norm(document.getElementById('input-s').value);
+  const vVal = norm(document.getElementById('input-v').value);
+  const oVal = isIntrans ? null : norm(document.getElementById('input-o').value);
+
+  const sOk = sVal === norm(subj);
+  const vOk = vVal === norm(verb);
+  const oOk = isIntrans ? true : (oVal === norm(obj));
+
+  const allOk = sOk && vOk && oOk;
+
+  // Mark inputs
+  markInput('input-s', sOk);
+  markInput('input-v', vOk);
+  if (!isIntrans) markInput('input-o', oOk);
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  const icon = document.getElementById('fb-icon');
+  const msg = document.getElementById('fb-msg');
+  const ans = document.getElementById('fb-answer');
+
+  if (allOk) {
+    fb.className = 'feedback correct-fb show';
+    icon.textContent = '✅';
+    msg.textContent = 'Harika! Doğru cevap!';
+    ans.innerHTML = `<span style="color:var(--subject-color)">${subj}</span> <span style="color:var(--verb-color)">${verb}</span>${isIntrans ? '' : ` <span style="color:var(--object-color)">${obj}</span>`}`;
+    correct++;
+  } else {
+    fb.className = 'feedback wrong-fb show';
+    icon.textContent = '❌';
+    msg.textContent = 'Yanlış! Doğru cevap:';
+    ans.innerHTML = `Subject: <span>${subj}</span> · Verb: <span>${verb}</span>${isIntrans ? '' : ` · Object: <span>${obj}</span>`}`;
+    wrong++;
+  }
+
+  answered = true;
+  document.getElementById('btn-check').disabled = true;
+  document.getElementById('btn-next').className = 'btn-next show';
+
+  // Disable inputs
+  ['input-s','input-v','input-o'].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+
+  updateStats();
+}
+
+function markInput(id, ok) {
+  const el = document.getElementById(id);
+  el.classList.remove('correct','wrong');
+  el.classList.add(ok ? 'correct' : 'wrong');
+}
+
+function nextQuestion() {
+  current++;
+  loadQuestion();
+}
+
+function updateStats() {
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+}
+
+function updateProgress() {
+  const pct = Math.round((current / queue.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${current} / ${queue.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+function showSummary() {
+  document.getElementById('quiz-card').style.display = 'none';
+  const sum = document.getElementById('summary');
+  sum.className = 'summary show';
+  const pct = Math.round((correct / queue.length) * 100);
+  document.getElementById('final-score').textContent = `${pct}%`;
+  document.querySelector('.summary p').textContent =
+    `${queue.length} sorudan ${correct} doğru, ${wrong} yanlış yaptın!`;
+
+  // Update progress to 100%
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-text').textContent = `${queue.length} / ${queue.length}`;
+  document.getElementById('progress-pct').textContent = '100%';
+}
+
+function restart() {
+  queue = shuffle(sentences);
+  current = 0; correct = 0; wrong = 0; answered = false;
+  document.getElementById('quiz-card').style.display = 'block';
+  document.getElementById('summary').className = 'summary';
+  loadQuestion();
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+  }
+});
+
+// Init
+loadQuestion();
+</script>
+</body>
+</html>
