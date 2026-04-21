@@ -3,1211 +3,1353 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English S+V+O — Level 0</title>
+<title>S + V + O — Sıraya Diz</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --card: #1c1c22;
-    --border: #2a2a35;
-    --accent: #7fff6e;
-    --accent2: #ffdd57;
-    --accent3: #57c8ff;
-    --red: #ff5757;
-    --text: #e8e8f0;
-    --muted: #6b6b80;
-    --subject-color: #57c8ff;
-    --verb-color: #ff9f57;
-    --object-color: #c157ff;
-  }
+:root {
+  --bg: #f5f0e8;
+  --surface: #ede8de;
+  --card: #ffffff;
+  --border: #d4cfc5;
+  --accent: #1a1a2e;
+  --green: #2d6a4f;
+  --green-light: #d8f3dc;
+  --red: #c1121f;
+  --red-light: #fce4e4;
+  --yellow: #e9c46a;
+  --yellow-light: #fdf3d0;
+  --text: #1a1a2e;
+  --muted: #8a8578;
+  --s-color: #0077b6;
+  --s-bg: #caf0f8;
+  --v-color: #d62828;
+  --v-bg: #fde8e8;
+  --o-color: #7b2d8b;
+  --o-bg: #f3d9fa;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* Background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(127,255,110,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(127,255,110,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* Subtle paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9c4ba' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
 
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-  }
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px 20px 80px;
+}
 
-  /* Header */
-  header {
-    margin-bottom: 48px;
-  }
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+}
 
-  .level-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(127,255,110,0.1);
-    border: 1px solid rgba(127,255,110,0.3);
-    color: var(--accent);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-  }
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--yellow);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
 
-  .level-badge::before {
-    content: '▶';
-    font-size: 8px;
-  }
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(32px, 6vw, 52px);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-  }
+.h1-s { color: var(--s-color); }
+.h1-v { color: var(--v-color); }
+.h1-o { color: var(--o-color); }
 
-  h1 .s { color: var(--subject-color); }
-  h1 .v { color: var(--verb-color); }
-  h1 .o { color: var(--object-color); }
+.subtitle {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
 
-  .subtitle {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
-  }
+/* Stats row */
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
 
-  /* Progress */
-  .progress-bar-wrap {
-    background: var(--border);
-    border-radius: 4px;
-    height: 4px;
-    margin: 32px 0 8px;
-    overflow: hidden;
-  }
+.stat {
+  flex: 1;
+  min-width: 80px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
 
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent3));
-    border-radius: 4px;
-    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-  }
+.stat-val {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  display: block;
+}
 
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
+.stat-val.g { color: var(--green); }
+.stat-val.r { color: var(--red); }
+.stat-val.b { color: var(--s-color); }
 
-  .progress-label span:last-child { color: var(--accent); }
+.stat-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-top: 2px;
+  display: block;
+}
 
-  /* Formula strip */
-  .formula-strip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 20px;
-    margin: 32px 0;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    overflow-x: auto;
-  }
+/* Progress */
+.progress-wrap {
+  background: var(--border);
+  border-radius: 6px;
+  height: 6px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
 
-  .formula-strip .chip {
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-  }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--s-color), var(--o-color));
+  border-radius: 6px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
 
-  .chip-s { background: rgba(87,200,255,0.15); color: var(--subject-color); border: 1px solid rgba(87,200,255,0.3); }
-  .chip-v { background: rgba(255,159,87,0.15); color: var(--verb-color); border: 1px solid rgba(255,159,87,0.3); }
-  .chip-o { background: rgba(193,87,255,0.15); color: var(--object-color); border: 1px solid rgba(193,87,255,0.3); }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
 
-  .formula-strip .plus {
-    color: var(--muted);
-    font-size: 18px;
-  }
+/* Legend */
+.legend {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
-  /* Question card */
-  .q-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-  }
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
 
-  .q-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--subject-color), var(--verb-color), var(--object-color));
-    border-radius: 20px 20px 0 0;
-  }
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
 
-  .q-number {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    margin-bottom: 20px;
-  }
+/* Quiz Card */
+.q-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
 
-  .sentence-display {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(22px, 4vw, 32px);
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    margin-bottom: 8px;
-  }
+.q-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--s-color), var(--v-color), var(--o-color));
+  border-radius: 24px 24px 0 0;
+}
 
-  .translation-hint {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 28px;
-    font-style: italic;
-  }
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  /* Input rows */
-  .inputs-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
+.q-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
 
-  @media(max-width: 520px) {
-    .inputs-row { grid-template-columns: 1fr; }
-  }
+.q-emoji {
+  font-size: 40px;
+  line-height: 1;
+}
 
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+/* Turkish sentence */
+.tr-sentence {
+  text-align: center;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
 
-  .input-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+.tr-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
 
-  .input-label.s-lbl { color: var(--subject-color); }
-  .input-label.v-lbl { color: var(--verb-color); }
-  .input-label.o-lbl { color: var(--object-color); }
+/* Formula chips */
+.formula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
-  .input-group input {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-    width: 100%;
-  }
+.fchip {
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
 
-  .input-group input:focus {
-    border-color: rgba(127,255,110,0.4);
-    background: rgba(127,255,110,0.04);
-  }
+.fchip-s { background: var(--s-bg); color: var(--s-color); }
+.fchip-v { background: var(--v-bg); color: var(--v-color); }
+.fchip-o { background: var(--o-bg); color: var(--o-color); }
+.fplus { color: var(--muted); font-size: 16px; }
 
-  .input-group input.correct {
-    border-color: var(--accent);
-    background: rgba(127,255,110,0.07);
-    color: var(--accent);
-  }
+/* Drop zones */
+.drop-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  min-height: 64px;
+  flex-wrap: wrap;
+}
 
-  .input-group input.wrong {
-    border-color: var(--red);
-    background: rgba(255,87,87,0.07);
-    animation: shake 0.3s ease;
-  }
+.drop-zone {
+  flex: 1;
+  min-width: 80px;
+  min-height: 60px;
+  border: 2.5px dashed var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background 0.2s, border-color 0.2s;
+  position: relative;
+  padding: 8px;
+}
 
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-  }
+.drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(26,26,46,0.05);
+}
 
-  /* Check button */
-  .btn-check {
-    width: 100%;
-    padding: 15px;
-    background: var(--accent);
-    color: #0d0d0f;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-  }
+.drop-zone.filled-s { border-color: var(--s-color); background: var(--s-bg); border-style: solid; }
+.drop-zone.filled-v { border-color: var(--v-color); background: var(--v-bg); border-style: solid; }
+.drop-zone.filled-o { border-color: var(--o-color); background: var(--o-bg); border-style: solid; }
 
-  .btn-check:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(127,255,110,0.25);
-  }
+.drop-zone.correct-zone { border-color: var(--green) !important; background: var(--green-light) !important; }
+.drop-zone.wrong-zone { border-color: var(--red) !important; background: var(--red-light) !important; }
 
-  .btn-check:active { transform: translateY(0); }
-  .btn-check:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+.zone-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  opacity: 0.5;
+}
 
-  /* Feedback */
-  .feedback {
-    margin-top: 16px;
-    padding: 16px 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    display: none;
-    align-items: flex-start;
-    gap: 12px;
-    line-height: 1.5;
-  }
+.zone-label.s { color: var(--s-color); }
+.zone-label.v { color: var(--v-color); }
+.zone-label.o { color: var(--o-color); }
 
-  .feedback.show { display: flex; }
+.zone-word {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
 
-  .feedback.correct-fb {
-    background: rgba(127,255,110,0.08);
-    border: 1px solid rgba(127,255,110,0.25);
-    color: var(--accent);
-  }
+.zone-empty-hint {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
 
-  .feedback.wrong-fb {
-    background: rgba(255,87,87,0.08);
-    border: 1px solid rgba(255,87,87,0.25);
-    color: var(--red);
-  }
+/* Word bank */
+.bank-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
 
-  .feedback-icon { font-size: 20px; flex-shrink: 0; }
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 52px;
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
 
-  .feedback .answer-reveal {
-    color: var(--text);
-    margin-top: 4px;
-    font-size: 13px;
-  }
+/* Word chip */
+.word-chip {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: grab;
+  user-select: none;
+  border: 2px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  touch-action: none;
+}
 
-  .feedback .answer-reveal span { font-family: 'DM Mono', monospace; }
+.word-chip:active { cursor: grabbing; }
 
-  /* Next button */
-  .btn-next {
-    margin-top: 12px;
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    color: var(--text);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-    display: none;
-  }
+.word-chip.type-s { background: var(--s-bg); color: var(--s-color); border-color: var(--s-color); }
+.word-chip.type-v { background: var(--v-bg); color: var(--v-color); border-color: var(--v-color); }
+.word-chip.type-o { background: var(--o-bg); color: var(--o-color); border-color: var(--o-color); }
+.word-chip.type-d { background: var(--yellow-light); color: #7a5c00; border-color: var(--yellow); }
 
-  .btn-next:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-next.show { display: block; }
+.word-chip.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
 
-  /* Score summary */
-  .summary {
-    display: none;
-    text-align: center;
-    padding: 48px 32px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-  }
+.word-chip.placed { display: none; }
 
-  .summary.show { display: block; }
+/* Check button */
+.btn-check {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: var(--yellow);
+  border: none;
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(26,26,46,0.2);
+}
 
-  .summary .big-score {
-    font-family: 'Syne', sans-serif;
-    font-size: 80px;
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+.btn-check:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,26,46,0.25); }
+.btn-check:active { transform: translateY(0); }
+.btn-check:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
 
-  .summary p { color: var(--muted); margin: 12px 0 28px; }
+/* Feedback */
+.feedback {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.5;
+}
 
-  .btn-restart {
-    padding: 14px 32px;
-    background: var(--accent);
-    color: #0d0d0f;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
+.feedback.show { display: flex; }
+.feedback.ok { background: var(--green-light); border: 1.5px solid var(--green); color: var(--green); }
+.feedback.bad { background: var(--red-light); border: 1.5px solid var(--red); color: var(--red); }
+.feedback-icon { font-size: 22px; flex-shrink: 0; }
+.feedback-text { flex: 1; }
+.feedback-answer { font-size: 12px; margin-top: 4px; color: var(--text); font-weight: 400; }
 
-  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(127,255,110,0.3); }
+/* Next button */
+.btn-next {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  display: none;
+}
 
-  /* Stats bar */
-  .stats {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
+.btn-next:hover { border-color: var(--accent); background: var(--accent); color: var(--yellow); }
+.btn-next.show { display: block; }
 
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+/* Summary */
+.summary {
+  display: none;
+  text-align: center;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 48px 32px;
+  box-shadow: var(--shadow-lg);
+}
 
-  .stat-val {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 24px;
-  }
+.summary.show { display: block; }
 
-  .stat-val.green { color: var(--accent); }
-  .stat-val.red { color: var(--red); }
-  .stat-val.blue { color: var(--accent3); }
+.summary-emoji { font-size: 64px; margin-bottom: 16px; }
 
-  .stat-key {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-  }
+.summary-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--green);
+}
 
-  /* Tag for no-object */
-  .tag-intrans {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--accent2);
-    background: rgba(255,221,87,0.1);
-    border: 1px solid rgba(255,221,87,0.3);
-    padding: 3px 9px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-    letter-spacing: 0.1em;
-  }
+.summary p { color: var(--muted); margin: 12px 0 28px; font-size: 15px; }
 
-  /* Tooltip hint */
-  .hint-note {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+.btn-restart {
+  padding: 14px 36px;
+  background: var(--accent);
+  color: var(--yellow);
+  border: none;
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(26,26,46,0.2);
+}
+
+.btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,26,46,0.25); }
+
+/* Tap-to-place for mobile */
+@media (max-width: 600px) {
+  .word-chip { padding: 10px 14px; font-size: 13px; }
+  .q-card { padding: 20px; }
+  .drop-row { gap: 8px; }
+}
+
+/* Celebration animation */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.celebrate { animation: pop 0.3s ease; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <header>
-    <div class="level-badge">LEVEL 0 — TEMEL CÜMLE YAPISI</div>
-    <h1><span class="s">Subject</span> + <span class="v">Verb</span> + <span class="o">Object</span></h1>
-    <p class="subtitle">Türkçe ipucunu oku, İngilizce cümlenin parçalarını kutulara yaz.</p>
-  </header>
+  <div class="header">
+    <div class="level-badge">LEVEL 0 — DRAG & DROP</div>
+    <h1><span class="h1-s">Subject</span> + <span class="h1-v">Verb</span> + <span class="h1-o">Object</span></h1>
+    <p class="subtitle">Kelimeleri doğru sıraya sürükle veya tıkla 👇</p>
+  </div>
 
   <div class="stats">
-    <div class="stat-item">
-      <span class="stat-val blue" id="stat-total">500</span>
-      <span class="stat-key">TOPLAM SORU</span>
+    <div class="stat"><span class="stat-val b" id="stat-total">500</span><span class="stat-key">TOPLAM</span></div>
+    <div class="stat"><span class="stat-val g" id="stat-correct">0</span><span class="stat-key">DOĞRU</span></div>
+    <div class="stat"><span class="stat-val r" id="stat-wrong">0</span><span class="stat-key">YANLIŞ</span></div>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="progress-label"><span id="prog-txt">0 / 500</span><span id="prog-pct">0%</span></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--s-color)"></div><span style="color:var(--s-color)">Subject (Kim?)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--v-color)"></div><span style="color:var(--v-color)">Verb (Ne yapıyor?)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--o-color)"></div><span style="color:var(--o-color)">Object (Neyi?)</span></div>
+  </div>
+
+  <div class="q-card" id="q-card">
+    <div class="q-meta">
+      <span class="q-num" id="q-num">SORU 1 / 500</span>
+      <span class="q-emoji" id="q-emoji">🌟</span>
     </div>
-    <div class="stat-item">
-      <span class="stat-val green" id="stat-correct">0</span>
-      <span class="stat-key">DOĞRU</span>
+
+    <div class="tr-sentence" id="tr-sentence">—</div>
+    <div class="tr-hint">↓ Aşağıdaki kelimeleri doğru sıraya diz</div>
+
+    <div class="formula">
+      <span class="fchip fchip-s">S · Subject</span>
+      <span class="fplus">+</span>
+      <span class="fchip fchip-v">V · Verb</span>
+      <span class="fplus">+</span>
+      <span class="fchip fchip-o">O · Object</span>
     </div>
-    <div class="stat-item">
-      <span class="stat-val red" id="stat-wrong">0</span>
-      <span class="stat-key">YANLIŞ</span>
-    </div>
-  </div>
 
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-  </div>
-  <div class="progress-label">
-    <span id="progress-text">0 / 100</span>
-    <span id="progress-pct">0%</span>
-  </div>
-
-  <div class="formula-strip">
-    <span class="chip chip-s">Subject</span>
-    <span class="plus">+</span>
-    <span class="chip chip-v">Verb</span>
-    <span class="plus">+</span>
-    <span class="chip chip-o">Object</span>
-    <span class="plus" style="margin-left:auto;font-size:12px;font-family:'DM Mono',monospace;letter-spacing:0.05em">= Tam Cümle ✓</span>
-  </div>
-
-  <!-- Quiz card -->
-  <div class="q-card" id="quiz-card">
-    <div class="q-number" id="q-number">SORU 1 / 500</div>
-    <div id="q-icon" style="font-size:48px;margin-bottom:12px;line-height:1;min-height:56px"></div>
-
-    <div id="intrans-tag" class="tag-intrans" style="display:none">⚠ Nesne gerektirmez (intransitive)</div>
-
-    <div class="sentence-display" id="sentence-tr">—</div>
-    <div class="translation-hint" id="hint-text"></div>
-
-    <div class="inputs-row" id="inputs-row">
-      <div class="input-group">
-        <label class="input-label s-lbl">▸ SUBJECT (kim/ne)</label>
-        <input type="text" id="input-s" placeholder="örn: I, She, The cat…" autocomplete="off" />
+    <!-- Drop zones -->
+    <div class="drop-row" id="drop-row">
+      <div class="drop-zone" id="zone-0" data-zone="0" ondragover="onDragOver(event)" ondrop="onDrop(event,0)" onclick="onZoneClick(0)">
+        <span class="zone-label s">SUBJECT</span>
+        <span class="zone-word" id="zone-word-0"></span>
+        <span class="zone-empty-hint" id="zone-hint-0">buraya bırak</span>
       </div>
-      <div class="input-group">
-        <label class="input-label v-lbl">▸ VERB (eylem)</label>
-        <input type="text" id="input-v" placeholder="örn: reads, eats…" autocomplete="off" />
+      <div class="drop-zone" id="zone-1" data-zone="1" ondragover="onDragOver(event)" ondrop="onDrop(event,1)" onclick="onZoneClick(1)">
+        <span class="zone-label v">VERB</span>
+        <span class="zone-word" id="zone-word-1"></span>
+        <span class="zone-empty-hint" id="zone-hint-1">buraya bırak</span>
       </div>
-      <div class="input-group" id="group-o">
-        <label class="input-label o-lbl">▸ OBJECT (neyi/kimi)</label>
-        <input type="text" id="input-o" placeholder="örn: books, music…" autocomplete="off" />
+      <div class="drop-zone" id="zone-2" data-zone="2" ondragover="onDragOver(event)" ondrop="onDrop(event,2)" onclick="onZoneClick(2)">
+        <span class="zone-label o">OBJECT</span>
+        <span class="zone-word" id="zone-word-2"></span>
+        <span class="zone-empty-hint" id="zone-hint-2">buraya bırak</span>
       </div>
     </div>
 
-    <div class="hint-note" id="hint-note">💡 Sadece temel kelimeleri yaz — büyük harf ve noktalama işareti gerekmez</div>
+    <div class="bank-label">KELİME HAVUZU — sürükle veya tıkla:</div>
+    <div class="word-bank" id="word-bank"></div>
 
-    <button class="btn-check" id="btn-check" onclick="checkAnswer()">KONTROL ET →</button>
+    <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>KONTROL ET →</button>
 
     <div class="feedback" id="feedback">
       <span class="feedback-icon" id="fb-icon"></span>
-      <div>
+      <div class="feedback-text">
         <div id="fb-msg"></div>
-        <div class="answer-reveal" id="fb-answer"></div>
+        <div class="feedback-answer" id="fb-answer"></div>
       </div>
     </div>
 
-    <button class="btn-next" id="btn-next" onclick="nextQuestion()">SONRAKİ SORU ›</button>
+    <button class="btn-next btn-next" id="btn-next" onclick="nextQuestion()">SONRAKİ SORU ›</button>
   </div>
 
-  <!-- Summary -->
   <div class="summary" id="summary">
-    <div class="big-score" id="final-score">—</div>
-    <p id="summary-text">500 soruyu tamamladın! İşte sonuçların.</p>
+    <div class="summary-emoji" id="sum-emoji">🎉</div>
+    <div class="summary-score" id="sum-score">—</div>
+    <p id="sum-text">Tebrikler!</p>
     <button class="btn-restart" onclick="restart()">TEKRAR BAŞLA ↺</button>
   </div>
 
 </div>
 
 <script>
-// ─── 500 S+V+O sentences — A1/A2 level, emoji icons in Turkish prompts ──────
-// Format: [turkish_prompt, subject, verb, object_or_null]
-const sentences = [
-  // 🍎 YEMEK & İÇECEK
-  ["🍎 Ben elma yiyorum.", "i", "eat", "an apple"],
-  ["🍕 Ben pizza yiyorum.", "i", "eat", "pizza"],
-  ["🍞 Ben ekmek yiyorum.", "i", "eat", "bread"],
-  ["🍌 O muz yiyor.", "she", "eats", "a banana"],
-  ["🍊 O portakal yiyor.", "he", "eats", "an orange"],
-  ["🥕 Biz havuç yiyoruz.", "we", "eat", "carrots"],
-  ["🍰 Onlar kek yiyor.", "they", "eat", "cake"],
-  ["🥗 Ben salata yiyorum.", "i", "eat", "a salad"],
-  ["🍚 O pirinç yiyor.", "she", "eats", "rice"],
-  ["🥪 O sandviç yiyor.", "he", "eats", "a sandwich"],
-  ["💧 Ben su içiyorum.", "i", "drink", "water"],
-  ["🍵 O çay içiyor.", "she", "drinks", "tea"],
-  ["☕ O kahve içiyor.", "he", "drinks", "coffee"],
-  ["🥛 Biz süt içiyoruz.", "we", "drink", "milk"],
-  ["🍊 Onlar meyve suyu içiyor.", "they", "drink", "juice"],
-  ["🍺 Ben soda içiyorum.", "i", "drink", "soda"],
-  ["🍵 O çorba içiyor.", "she", "drinks", "soup"],
-  ["☕ Ben kahve yapıyorum.", "i", "make", "coffee"],
-  ["🥪 O sandviç yapıyor.", "he", "makes", "a sandwich"],
-  ["🍳 Biz yumurta pişiriyoruz.", "we", "cook", "eggs"],
-  ["🍕 Onlar pizza pişiriyor.", "they", "cook", "pizza"],
-  ["🍰 Ben kek yapıyorum.", "i", "make", "a cake"],
-  ["🍞 O ekmek kesiyor.", "she", "cuts", "the bread"],
-  ["🍎 O meyve yıkıyor.", "he", "washes", "the fruit"],
-  ["🥗 Biz yemek hazırlıyoruz.", "we", "prepare", "the food"],
+// ─── 500 sentences ─────────────────────────────────────────────────────────
+// [emoji, turkish, subject, verb, object|null]
+const ALL = [
+  // YEMEK & İÇECEK
+  ["🍎","Ben elma yiyorum.","i","eat","an apple"],
+  ["🍕","Ben pizza yiyorum.","i","eat","pizza"],
+  ["🍞","Ben ekmek yiyorum.","i","eat","bread"],
+  ["🍌","O muz yiyor.","she","eats","a banana"],
+  ["🍊","O portakal yiyor.","he","eats","an orange"],
+  ["🥕","Biz havuç yiyoruz.","we","eat","carrots"],
+  ["🍰","Onlar kek yiyor.","they","eat","cake"],
+  ["🥗","Ben salata yiyorum.","i","eat","a salad"],
+  ["🍚","O pirinç yiyor.","she","eats","rice"],
+  ["🥪","O sandviç yiyor.","he","eats","a sandwich"],
+  ["💧","Ben su içiyorum.","i","drink","water"],
+  ["🍵","O çay içiyor.","she","drinks","tea"],
+  ["☕","O kahve içiyor.","he","drinks","coffee"],
+  ["🥛","Biz süt içiyoruz.","we","drink","milk"],
+  ["🍊","Onlar meyve suyu içiyor.","they","drink","juice"],
+  ["🍺","Ben soda içiyorum.","i","drink","soda"],
+  ["🍵","O çorba içiyor.","she","drinks","soup"],
+  ["☕","Ben kahve yapıyorum.","i","make","coffee"],
+  ["🥪","O sandviç yapıyor.","he","makes","a sandwich"],
+  ["🍳","Biz yumurta pişiriyoruz.","we","cook","eggs"],
+  ["🍕","Onlar pizza pişiriyor.","they","cook","pizza"],
+  ["🍰","Ben kek yapıyorum.","i","make","a cake"],
+  ["🍞","O ekmeği kesiyor.","she","cuts","the bread"],
+  ["🍎","O meyveyi yıkıyor.","he","washes","the fruit"],
+  ["🥗","Biz yemek hazırlıyoruz.","we","prepare","the food"],
+  // OKUL
+  ["📚","Ben kitap okuyorum.","i","read","a book"],
+  ["📖","O ders kitabı okuyor.","she","reads","a textbook"],
+  ["✏️","O not yazıyor.","he","writes","notes"],
+  ["📝","Biz ödev yapıyoruz.","we","do","homework"],
+  ["📝","Ben test çözüyorum.","i","do","a test"],
+  ["📏","O dersi öğreniyor.","she","learns","the lesson"],
+  ["✏️","O soru soruyor.","he","asks","a question"],
+  ["📚","Biz cevabı buluyoruz.","we","find","the answer"],
+  ["📖","Onlar hikaye okuyor.","they","read","a story"],
+  ["🖊️","Ben adımı yazıyorum.","i","write","my name"],
+  ["✏️","O kelimeyi yazıyor.","she","writes","the word"],
+  ["📚","O İngilizce öğreniyor.","he","learns","English"],
+  ["🖊️","Biz cümle yazıyoruz.","we","write","a sentence"],
+  ["📝","Onlar kelime öğreniyor.","they","learn","words"],
+  ["📚","Ben roman okuyorum.","i","read","a novel"],
+  ["✏️","O resim çiziyor.","she","draws","a picture"],
+  ["📖","O sayfayı okuyor.","he","reads","the page"],
+  ["🎒","Onlar çantalarını açıyor.","they","open","their bags"],
+  ["✏️","O tahtaya yazıyor.","he","writes","on the board"],
+  // TEKNOLOJİ
+  ["📱","Ben telefonu kullanıyorum.","i","use","the phone"],
+  ["📱","O mesaj gönderiyor.","she","sends","a message"],
+  ["💻","O bilgisayar kullanıyor.","he","uses","a computer"],
+  ["📸","Biz fotoğraf çekiyoruz.","we","take","a photo"],
+  ["🎮","Onlar oyun oynuyor.","they","play","a game"],
+  ["📱","Ben müzik indiriyorum.","i","download","music"],
+  ["📺","O film izliyor.","she","watches","a movie"],
+  ["💻","O video izliyor.","he","watches","a video"],
+  ["📱","Biz fotoğraf paylaşıyoruz.","we","share","a photo"],
+  ["📱","Ben uygulamayı açıyorum.","i","open","the app"],
+  ["💻","O e-posta okuyor.","she","reads","an email"],
+  ["📺","O diziyi izliyor.","he","watches","the show"],
+  ["📱","Ben mesajı okuyorum.","i","read","the message"],
+  ["💻","O ekrana bakıyor.","he","looks at","the screen"],
+  ["📱","Ben telefonu şarj ediyorum.","i","charge","the phone"],
+  // EV
+  ["🚪","Ben kapıyı açıyorum.","i","open","the door"],
+  ["🪟","O pencereyi açıyor.","she","opens","the window"],
+  ["🚪","O kapıyı kapatıyor.","he","closes","the door"],
+  ["🏠","O evi temizliyor.","he","cleans","the house"],
+  ["🍽️","Onlar tabakları yıkıyor.","they","wash","the plates"],
+  ["🛋️","Ben masayı temizliyorum.","i","clean","the table"],
+  ["🪟","O pencereyi kapatıyor.","she","closes","the window"],
+  ["🍽️","Biz masayı hazırlıyoruz.","we","set","the table"],
+  ["🚪","Onlar kapıyı boyuyor.","they","paint","the door"],
+  ["🏠","Ben evi boyuyorum.","i","paint","the house"],
+  ["🛋️","Ben koltuğu taşıyorum.","i","move","the sofa"],
+  ["🏠","O lambayı yakıyor.","he","turns on","the lamp"],
+  ["🛋️","Biz televizyon izliyoruz.","we","watch","television"],
+  ["🛏️","O yatağı düzeltiyor.","she","makes","the bed"],
+  ["🍽️","Onlar kahvaltı yapıyor.","they","have","breakfast"],
+  // HAYVANLAR
+  ["🐱","Kedi süt içiyor.","the cat","drinks","milk"],
+  ["🐶","Köpek et yiyor.","the dog","eats","meat"],
+  ["🐦","Kuş ekmek yiyor.","the bird","eats","bread"],
+  ["🐟","Balık yem yiyor.","the fish","eats","food"],
+  ["🐹","Hamster peynir yiyor.","the hamster","eats","cheese"],
+  ["🐱","Kedi topu oynuyor.","the cat","plays with","the ball"],
+  ["🐶","Köpek kemiği çiğniyor.","the dog","chews","a bone"],
+  ["🐦","Kuş tohum yiyor.","the bird","eats","seeds"],
+  ["🐱","Kedi balık istiyor.","the cat","wants","fish"],
+  ["🐶","Köpek topu getiriyor.","the dog","brings","the ball"],
+  ["🐾","Ben kedimi besliyorum.","i","feed","my cat"],
+  ["🐶","O köpeğini seviyor.","she","loves","her dog"],
+  ["🐾","Biz balığı besliyoruz.","we","feed","the fish"],
+  ["🐶","Onlar köpeği yürütüyor.","they","walk","the dog"],
+  ["🐱","O kediye bakıyor.","he","looks after","the cat"],
+  // SPOR
+  ["⚽","Ben futbol oynuyorum.","i","play","football"],
+  ["🎾","O tenis oynuyor.","she","plays","tennis"],
+  ["🏀","O basketbol oynuyor.","he","plays","basketball"],
+  ["🚴","Onlar bisiklet sürüyor.","they","ride","bikes"],
+  ["⚽","Ben topu tekmeliyorum.","i","kick","the ball"],
+  ["🎾","O topu vuruyor.","she","hits","the ball"],
+  ["🏀","O topu fırlatıyor.","he","throws","the ball"],
+  ["⚽","Onlar maç oynuyor.","they","play","a match"],
+  ["🚴","O bisiklet sürüyor.","she","rides","a bike"],
+  ["⚽","O futbol seviyor.","he","loves","football"],
+  ["⚽","Ben topu tutuyorum.","i","catch","the ball"],
+  ["🏀","O basketbol izliyor.","she","watches","basketball"],
+  ["🚴","Biz bisiklet yarışı yapıyoruz.","we","race","bikes"],
+  ["⚽","Onlar maçı kazanıyor.","they","win","the match"],
+  ["⚽","Biz maç izliyoruz.","we","watch","the match"],
+  // ALIŞVERİŞ
+  ["🛒","Ben süt alıyorum.","i","buy","milk"],
+  ["🛒","O ekmek alıyor.","she","buys","bread"],
+  ["🛒","O elma alıyor.","he","buys","apples"],
+  ["🛒","Biz meyve alıyoruz.","we","buy","fruit"],
+  ["🛒","Onlar sebze alıyor.","they","buy","vegetables"],
+  ["🛒","Ben kitap alıyorum.","i","buy","a book"],
+  ["👕","O gömlek alıyor.","she","buys","a shirt"],
+  ["👟","O ayakkabı alıyor.","he","buys","shoes"],
+  ["🛒","Biz hediye alıyoruz.","we","buy","a gift"],
+  ["💳","Onlar para ödüyor.","they","pay","money"],
+  ["👜","Ben çanta alıyorum.","i","buy","a bag"],
+  ["👒","O şapka alıyor.","she","buys","a hat"],
+  ["💳","Biz kartla ödüyoruz.","we","pay","by card"],
+  ["🛍️","Onlar alışveriş yapıyor.","they","go","shopping"],
+  ["👗","O elbise seçiyor.","she","chooses","a dress"],
+  // BAHÇE & DOĞA
+  ["🌸","Ben çiçek suluyorum.","i","water","the flowers"],
+  ["🌸","O çiçek topluyor.","he","picks","flowers"],
+  ["🌳","Biz ağaç dikiyoruz.","we","plant","a tree"],
+  ["🍃","Onlar yaprakları topluyor.","they","collect","the leaves"],
+  ["🌸","Ben gülü suluyorum.","i","water","the rose"],
+  ["🌻","O çiçeği kesiyor.","he","cuts","the flower"],
+  ["🌳","Biz bahçeyi temizliyoruz.","we","clean","the garden"],
+  ["🍃","Onlar meyve topluyor.","they","pick","fruit"],
+  ["☀️","Güneş ışık veriyor.","the sun","gives","light"],
+  ["🌧️","Yağmur çiçekleri suluyor.","the rain","waters","the flowers"],
+  ["🌸","Ben çiçeği kokluyor.","i","smell","the flower"],
+  ["🌳","O parkta yürüyor.","she","walks in","the park"],
+  ["🌳","Biz ormanı seviyoruz.","we","love","the forest"],
+  ["❄️","Onlar karda oynuyor.","they","play in","the snow"],
+  ["🌧️","Biz yağmurda yürüyoruz.","we","walk in","the rain"],
+  // AİLE & SOSYAL
+  ["👨","Ben babamı seviyorum.","i","love","my father"],
+  ["👩","Ben annemi arıyorum.","i","call","my mom"],
+  ["👧","O kız kardeşini seviyor.","he","loves","his sister"],
+  ["👨‍👩‍👧","Biz aileyi ziyaret ediyoruz.","we","visit","the family"],
+  ["👫","Onlar arkadaşlarını görüyor.","they","see","their friends"],
+  ["📞","Ben arkadaşımı arıyorum.","i","call","my friend"],
+  ["👨","O annesine yardım ediyor.","she","helps","her mother"],
+  ["🎁","Ben hediye veriyorum.","i","give","a gift"],
+  ["📞","O annesini arıyor.","she","calls","her mother"],
+  ["🎂","O pastayı kesiyor.","he","cuts","the cake"],
+  ["🎁","Biz hediye alıyoruz.","we","buy","a gift"],
+  ["👫","Onlar doğum günü kutluyor.","they","celebrate","a birthday"],
+  ["😊","Ben arkadaşıma yardım ediyorum.","i","help","my friend"],
+  ["👩","O ablasını görüyor.","she","sees","her sister"],
+  ["👦","Biz kardeşimizi görüyoruz.","we","see","our brother"],
+  // ULAŞIM
+  ["🚗","Ben arabaya biniyorum.","i","get in","the car"],
+  ["🚌","O otobüse biniyor.","she","takes","the bus"],
+  ["🚂","O trene biniyor.","he","takes","the train"],
+  ["✈️","Biz uçağa biniyoruz.","we","take","the plane"],
+  ["🚕","Onlar taksiye biniyor.","they","take","a taxi"],
+  ["🚗","Ben arabayı kullanıyorum.","i","drive","the car"],
+  ["🚴","O bisiklete biniyor.","she","rides","the bike"],
+  ["🚗","Biz arabayı yıkıyoruz.","we","wash","the car"],
+  ["🚌","O bilet alıyor.","she","buys","a ticket"],
+  ["🚂","O tren biletini kontrol ediyor.","he","checks","the train ticket"],
+  ["✈️","Biz uçak bileti alıyoruz.","we","buy","a plane ticket"],
+  ["🚗","Ben arabanın kapısını açıyorum.","i","open","the car door"],
+  ["✈️","Ben biletimi kontrol ediyorum.","i","check","my ticket"],
+  ["🚌","O otobüsü bekliyor.","he","waits for","the bus"],
+  ["✈️","Onlar pasaportunu gösteriyor.","they","show","their passport"],
+  // MÜZİK & EĞLENCE
+  ["🎵","Ben müzik dinliyorum.","i","listen to","music"],
+  ["🎸","O gitar çalıyor.","she","plays","the guitar"],
+  ["🎹","O piyano çalıyor.","he","plays","the piano"],
+  ["🎵","Biz şarkı söylüyoruz.","we","sing","a song"],
+  ["🎬","Onlar film izliyor.","they","watch","a movie"],
+  ["🎸","O gitar öğreniyor.","she","learns","guitar"],
+  ["🎹","O piyano öğreniyor.","he","learns","piano"],
+  ["🎵","Biz konser izliyoruz.","we","watch","a concert"],
+  ["🎬","Onlar dizi izliyor.","they","watch","a TV show"],
+  ["🎙️","Ben şarkı söylüyorum.","i","sing","a song"],
+  ["🎵","O albüm alıyor.","she","buys","an album"],
+  ["🎬","Biz film seviyoruz.","we","love","movies"],
+  ["🎵","Ben şarkı öğreniyorum.","i","learn","a song"],
+  ["🎵","O müziği açıyor.","she","plays","music"],
+  ["🎙️","Biz birlikte şarkı söylüyoruz.","we","sing","together"],
+  // GÜNLÜK HAYAT
+  ["🦷","O dişini fırçalıyor.","she","brushes","her teeth"],
+  ["🚿","O duş alıyor.","he","takes","a shower"],
+  ["🍳","Onlar kahvaltı yapıyor.","they","have","breakfast"],
+  ["🦷","O yüzünü yıkıyor.","she","washes","her face"],
+  ["🚿","O sabun kullanıyor.","he","uses","soap"],
+  ["👕","Biz mont giyiyoruz.","we","wear","a coat"],
+  ["😴","O kitap okuyor geceleri.","she","reads","a book"],
+  ["⏰","O saate bakıyor.","he","checks","the clock"],
+  ["🦷","Biz dişlerimizi fırçalıyoruz.","we","brush","our teeth"],
+  ["🍳","Onlar öğle yemeği yiyor.","they","eat","lunch"],
+  ["🌅","Ben güneşi görüyorum.","i","see","the sun"],
+  ["☕","O çay yapıyor.","she","makes","tea"],
+  ["🍳","O omlet yiyor.","he","eats","an omelet"],
+  ["🍞","Onlar reçel yiyor.","they","eat","jam"],
+  ["⏰","Ben alarmı kuruyorum.","i","set","the alarm"],
+  // GİYSİLER
+  ["👕","Ben tişört giyiyorum.","i","wear","a t-shirt"],
+  ["👗","O elbise giyiyor.","she","wears","a dress"],
+  ["👖","O pantolon giyiyor.","he","wears","pants"],
+  ["🧥","Biz mont giyiyoruz.","we","wear","a coat"],
+  ["👟","Onlar ayakkabı giyiyor.","they","wear","shoes"],
+  ["👒","Ben şapka takıyorum.","i","wear","a hat"],
+  ["🧤","O eldiven takıyor.","she","wears","gloves"],
+  ["🧣","O atkı takıyor.","he","wears","a scarf"],
+  ["👟","Onlar spor ayakkabı giyiyor.","they","wear","sneakers"],
+  ["👕","Ben üniforma giyiyorum.","i","wear","a uniform"],
+  ["👕","O yeni tişört alıyor.","she","buys","a new t-shirt"],
+  ["👟","O ayakkabı seçiyor.","he","chooses","shoes"],
+  ["👗","Ben elbise seviyorum.","i","love","dresses"],
+  ["🧥","Onlar ceket giyiyor.","they","wear","a jacket"],
+  ["👜","O çantayı seviyor.","she","loves","the bag"],
+  // YERLER
+  ["🏫","Ben okula gidiyorum.","i","go to","school"],
+  ["🏥","O hastaneye gidiyor.","she","goes to","the hospital"],
+  ["🏪","O markete gidiyor.","he","goes to","the market"],
+  ["🏖️","Biz plaja gidiyoruz.","we","go to","the beach"],
+  ["🏫","Ben okulu seviyorum.","i","love","school"],
+  ["🏥","O doktoru ziyaret ediyor.","she","visits","the doctor"],
+  ["🏪","O dükkanı buluyor.","he","finds","the shop"],
+  ["🏖️","Biz sahili seviyoruz.","we","love","the beach"],
+  ["🏔️","Onlar manzarayı izliyor.","they","watch","the view"],
+  ["🏠","Ben eve dönüyorum.","i","return to","home"],
+  ["🌳","Biz parka gidiyoruz.","we","go to","the park"],
+  ["🏖️","Onlar denizi görüyor.","they","see","the sea"],
+  ["🏪","Ben kafeteryayı buluyorum.","i","find","the cafe"],
+  ["🏫","O okuldan çıkıyor.","she","leaves","school"],
+  ["🌳","O parkı seviyor.","he","loves","the park"],
+  // SAĞLIK
+  ["💊","Ben ilaç içiyorum.","i","take","medicine"],
+  ["🩺","O doktoru ziyaret ediyor.","she","visits","the doctor"],
+  ["💊","O vitamin alıyor.","he","takes","vitamins"],
+  ["🏃","Biz egzersiz yapıyoruz.","we","do","exercise"],
+  ["💊","Ben aspirin içiyorum.","i","take","aspirin"],
+  ["🏃","O yürüyüşe çıkıyor.","she","goes for","a walk"],
+  ["💊","O ilacını içiyor.","he","takes","his medicine"],
+  ["🩺","Onlar hastaneye gidiyor.","they","go to","the hospital"],
+  ["🏃","Ben spor yapıyorum.","i","do","sports"],
+  ["💊","Ben vitamini alıyorum.","i","take","a vitamin"],
+  // SEYAHAT
+  ["✈️","Ben çantamı hazırlıyorum.","i","pack","my bag"],
+  ["🗺️","O haritaya bakıyor.","she","looks at","the map"],
+  ["📸","O fotoğraf çekiyor.","he","takes","a photo"],
+  ["🏨","Biz otele giriyoruz.","we","enter","the hotel"],
+  ["✈️","Ben pasaportumu alıyorum.","i","take","my passport"],
+  ["🗺️","O yolu buluyor.","she","finds","the way"],
+  ["📸","O manzarayı fotoğraflıyor.","he","photographs","the view"],
+  ["🏨","Biz odamıza gidiyoruz.","we","go to","our room"],
+  ["✈️","Onlar valizini taşıyor.","they","carry","their suitcase"],
+  ["🏖️","O plajı seviyor.","she","loves","the beach"],
+  ["🏨","Biz odayı alıyoruz.","we","book","the room"],
+  ["✈️","Ben seyahat ediyorum.","i","enjoy","travel"],
+  ["🗺️","O şehri geziyor.","she","explores","the city"],
+  ["📸","Biz hatıra fotoğrafı çekiyoruz.","we","take","a photo"],
+  ["✈️","Onlar uçağı bekliyor.","they","wait for","the plane"],
+  // SANAT & HOBİ
+  ["🎨","Ben resim yapıyorum.","i","draw","a picture"],
+  ["✂️","O kağıt kesiyor.","she","cuts","the paper"],
+  ["🎨","O renkleri karıştırıyor.","he","mixes","the colors"],
+  ["🎨","Ben boya kullanıyorum.","i","use","paint"],
+  ["🎨","O tablo yapıyor.","he","paints","a picture"],
+  ["📸","Biz video çekiyoruz.","we","record","a video"],
+  ["🎨","O resim seviyor.","she","loves","painting"],
+  ["✂️","Ben kağıt kesiyor.","i","cut","the paper"],
+  ["🎨","Biz sanatı seviyoruz.","we","love","art"],
+  ["📸","Onlar video izliyor.","they","watch","a video"],
+  // HAVA
+  ["☀️","Güneş ısıtıyor.","the sun","warms","the ground"],
+  ["🌧️","Yağmur ıslatıyor.","the rain","wets","the ground"],
+  ["❄️","Kar yeri kaplıyor.","the snow","covers","the ground"],
+  ["💨","Rüzgar yaprakları uçuruyor.","the wind","blows","the leaves"],
+  ["☀️","Ben güneşi seviyorum.","i","love","the sun"],
+  ["🌧️","O yağmuru seviyor.","she","loves","the rain"],
+  ["❄️","Onlar karı seviyor.","they","love","snow"],
+  ["☀️","Biz güneşi görüyoruz.","we","see","the sun"],
+  ["🌧️","Ben şemsiye alıyorum.","i","take","an umbrella"],
+  ["❄️","O karda oynuyor.","he","plays in","the snow"],
+  // MİX A1/A2 TEKRAR
+  ["🌟","Ben İngilizce öğreniyorum.","i","learn","English"],
+  ["📚","O ders çalışıyor.","she","studies","English"],
+  ["✏️","O alıştırma yapıyor.","he","does","an exercise"],
+  ["🌟","Biz pratik yapıyoruz.","we","practice","English"],
+  ["📚","Ben soru soruyorum.","i","ask","a question"],
+  ["📖","O cevabı buluyor.","she","finds","the answer"],
+  ["✏️","O cümle yazıyor.","he","writes","a sentence"],
+  ["🌟","Biz İngilizce konuşuyoruz.","we","speak","English"],
+  ["📚","Onlar gramer öğreniyor.","they","learn","grammar"],
+  ["📖","O kitabı bitiriyor.","she","finishes","the book"],
+  ["✏️","O yeni kelime öğreniyor.","he","learns","a new word"],
+  ["📝","Onlar test çözüyor.","they","do","a test"],
+  ["🌟","Ben İngilizceyi seviyorum.","i","love","English"],
+  ["📝","O yazmayı seviyor.","she","loves","writing"],
+  ["🎨","O çizmeyi seviyor.","he","loves","drawing"],
+  // SABAH RUTINI
+  ["🌅","Ben güne başlıyorum.","i","start","the day"],
+  ["☕","O kahvaltı yapıyor.","she","has","breakfast"],
+  ["🍳","O yumurta pişiriyor.","he","cooks","eggs"],
+  ["🥛","Biz süt içiyoruz.","we","drink","milk"],
+  ["🍞","Onlar ekmek yiyor.","they","eat","bread"],
+  ["☕","O çay yapıyor.","she","makes","tea"],
+  ["🥛","Biz kahvaltıyı seviyoruz.","we","love","breakfast"],
+  ["🌅","Ben pencereyi açıyorum.","i","open","the window"],
+  ["🍞","O reçel alıyor.","he","buys","jam"],
+  ["🌅","Onlar sabah yürüyüşü yapıyor.","they","go for","a morning walk"],
+  // DUYGULAR & ARZULAR
+  ["🌟","Ben mutlu hissediyorum.","i","feel","happy"],
+  ["🍎","Ben bir elma istiyorum.","i","want","an apple"],
+  ["💧","O su istiyor.","she","wants","water"],
+  ["📚","O yeni kitap istiyor.","he","wants","a new book"],
+  ["🎮","Biz oyun istiyoruz.","we","want","a game"],
+  ["🍕","Onlar pizza istiyor.","they","want","pizza"],
+  ["😊","Ben arkadaşıma yardım ediyorum.","i","help","my friend"],
+  ["👫","O arkadaşına yardım ediyor.","she","helps","her friend"],
+  ["📚","O öğrenciye yardım ediyor.","he","helps","the student"],
+  ["😊","Onlar komşuya yardım ediyor.","they","help","the neighbor"],
+  // ÇEVRE & RENK
+  ["🔴","Ben kırmızı kalem kullanıyorum.","i","use","a red pen"],
+  ["📕","O kırmızı kitap okuyor.","she","reads","the red book"],
+  ["💙","O mavi kalem alıyor.","he","buys","a blue pen"],
+  ["🟢","Biz yeşil elma yiyoruz.","we","eat","green apples"],
+  ["⭐","Onlar sarı çiçek seviyor.","they","love","yellow flowers"],
+  ["📦","Ben kutuyu açıyorum.","i","open","the box"],
+  ["🎒","O çantayı açıyor.","she","opens","the bag"],
+  ["🎒","Biz çantayı taşıyoruz.","we","carry","the bag"],
+  ["📦","Onlar kutuyu taşıyor.","they","carry","the box"],
+  ["🖊️","Ben kalemi buluyorum.","i","find","the pen"],
+  ["📓","O defteri açıyor.","she","opens","the notebook"],
+  ["📏","O cetvelini kullanıyor.","he","uses","the ruler"],
+  ["🖊️","Biz kalemi paylaşıyoruz.","we","share","the pen"],
+  ["📓","Onlar defteri kapıyor.","they","close","the notebook"],
+  ["🖊️","Ben defteri kaybediyorum.","i","lose","the notebook"],
+  // RESTORAN
+  ["🍽️","Ben sipariş veriyorum.","i","order","food"],
+  ["🍕","O pizza sipariş ediyor.","she","orders","pizza"],
+  ["🍔","O hamburger yiyor.","he","eats","a burger"],
+  ["🍝","Biz makarna yiyoruz.","we","eat","pasta"],
+  ["🍣","Onlar balık yiyor.","they","eat","fish"],
+  ["🍽️","Ben menüye bakıyorum.","i","look at","the menu"],
+  ["💳","Biz yemeği ödüyoruz.","we","pay for","the food"],
+  ["🍝","Onlar masayı seçiyor.","they","choose","the table"],
+  ["🍕","O garsonı çağırıyor.","she","calls","the waiter"],
+  ["🍔","O hesabı istiyor.","he","asks for","the bill"],
+  // SON GRUP
+  ["🐱","Ben kediyi seviyorum.","i","love","the cat"],
+  ["🐶","O köpeği seviyor.","she","loves","the dog"],
+  ["📱","O telefona bakıyor.","he","looks at","the phone"],
+  ["💻","Biz bilgisayar kullanıyoruz.","we","use","the computer"],
+  ["📺","Onlar televizyon izliyor.","they","watch","television"],
+  ["🎵","Ben şarkı seviyorum.","i","love","songs"],
+  ["📖","O hikaye okuyor.","she","reads","a story"],
+  ["⚽","Biz futbol izliyoruz.","we","watch","football"],
+  ["🌸","Ben çiçek seviyorum.","i","love","flowers"],
+  ["🌳","O ağacı seviyor.","she","loves","the tree"],
+  ["☀️","O güneşi seviyor.","he","loves","the sun"],
+  ["🍎","Ben meyveyi seviyorum.","i","love","fruit"],
+  ["🥦","O sebzeyi seviyor.","she","loves","vegetables"],
+  ["🍕","O pizzayı seviyor.","he","loves","pizza"],
+  ["☕","Biz kahveyi seviyoruz.","we","love","coffee"],
+  ["🍵","Onlar çayı seviyor.","they","love","tea"],
+  ["📚","Ben okumayı seviyorum.","i","love","reading"],
+  ["🎵","O müziği seviyor.","she","loves","music"],
+  ["🎾","O sporu seviyor.","he","loves","sports"],
+  ["🌍","Biz seyahati seviyoruz.","we","love","travel"],
+  ["🎬","Onlar filmleri seviyor.","they","love","movies"],
+  ["📝","O yazmayı seviyor.","she","loves","writing"],
+  ["🏃","Biz koşmayı seviyoruz.","we","love","running"],
+  ["🌟","Ben her gün çalışıyorum.","i","study","every day"],
+  ["😊","Onlar birlikte çalışıyor.","they","study","together"],
 
-  // 📚 OKUL & DERS
-  ["📚 Ben kitap okuyorum.", "i", "read", "a book"],
-  ["📖 O ders kitabı okuyor.", "she", "reads", "a textbook"],
-  ["✏️ O not yazıyor.", "he", "writes", "notes"],
-  ["📝 Biz ödev yapıyoruz.", "we", "do", "homework"],
-  ["🎒 Onlar okula gidiyor.", "they", "go", "to school"],
-  ["📝 Ben test çözüyorum.", "i", "do", "a test"],
-  ["📏 O dersi öğreniyor.", "she", "learns", "the lesson"],
-  ["✏️ O soru soruyor.", "he", "asks", "a question"],
-  ["📚 Biz cevabı buluyoruz.", "we", "find", "the answer"],
-  ["📖 Onlar hikaye okuyor.", "they", "read", "a story"],
-  ["🖊️ Ben adımı yazıyorum.", "i", "write", "my name"],
-  ["✏️ O kelimeyi yazıyor.", "she", "writes", "the word"],
-  ["📚 O İngilizce öğreniyor.", "he", "learns", "English"],
-  ["🖊️ Biz cümle yazıyoruz.", "we", "write", "a sentence"],
-  ["📝 Onlar kelime öğreniyor.", "they", "learn", "words"],
-  ["📚 Ben roman okuyorum.", "i", "read", "a novel"],
-  ["✏️ O resim çiziyor.", "she", "draws", "a picture"],
-  ["📖 O sayfayı okuyor.", "he", "reads", "the page"],
-  ["📝 Biz sınava çalışıyoruz.", "we", "study", "for the exam"],
-  ["🎒 Onlar çantalarını taşıyor.", "they", "carry", "their bags"],
+  // EK CÜMLELER ─────────────────────────────────────
+  // Yemek tekrar
+  ["🍎","O elma yiyor.","he","eats","an apple"],
+  ["🍌","Ben muz yiyorum.","i","eat","a banana"],
+  ["🥕","O havuç yiyor.","she","eats","a carrot"],
+  ["🍰","Ben kek istiyorum.","i","want","cake"],
+  ["🍞","O ekmek yapıyor.","he","makes","bread"],
+  ["🥗","Onlar salata yiyor.","they","eat","salad"],
+  ["🍚","Ben pirinç pişiriyorum.","i","cook","rice"],
+  ["🥪","Biz sandviç yapıyoruz.","we","make","sandwiches"],
+  ["💧","Ben su alıyorum.","i","get","water"],
+  ["🍵","Biz çay yapıyoruz.","we","make","tea"],
+  ["☕","Onlar kahve içiyor.","they","drink","coffee"],
+  ["🥛","Ben süt alıyorum.","i","buy","milk"],
+  ["🍊","O meyve suyu yapıyor.","she","makes","juice"],
+  ["🍕","Ben pizza seviyorum.","i","love","pizza"],
+  ["🍔","O hamburger istiyor.","he","wants","a burger"],
+  // Okul tekrar
+  ["📚","Biz kitap okuyoruz.","we","read","books"],
+  ["✏️","Ben kalem alıyorum.","i","buy","a pen"],
+  ["📝","O ödevi bitirir.","she","finishes","the homework"],
+  ["🎒","Ben çantamı hazırlıyorum.","i","pack","my bag"],
+  ["📖","O dersi tekrar ediyor.","he","reviews","the lesson"],
+  ["✏️","Biz sınav yapıyoruz.","we","take","an exam"],
+  ["📚","Onlar çalışıyor.","they","do","their homework"],
+  ["🖊️","Ben kelime öğreniyorum.","i","learn","a word"],
+  ["📝","O notu kaybediyor.","she","loses","the note"],
+  ["✏️","O tahtayı siliyor.","he","cleans","the board"],
+  // Teknoloji tekrar
+  ["📱","Ben aramayı kapatıyorum.","i","end","the call"],
+  ["💻","O bilgisayarı kapatıyor.","she","turns off","the computer"],
+  ["📺","Onlar programı izliyor.","they","watch","the program"],
+  ["📱","Biz fotoğrafa bakıyoruz.","we","look at","the photo"],
+  ["💻","O oyunu açıyor.","he","opens","the game"],
+  ["📱","Ben videoyu izliyorum.","i","watch","the video"],
+  ["📺","O kanalı değiştiriyor.","she","changes","the channel"],
+  ["💻","Biz müzik indiriyoruz.","we","download","music"],
+  ["📱","O uygulamayı kullanıyor.","he","uses","the app"],
+  ["💻","Ben oyun oynuyorum.","i","play","a game"],
+  // Ev tekrar
+  ["🚪","Biz kapıyı açıyoruz.","we","open","the door"],
+  ["🪟","Onlar pencereyi kapatıyor.","they","close","the window"],
+  ["🛋️","Ben masayı taşıyorum.","i","move","the table"],
+  ["🏠","O odayı temizliyor.","she","cleans","the room"],
+  ["🍽️","O bardakları yıkıyor.","he","washes","the glasses"],
+  ["🛏️","Biz yatağı toparlıyoruz.","we","tidy","the bed"],
+  ["🏠","Onlar evi temizliyor.","they","clean","the house"],
+  ["🛋️","Ben sandalyeyi çekiyorum.","i","pull","the chair"],
+  ["🚿","O suyu açıyor.","she","turns on","the water"],
+  ["🏠","O ışığı kapatıyor.","he","turns off","the light"],
+  // Spor tekrar
+  ["⚽","Biz topu sürüyoruz.","we","dribble","the ball"],
+  ["🏀","Onlar topu atıyor.","they","throw","the ball"],
+  ["🎾","Ben raketi alıyorum.","i","take","the racket"],
+  ["⚽","O gol istiyor.","she","wants","a goal"],
+  ["🏃","Ben koşuyorum.","i","run","every day"],
+  ["🏊","O yüzme öğreniyor.","she","learns","swimming"],
+  ["🚴","Biz bisiklet seviyoruz.","we","love","cycling"],
+  ["⚽","Onlar takım seçiyor.","they","choose","a team"],
+  ["🎾","O tenis topu alıyor.","he","buys","a tennis ball"],
+  ["🏀","Ben basketbol izliyorum.","i","watch","basketball"],
+  // Alışveriş tekrar
+  ["🛒","O mağazaya gidiyor.","she","goes to","the store"],
+  ["👗","Ben elbise seviyorum.","i","love","dresses"],
+  ["👟","Biz ayakkabı alıyoruz.","we","buy","shoes"],
+  ["💳","Onlar faturayı ödüyor.","they","pay","the bill"],
+  ["🛒","Ben fiyata bakıyorum.","i","look at","the price"],
+  ["👕","O kazak alıyor.","she","buys","a sweater"],
+  ["🛍️","Biz torba alıyoruz.","we","take","a bag"],
+  ["💳","O para alıyor.","he","takes","money"],
+  ["🛒","Onlar marketten çıkıyor.","they","leave","the market"],
+  ["🛒","Ben alışveriş listesi yapıyorum.","i","make","a shopping list"],
+  // Aile tekrar
+  ["👨","O babasını seviyor.","she","loves","her father"],
+  ["👩","Ben annemi görüyorum.","i","see","my mother"],
+  ["👧","O kız kardeşine hediye veriyor.","he","gives","his sister a gift"],
+  ["👦","Biz erkek kardeşimizi arıyoruz.","we","call","our brother"],
+  ["👫","Onlar aileyi seviyor.","they","love","the family"],
+  ["🎂","Ben pasta yapıyorum.","i","make","a cake"],
+  ["🎁","O hediye aldı.","she","bought","a gift"],
+  ["📞","Biz aileyi arıyoruz.","we","call","the family"],
+  ["👨‍👩‍👧","Onlar birlikte yemek yiyor.","they","eat","together"],
+  ["😊","Ben komşuya yardım ediyorum.","i","help","the neighbor"],
+  // Ulaşım tekrar
+  ["🚗","O arabayı park ediyor.","he","parks","the car"],
+  ["🚌","Biz durağı bekliyoruz.","we","wait at","the stop"],
+  ["✈️","Onlar biletlerini alıyor.","they","buy","their tickets"],
+  ["🚂","Ben treni bekliyorum.","i","wait for","the train"],
+  ["🚕","O taksiden iniyor.","she","gets out of","the taxi"],
+  ["🚗","Biz arabaya biniyoruz.","we","get in","the car"],
+  ["🚌","Onlar otobüsten iniyor.","they","get off","the bus"],
+  ["✈️","Ben valizimi taşıyorum.","i","carry","my suitcase"],
+  ["🚗","O benzin alıyor.","he","buys","petrol"],
+  ["🚴","Biz bisikletle gidiyoruz.","we","go by","bike"],
+  // Müzik tekrar
+  ["🎵","Ben yeni şarkı dinliyorum.","i","listen to","a new song"],
+  ["🎸","Biz gitar çalıyoruz.","we","play","the guitar"],
+  ["🎹","Onlar piyano izliyor.","they","watch","a piano concert"],
+  ["🎙️","O şarkıyı öğreniyor.","she","learns","the song"],
+  ["🎬","Ben komedi izliyorum.","i","watch","a comedy"],
+  ["🎵","O radyoyu açıyor.","he","turns on","the radio"],
+  ["🎸","Biz bant kuruyoruz.","we","form","a band"],
+  ["🎵","Onlar şarkı söylüyor.","they","sing","a song"],
+  ["🎹","Ben nota öğreniyorum.","i","learn","music notes"],
+  ["🎙️","O mikrofonu alıyor.","she","takes","the microphone"],
+  // Sağlık tekrar
+  ["💊","Biz vitamin alıyoruz.","we","take","vitamins"],
+  ["🩺","Onlar doktora gidiyor.","they","go to","the doctor"],
+  ["🏃","Ben yürüyüş yapıyorum.","i","go for","a walk"],
+  ["💊","O hapları sayıyor.","she","counts","the pills"],
+  ["🩺","O kontrol yaptırıyor.","he","has","a checkup"],
+  ["🏃","Biz sabah koşuyoruz.","we","run","in the morning"],
+  ["💊","Onlar ilacı alıyor.","they","take","the medicine"],
+  ["🏃","Ben bisiklet sürüyorum.","i","ride","a bike"],
+  ["🩺","O doktoru dinliyor.","she","listens to","the doctor"],
+  ["💊","Biz sağlıklı yiyoruz.","we","eat","healthy food"],
+  // Seyahat tekrar
+  ["✈️","O pasaportunu kontrol ediyor.","she","checks","her passport"],
+  ["🏨","Ben otel istiyorum.","i","want","a hotel"],
+  ["🗺️","O yol buluyor.","she","finds","the road"],
+  ["📸","Biz anı fotoğrafı çekiyoruz.","we","take","a memory photo"],
+  ["🏖️","Onlar kumda oturuyor.","they","sit on","the sand"],
+  ["✈️","Ben uçağa bakıyorum.","i","look at","the plane"],
+  ["🏨","O oda anahtarını alıyor.","she","takes","the room key"],
+  ["🗺️","Biz şehri geziyoruz.","we","explore","the city"],
+  ["📸","Onlar fotoğraf albümü yapıyor.","they","make","a photo album"],
+  ["🏨","Ben odayı beğeniyorum.","i","like","the room"],
 
-  // 📱 TEKNOLOJİ
-  ["📱 Ben telefonu kullanıyorum.", "i", "use", "the phone"],
-  ["📱 O mesaj gönderiyor.", "she", "sends", "a message"],
-  ["💻 O bilgisayar kullanıyor.", "he", "uses", "a computer"],
-  ["📸 Biz fotoğraf çekiyoruz.", "we", "take", "a photo"],
-  ["🎮 Onlar oyun oynuyor.", "they", "play", "a game"],
-  ["📱 Ben müzik indiriyorum.", "i", "download", "music"],
-  ["📺 O film izliyor.", "she", "watches", "a movie"],
-  ["💻 O video izliyor.", "he", "watches", "a video"],
-  ["📱 Biz fotoğraf paylaşıyoruz.", "we", "share", "a photo"],
-  ["🎮 Onlar bilgisayar oyunu oynuyor.", "they", "play", "a computer game"],
-  ["📱 Ben uygulama açıyorum.", "i", "open", "the app"],
-  ["💻 O e-posta okuyor.", "she", "reads", "an email"],
-  ["📺 O diziyi izliyor.", "he", "watches", "the show"],
-  ["📱 Biz video izliyoruz.", "we", "watch", "a video"],
-  ["💻 Onlar müzik dinliyor.", "they", "listen", "to music"],
-
-  // 🏠 EV
-  ["🚪 Ben kapıyı açıyorum.", "i", "open", "the door"],
-  ["🪟 O pencereyi açıyor.", "she", "opens", "the window"],
-  ["🚪 O kapıyı kapatıyor.", "he", "closes", "the door"],
-  ["🛏️ Biz yatağı düzeltiyoruz.", "we", "fix", "the bed"],
-  ["🍽️ Onlar tabakları yıkıyor.", "they", "wash", "the plates"],
-  ["🛋️ Ben masayı temizliyorum.", "i", "clean", "the table"],
-  ["🪟 O pencereyi kapatıyor.", "she", "closes", "the window"],
-  ["🏠 O evi temizliyor.", "he", "cleans", "the house"],
-  ["🛏️ Biz odayı toparlıyoruz.", "we", "tidy", "the room"],
-  ["🚿 Onlar bulaşıkları yıkıyor.", "they", "wash", "the dishes"],
-  ["🛋️ Ben sandalyeyi taşıyorum.", "i", "carry", "the chair"],
-  ["🏠 O evi boyuyor.", "she", "paints", "the house"],
-  ["🛏️ O yatağı topluyor.", "he", "makes", "the bed"],
-  ["🍽️ Biz masayı hazırlıyoruz.", "we", "set", "the table"],
-  ["🚪 Onlar kapıyı boyuyor.", "they", "paint", "the door"],
-  ["🛋️ Ben koltuğu taşıyorum.", "i", "move", "the sofa"],
-  ["🪟 O perdeyi çekiyor.", "she", "closes", "the curtain"],
-  ["🏠 O lambayı yakıyor.", "he", "turns on", "the lamp"],
-  ["🛋️ Biz mobilyayı taşıyoruz.", "we", "move", "the furniture"],
-  ["🚿 Onlar banyoyu temizliyor.", "they", "clean", "the bathroom"],
-
-  // 🐱 HAYVANLAR
-  ["🐱 Kedi sütü içiyor.", "the cat", "drinks", "milk"],
-  ["🐶 Köpek et yiyor.", "the dog", "eats", "meat"],
-  ["🐦 Kuş ekmek yiyor.", "the bird", "eats", "bread"],
-  ["🐟 Balık yem yiyor.", "the fish", "eats", "food"],
-  ["🐹 Hamster peynir yiyor.", "the hamster", "eats", "cheese"],
-  ["🐱 Kedi topu oyuyor.", "the cat", "plays", "with the ball"],
-  ["🐶 Köpek kemiği çiğniyor.", "the dog", "chews", "a bone"],
-  ["🐦 Kuş tohum yiyor.", "the bird", "eats", "seeds"],
-  ["🐱 Kedi balık istiyor.", "the cat", "wants", "fish"],
-  ["🐶 Köpek topu getiriyor.", "the dog", "brings", "the ball"],
-  ["🐾 Ben kedimi besliyorum.", "i", "feed", "my cat"],
-  ["🐶 O köpeğini seviyor.", "she", "loves", "her dog"],
-  ["🐱 O kediyi seviyor.", "he", "loves", "the cat"],
-  ["🐾 Biz balığı besliyoruz.", "we", "feed", "the fish"],
-  ["🐶 Onlar köpeği yürütüyor.", "they", "walk", "the dog"],
-
-  // 🏃 SPOR & AKTİVİTE
-  ["⚽ Ben futbol oynuyorum.", "i", "play", "football"],
-  ["🎾 O tenis oynuyor.", "she", "plays", "tennis"],
-  ["🏀 O basketbol oynuyor.", "he", "plays", "basketball"],
-  ["🏊 Biz yüzüyoruz.", "we", "swim", null],
-  ["🚴 Onlar bisiklet sürüyor.", "they", "ride", "bikes"],
-  ["⚽ Ben topu tekmeliyorum.", "i", "kick", "the ball"],
-  ["🎾 O topu vuruyor.", "she", "hits", "the ball"],
-  ["🏀 O topu fırlatıyor.", "he", "throws", "the ball"],
-  ["🏃 Biz parkta koşuyoruz.", "we", "run", "in the park"],
-  ["⚽ Onlar maç oynuyor.", "they", "play", "a match"],
-  ["🏊 Ben her gün yüzüyorum.", "i", "swim", null],
-  ["🚴 O bisiklet sürüyor.", "she", "rides", "a bike"],
-  ["⚽ O futbol seviyor.", "he", "loves", "football"],
-  ["🏃 Biz sabah koşuyoruz.", "we", "run", null],
-  ["🎾 Onlar tenis izliyor.", "they", "watch", "tennis"],
-  ["⚽ Ben topu tutuyorum.", "i", "catch", "the ball"],
-  ["🏀 O basketbol izliyor.", "she", "watches", "basketball"],
-  ["🏊 O yüzmeyi öğreniyor.", "he", "learns", "swimming"],
-  ["🚴 Biz bisiklet yarışı yapıyoruz.", "we", "have", "a bike race"],
-  ["⚽ Onlar maçı kazanıyor.", "they", "win", "the match"],
-
-  // 🛒 ALIŞVERİŞ
-  ["🛒 Ben süt alıyorum.", "i", "buy", "milk"],
-  ["🛒 O ekmek alıyor.", "she", "buys", "bread"],
-  ["🛒 O elma alıyor.", "he", "buys", "apples"],
-  ["🛒 Biz meyve alıyoruz.", "we", "buy", "fruit"],
-  ["🛒 Onlar sebze alıyor.", "they", "buy", "vegetables"],
-  ["🛒 Ben kitap alıyorum.", "i", "buy", "a book"],
-  ["👕 O gömlek alıyor.", "she", "buys", "a shirt"],
-  ["👟 O ayakkabı alıyor.", "he", "buys", "shoes"],
-  ["🛒 Biz hediye alıyoruz.", "we", "buy", "a gift"],
-  ["🛒 Onlar para ödüyor.", "they", "pay", "money"],
-  ["👜 Ben çanta alıyorum.", "i", "buy", "a bag"],
-  ["👒 O şapka alıyor.", "she", "buys", "a hat"],
-  ["🛒 O market geziyor.", "he", "visits", "the market"],
-  ["💳 Biz para ödüyoruz.", "we", "pay", "the money"],
-  ["🛒 Onlar fiyata bakıyor.", "they", "check", "the price"],
-  ["🛒 Ben süpermarket geziyorum.", "i", "visit", "the supermarket"],
-  ["👗 O elbise seçiyor.", "she", "chooses", "a dress"],
-  ["👟 O ayakkabı seçiyor.", "he", "chooses", "shoes"],
-  ["💳 Biz kart ile ödüyoruz.", "we", "pay", "by card"],
-  ["🛍️ Onlar alışveriş yapıyor.", "they", "go", "shopping"],
-
-  // 🌳 DOĞA & BAHÇE
-  ["🌸 Ben çiçek suluyorum.", "i", "water", "the flowers"],
-  ["🌳 O ağaca bakıyor.", "she", "looks at", "the tree"],
-  ["🌸 O çiçek topluyor.", "he", "picks", "flowers"],
-  ["🌳 Biz ağaç dikiyoruz.", "we", "plant", "a tree"],
-  ["🍃 Onlar yaprakları topluyor.", "they", "collect", "the leaves"],
-  ["🌸 Ben gülü suluyorum.", "i", "water", "the rose"],
-  ["🌳 O bahçeye gidiyor.", "she", "goes", "to the garden"],
-  ["🌻 O çiçeği kesiyor.", "he", "cuts", "the flower"],
-  ["🌳 Biz bahçeyi temizliyoruz.", "we", "clean", "the garden"],
-  ["🍃 Onlar meyve topluyor.", "they", "pick", "fruit"],
-  ["☀️ Güneş ışık veriyor.", "the sun", "gives", "light"],
-  ["🌧️ Yağmur çiçekleri suluyor.", "the rain", "waters", "the flowers"],
-  ["🌳 Ben ağacı seviyorum.", "i", "love", "the tree"],
-  ["🌸 O gülü seviyor.", "she", "loves", "the rose"],
-  ["🌳 O bahçeyi seviyor.", "he", "loves", "the garden"],
-
-  // 👨‍👩‍👧 AİLE & SOSYAL
-  ["👨‍👩‍👧 Ben anneми arıyorum.", "i", "call", "my mom"],
-  ["👨 O babasını görüyor.", "she", "sees", "her father"],
-  ["👧 O kız kardeşini seviyor.", "he", "loves", "his sister"],
-  ["👨‍👩‍👧 Biz aileyi ziyaret ediyoruz.", "we", "visit", "the family"],
-  ["👫 Onlar arkadaşlarını görüyor.", "they", "see", "their friends"],
-  ["📞 Ben arkadaşımı arıyorum.", "i", "call", "my friend"],
-  ["👨 O annesine yardım ediyor.", "she", "helps", "her mother"],
-  ["👧 O kardeşine bakıyor.", "he", "looks after", "his brother"],
-  ["👫 Biz arkadaşı bekliyoruz.", "we", "wait for", "the friend"],
-  ["👨‍👩‍👧 Onlar aileyi seviyor.", "they", "love", "the family"],
-  ["🎁 Ben hediye veriyorum.", "i", "give", "a gift"],
-  ["📞 O annesini arıyor.", "she", "calls", "her mother"],
-  ["🎂 O pastayı kesiyor.", "he", "cuts", "the cake"],
-  ["🎁 Biz hediye alıyoruz.", "we", "buy", "a gift"],
-  ["👫 Onlar doğum günü kutluyor.", "they", "celebrate", "a birthday"],
-
-  // 🚗 ULAŞIM
-  ["🚗 Ben arabaya biniyorum.", "i", "get in", "the car"],
-  ["🚌 O otobüse biniyor.", "she", "takes", "the bus"],
-  ["🚂 O trene biniyor.", "he", "takes", "the train"],
-  ["✈️ Biz uçağa biniyoruz.", "we", "take", "the plane"],
-  ["🚕 Onlar taksiye biniyor.", "they", "take", "a taxi"],
-  ["🚗 Ben arabayı kullanıyorum.", "i", "drive", "the car"],
-  ["🚴 O bisiklete biniyor.", "she", "rides", "the bike"],
-  ["🚌 O otobüsü bekliyor.", "he", "waits for", "the bus"],
-  ["🚗 Biz arabayı yıkıyoruz.", "we", "wash", "the car"],
-  ["✈️ Onlar uçağı bekliyor.", "they", "wait for", "the plane"],
-  ["🚗 Ben arabanın kapısını açıyorum.", "i", "open", "the car door"],
-  ["🚌 O bilet alıyor.", "she", "buys", "a ticket"],
-  ["🚂 O tren biletini kontrol ediyor.", "he", "checks", "the train ticket"],
-  ["✈️ Biz uçak bileti alıyoruz.", "we", "buy", "a plane ticket"],
-  ["🚕 Onlar taksiye para veriyor.", "they", "pay", "the taxi driver"],
-
-  // 🎵 MÜZİK & EĞLENCE
-  ["🎵 Ben müzik dinliyorum.", "i", "listen to", "music"],
-  ["🎸 O gitar çalıyor.", "she", "plays", "the guitar"],
-  ["🎹 O piyano çalıyor.", "he", "plays", "the piano"],
-  ["🎵 Biz şarkı söylüyoruz.", "we", "sing", "a song"],
-  ["🎬 Onlar film izliyor.", "they", "watch", "a movie"],
-  ["🎵 Ben şarkı seviyorum.", "i", "love", "music"],
-  ["🎸 O gitar öğreniyor.", "she", "learns", "guitar"],
-  ["🎹 O piyano öğreniyor.", "he", "learns", "piano"],
-  ["🎵 Biz konser izliyoruz.", "we", "watch", "a concert"],
-  ["🎬 Onlar dizi izliyor.", "they", "watch", "a TV show"],
-  ["🎙️ Ben şarkı söylüyorum.", "i", "sing", "a song"],
-  ["🎸 O müzik dinliyor.", "she", "listens to", "music"],
-  ["🎵 O albüm dinliyor.", "he", "listens to", "an album"],
-  ["🎬 Biz film seviyor.", "we", "love", "movies"],
-  ["🎵 Onlar müzik yapıyor.", "they", "make", "music"],
-
-  // ⏰ GÜNLÜK HAYAT
-  ["⏰ Ben erken uyanıyorum.", "i", "wake up", null],
-  ["🦷 O dişini fırçalıyor.", "she", "brushes", "her teeth"],
-  ["🚿 O duş alıyor.", "he", "takes", "a shower"],
-  ["👕 Biz giyiniyoruz.", "we", "get dressed", null],
-  ["🍳 Onlar kahvaltı yapıyor.", "they", "have", "breakfast"],
-  ["⏰ Ben erken kalkıyorum.", "i", "get up", null],
-  ["🦷 O ağzını yıkıyor.", "she", "washes", "her face"],
-  ["🚿 O sabun kullanıyor.", "he", "uses", "soap"],
-  ["👕 Biz mont giyiyoruz.", "we", "wear", "a coat"],
-  ["🍳 Onlar yemek yiyor.", "they", "eat", "breakfast"],
-  ["😴 Ben kitap okuyorum geceleri.", "i", "read", "a book"],
-  ["🛌 O yatıyor.", "she", "goes to", "bed"],
-  ["⏰ O saate bakıyor.", "he", "checks", "the clock"],
-  ["🦷 Biz dişlerimizi fırçalıyoruz.", "we", "brush", "our teeth"],
-  ["🍳 Onlar öğle yemeği yiyor.", "they", "eat", "lunch"],
-
-  // 🌍 RENKLER & EŞYALAR (çok A1)
-  ["🔴 Ben kırmızı kalem kullanıyorum.", "i", "use", "a red pen"],
-  ["📕 O kırmızı kitap okuyor.", "she", "reads", "the red book"],
-  ["💙 O mavi kalem alıyor.", "he", "buys", "a blue pen"],
-  ["🟢 Biz yeşil elma yiyoruz.", "we", "eat", "green apples"],
-  ["⭐ Onlar sarı çiçek seviyor.", "they", "love", "yellow flowers"],
-  ["📦 Ben kutuyu açıyorum.", "i", "open", "the box"],
-  ["🎒 O çantayı açıyor.", "she", "opens", "the bag"],
-  ["📦 O paketi teslim ediyor.", "he", "delivers", "the package"],
-  ["🎒 Biz çantayı taşıyoruz.", "we", "carry", "the bag"],
-  ["📦 Onlar kutuyu taşıyor.", "they", "carry", "the box"],
-  ["🖊️ Ben kalemi buluyorum.", "i", "find", "the pen"],
-  ["📓 O defteri açıyor.", "she", "opens", "the notebook"],
-  ["📏 O cetvelini kullanıyor.", "he", "uses", "the ruler"],
-  ["🖊️ Biz kalemi paylaşıyoruz.", "we", "share", "the pen"],
-  ["📓 Onlar defteri kapıyor.", "they", "close", "the notebook"],
-
-  // 🍽️ KAFETERYA & RESTORAN
-  ["🍽️ Ben sipariş veriyorum.", "i", "order", "food"],
-  ["🍕 O pizza sipariş ediyor.", "she", "orders", "pizza"],
-  ["🍔 O hamburger yiyor.", "he", "eats", "a burger"],
-  ["🍝 Biz makarna yiyoruz.", "we", "eat", "pasta"],
-  ["🍣 Onlar balık yiyor.", "they", "eat", "fish"],
-  ["🍽️ Ben menüye bakıyorum.", "i", "look at", "the menu"],
-  ["🍕 O garsonı çağırıyor.", "she", "calls", "the waiter"],
-  ["🍔 O hesabı istiyor.", "he", "asks for", "the bill"],
-  ["💳 Biz yemeği ödüyoruz.", "we", "pay for", "the food"],
-  ["🍝 Onlar masayı seçiyor.", "they", "choose", "the table"],
-
-  // 🌤️ HAVA DURUMU
-  ["☀️ Güneş parlıyor.", "the sun", "shines", null],
-  ["🌧️ Yağmur yağıyor.", "the rain", "falls", null],
-  ["❄️ Kar yağıyor.", "the snow", "falls", null],
-  ["💨 Rüzgar esiyor.", "the wind", "blows", null],
-  ["⛅ Bulut geçiyor.", "the cloud", "moves", null],
-  ["☀️ Güneş ısıtıyor.", "the sun", "warms", "the ground"],
-  ["🌧️ Yağmur ıslatıyor.", "the rain", "wets", "the ground"],
-  ["❄️ Kar kapıyor.", "the snow", "covers", "the ground"],
-  ["💨 Rüzgar yaprakları uçuruyor.", "the wind", "blows", "the leaves"],
-  ["🌈 Gökkuşağı görünüyor.", "the rainbow", "appears", null],
-
-  // 👕 GİYSİLER
-  ["👕 Ben tişört giyiyorum.", "i", "wear", "a t-shirt"],
-  ["👗 O elbise giyiyor.", "she", "wears", "a dress"],
-  ["👖 O pantolon giyiyor.", "he", "wears", "pants"],
-  ["🧥 Biz mont giyiyoruz.", "we", "wear", "a coat"],
-  ["👟 Onlar ayakkabı giyiyor.", "they", "wear", "shoes"],
-  ["👒 Ben şapka takıyorum.", "i", "wear", "a hat"],
-  ["🧤 O eldiven takıyor.", "she", "wears", "gloves"],
-  ["🧣 O atkı takıyor.", "he", "wears", "a scarf"],
-  ["👕 Biz üniforma giyiyoruz.", "we", "wear", "a uniform"],
-  ["👟 Onlar spor ayakkabı giyiyor.", "they", "wear", "sneakers"],
-
-  // 📍 YER & KONUM
-  ["🏫 Ben okula gidiyorum.", "i", "go to", "school"],
-  ["🏥 O hastaneye gidiyor.", "she", "goes to", "the hospital"],
-  ["🏪 O markete gidiyor.", "he", "goes to", "the market"],
-  ["🏖️ Biz plaja gidiyoruz.", "we", "go to", "the beach"],
-  ["🏔️ Onlar dağa gidiyor.", "they", "go to", "the mountain"],
-  ["🏫 Ben okulu seviyorum.", "i", "love", "school"],
-  ["🏥 O doktoru ziyaret ediyor.", "she", "visits", "the doctor"],
-  ["🏪 O dükkanı buluyor.", "he", "finds", "the shop"],
-  ["🏖️ Biz kumsalı seviyoruz.", "we", "love", "the beach"],
-  ["🏔️ Onlar manzarayı izliyor.", "they", "watch", "the view"],
-  ["🏠 Ben eve dönüyorum.", "i", "return to", "home"],
-  ["🏫 O okuldan çıkıyor.", "she", "leaves", "school"],
-  ["🏪 O kafeteryayı buluyor.", "he", "finds", "the cafe"],
-  ["🌳 Biz parka gidiyoruz.", "we", "go to", "the park"],
-  ["🏖️ Onlar denizi görüyor.", "they", "see", "the sea"],
-
-  // 🎨 SANAT & HOBİ
-  ["🎨 Ben resim yapıyorum.", "i", "draw", "a picture"],
-  ["✂️ O kağıt kesiyor.", "she", "cuts", "the paper"],
-  ["🎨 O renkleri karıştırıyor.", "he", "mixes", "the colors"],
-  ["📸 Biz fotoğraf çekiyoruz.", "we", "take", "a photo"],
-  ["🎭 Onlar oyun oynuyor.", "they", "play", "a game"],
-  ["🎨 Ben boya kullanıyorum.", "i", "use", "paint"],
-  ["✂️ O kolaj yapıyor.", "she", "makes", "a collage"],
-  ["🎨 O tablo yapıyor.", "he", "paints", "a picture"],
-  ["📸 Biz video çekiyoruz.", "we", "record", "a video"],
-  ["🎭 Onlar dans ediyor.", "they", "dance", null],
-
-  // 💊 SAĞLIK
-  ["💊 Ben ilaç içiyorum.", "i", "take", "medicine"],
-  ["🩺 O doktoru ziyaret ediyor.", "she", "visits", "the doctor"],
-  ["💊 O vitamin alıyor.", "he", "takes", "vitamins"],
-  ["🏃 Biz egzersiz yapıyoruz.", "we", "do", "exercise"],
-  ["😴 Onlar çok uyuyor.", "they", "sleep", null],
-  ["💊 Ben aspirin içiyorum.", "i", "take", "aspirin"],
-  ["🩺 O hasta hissediyor.", "she", "feels", "sick"],
-  ["💊 O ateşini ölçüyor.", "he", "checks", "his temperature"],
-  ["🏃 Biz yürüyüş yapıyoruz.", "we", "go for", "a walk"],
-  ["😴 Onlar dinleniyor.", "they", "rest", null],
-
-  // 🔢 SAYILAR & ZAMAN (çok A1)
-  ["⏰ Ben saate bakıyorum.", "i", "check", "the clock"],
-  ["📅 O takvime bakıyor.", "she", "looks at", "the calendar"],
-  ["⏰ O alarmı kuruyor.", "he", "sets", "the alarm"],
-  ["📅 Biz tarihi öğreniyoruz.", "we", "learn", "the date"],
-  ["⏱️ Onlar zamanı takip ediyor.", "they", "track", "the time"],
-
-  // 🌟 MİX - çok temel tekrar cümleler
-  ["🌟 Ben İngilizce öğreniyorum.", "i", "learn", "English"],
-  ["📚 O ders çalışıyor.", "she", "studies", null],
-  ["✏️ O alıştırma yapıyor.", "he", "does", "an exercise"],
-  ["🌟 Biz pratik yapıyoruz.", "we", "practice", "English"],
-  ["📚 Onlar ders tekrarlıyor.", "they", "review", "the lesson"],
-  ["🌟 Ben her gün çalışıyorum.", "i", "study", null],
-  ["📖 O kitabı bitiriyor.", "she", "finishes", "the book"],
-  ["✏️ O yeni kelime öğreniyor.", "he", "learns", "a new word"],
-  ["🌟 Biz İngilizce konuşuyoruz.", "we", "speak", "English"],
-  ["📚 Onlar gramer öğreniyor.", "they", "learn", "grammar"],
-  ["🌟 Ben soru soruyorum.", "i", "ask", "a question"],
-  ["📖 O cevabı buluyor.", "she", "finds", "the answer"],
-  ["✏️ O cümle yazıyor.", "he", "writes", "a sentence"],
-  ["🌟 Biz konuşma yapıyoruz.", "we", "have", "a conversation"],
-  ["📚 Onlar test çözüyor.", "they", "do", "a test"],
-
-  // 🍳 SABAH RUTINI tekrar
-  ["🌅 Ben güne başlıyorum.", "i", "start", "the day"],
-  ["☕ O kahvaltı yapıyor.", "she", "has", "breakfast"],
-  ["🍳 O yumurta pişiriyor.", "he", "cooks", "eggs"],
-  ["🥛 Biz süt içiyoruz.", "we", "drink", "milk"],
-  ["🍞 Onlar ekmek yiyor.", "they", "eat", "bread"],
-  ["🌅 Ben güneşi görüyorum.", "i", "see", "the sun"],
-  ["☕ O çay yapıyor.", "she", "makes", "tea"],
-  ["🍳 O omlet yiyor.", "he", "eats", "an omelet"],
-  ["🥛 Biz kahvaltıyı seviyoruz.", "we", "love", "breakfast"],
-  ["🍞 Onlar reçel yiyor.", "they", "eat", "jam"],
-
-  // 🏪 DÜKKAN isim tekrarları
-  ["🏪 Ben pastaneden kek alıyorum.", "i", "buy", "a cake"],
-  ["🥖 O fırından ekmek alıyor.", "she", "buys", "bread"],
-  ["📚 O kitapçıdan kitap alıyor.", "he", "buys", "a book"],
-  ["🏪 Biz marketten süt alıyoruz.", "we", "buy", "milk"],
-  ["💊 Onlar eczaneden ilaç alıyor.", "they", "buy", "medicine"],
-
-  // 🎒 SEYAHAT
-  ["✈️ Ben çantamı hazırlıyorum.", "i", "pack", "my bag"],
-  ["🗺️ O haritaya bakıyor.", "she", "looks at", "the map"],
-  ["📸 O fotoğraf çekiyor.", "he", "takes", "a photo"],
-  ["🏨 Biz otele giriyoruz.", "we", "enter", "the hotel"],
-  ["✈️ Onlar pasaportunu gösteriyor.", "they", "show", "their passport"],
-  ["✈️ Ben biletimi kontrol ediyorum.", "i", "check", "my ticket"],
-  ["🗺️ O yolu buluyor.", "she", "finds", "the way"],
-  ["📸 O manzarayı çekiyor.", "he", "photographs", "the view"],
-  ["🏨 Biz odamıza gidiyoruz.", "we", "go to", "our room"],
-  ["✈️ Onlar valizini taşıyor.", "they", "carry", "their suitcase"],
-
-  // ⭐ SON 30 - karışık basit tekrar
-  ["🐱 Ben kediyi seviyorum.", "i", "love", "the cat"],
-  ["🐶 O köpeği seviyor.", "she", "loves", "the dog"],
-  ["📱 O telefona bakıyor.", "he", "looks at", "the phone"],
-  ["💻 Biz bilgisayar kullanıyoruz.", "we", "use", "the computer"],
-  ["📺 Onlar televizyon izliyor.", "they", "watch", "television"],
-  ["🎵 Ben şarkı seviyorum.", "i", "love", "songs"],
-  ["📖 O hikaye okuyor.", "she", "reads", "a story"],
-  ["🎨 O boyama yapıyor.", "he", "does", "painting"],
-  ["⚽ Biz futbol izliyoruz.", "we", "watch", "football"],
-  ["🏊 Onlar denizde yüzüyor.", "they", "swim", null],
-  ["🌸 Ben çiçek seviyorum.", "i", "love", "flowers"],
-  ["🌳 O ağacı seviyor.", "she", "loves", "the tree"],
-  ["☀️ O güneşi seviyor.", "he", "loves", "the sun"],
-  ["🌧️ Biz yağmuru seviyoruz.", "we", "love", "the rain"],
-  ["❄️ Onlar karı seviyor.", "they", "love", "snow"],
-  ["🍎 Ben meyveyi seviyorum.", "i", "love", "fruit"],
-  ["🥦 O sebzeyi seviyor.", "she", "loves", "vegetables"],
-  ["🍕 O pizzayı seviyor.", "he", "loves", "pizza"],
-  ["☕ Biz kahveyi seviyoruz.", "we", "love", "coffee"],
-  ["🍵 Onlar çayı seviyor.", "they", "love", "tea"],
-  ["📚 Ben okumayı seviyorum.", "i", "love", "reading"],
-  ["🎵 O müziği seviyor.", "she", "loves", "music"],
-  ["🎾 O sporu seviyor.", "he", "loves", "sports"],
-  ["🌍 Biz seyahati seviyoruz.", "we", "love", "travel"],
-  ["🎬 Onlar filmleri seviyor.", "they", "love", "movies"],
-  ["🌟 Ben İngilizceyi seviyorum.", "i", "love", "English"],
-  ["📝 O yazmayı seviyor.", "she", "loves", "writing"],
-  ["🎨 O çizmeyi seviyor.", "he", "loves", "drawing"],
-  ["🏃 Biz koşmayı seviyoruz.", "we", "love", "running"],
-  ["😴 Onlar uyumayı seviyor.", "they", "love", "sleeping"],
-
-  // 🌟 EK CÜMLELER — 135 adet daha
-  // Temel fiil tekrarları farklı özne ile
-  ["🍎 O elma yiyor.", "he", "eats", "an apple"],
-  ["🍞 Ben ekmek alıyorum.", "i", "buy", "bread"],
-  ["💧 O su içiyor.", "he", "drinks", "water"],
-  ["🍵 Ben çay içiyorum.", "i", "drink", "tea"],
-  ["☕ O kahve içiyor.", "she", "drinks", "coffee"],
-  ["🥛 O süt içiyor.", "he", "drinks", "milk"],
-  ["🍊 Ben portakal suyu içiyorum.", "i", "drink", "orange juice"],
-  ["🍕 Biz pizza sipariş ediyoruz.", "we", "order", "pizza"],
-  ["🍔 Onlar hamburger yiyor.", "they", "eat", "a burger"],
-  ["🍰 Ben kek istiyorum.", "i", "want", "cake"],
-
-  // Okul tekrarları
-  ["📚 O kitabı okuyor.", "he", "reads", "the book"],
-  ["✏️ Ben kalem kullanıyorum.", "i", "use", "a pen"],
-  ["📝 O not alıyor.", "she", "takes", "notes"],
-  ["📖 Biz ders çalışıyoruz.", "we", "study", null],
-  ["🎒 O okul çantasını taşıyor.", "he", "carries", "his school bag"],
-  ["✏️ Ben kağıda yazıyorum.", "i", "write", "on paper"],
-  ["📚 O ders kitabını kapıyor.", "she", "closes", "the textbook"],
-  ["📝 Biz test yapıyoruz.", "we", "take", "a test"],
-  ["🎒 Onlar kitaplarını açıyor.", "they", "open", "their books"],
-  ["✏️ O tahtaya yazıyor.", "he", "writes", "on the board"],
-
-  // Hayvan tekrarları
-  ["🐱 Kedi uyuyor.", "the cat", "sleeps", null],
-  ["🐶 Köpek çalıyor.", "the dog", "runs", null],
-  ["🐦 Kuş uçuyor.", "the bird", "flies", null],
-  ["🐟 Balık yüzüyor.", "the fish", "swims", null],
-  ["🐹 Hamster koşuyor.", "the hamster", "runs", null],
-  ["🐱 Kedi oyun oynuyor.", "the cat", "plays", null],
-  ["🐶 Köpek uyuyor.", "the dog", "sleeps", null],
-  ["🐾 Ben kedimi seviyorum.", "i", "love", "my cat"],
-  ["🐶 O köpeğini besliyor.", "she", "feeds", "her dog"],
-  ["🐱 O kedisine bakıyor.", "he", "looks after", "his cat"],
-
-  // Spor tekrarları
-  ["⚽ Ben top sürüyorum.", "i", "dribble", "the ball"],
-  ["🏀 O basketbol oynuyor.", "she", "plays", "basketball"],
-  ["🎾 O tenis topu vuruyor.", "he", "hits", "the tennis ball"],
-  ["🏊 Biz havuzda yüzüyoruz.", "we", "swim", null],
-  ["🚴 Onlar bisiklet yarışı yapıyor.", "they", "race", "bikes"],
-  ["⚽ Ben gol atıyorum.", "i", "score", "a goal"],
-  ["🏃 O her sabah koşuyor.", "she", "runs", null],
-  ["🏊 O yüzmeyi seviyor.", "he", "loves", "swimming"],
-  ["⚽ Biz maç izliyoruz.", "we", "watch", "the match"],
-  ["🏀 Onlar topu kaybediyor.", "they", "lose", "the ball"],
-
-  // Alışveriş tekrarları
-  ["🛒 Ben mağazaya giriyorum.", "i", "enter", "the store"],
-  ["🛍️ O hediyeyi seçiyor.", "she", "chooses", "a gift"],
-  ["💳 O kredi kartı kullanıyor.", "he", "uses", "a credit card"],
-  ["🛒 Biz liste yapıyoruz.", "we", "make", "a list"],
-  ["🛍️ Onlar torbayı taşıyor.", "they", "carry", "the bag"],
-  ["🛒 Ben fiyatı kontrol ediyorum.", "i", "check", "the price"],
-  ["👕 O tişört alıyor.", "she", "buys", "a t-shirt"],
-  ["👟 O spor ayakkabı alıyor.", "he", "buys", "sneakers"],
-  ["🛒 Biz markete gidiyoruz.", "we", "go to", "the market"],
-  ["💳 Onlar nakit ödüyor.", "they", "pay", "cash"],
-
-  // Aile & sosyal tekrarları
-  ["👨 Ben babamı seviyorum.", "i", "love", "my father"],
-  ["👩 O annesini arıyor.", "she", "calls", "her mother"],
-  ["👧 O kız kardeşini görüyor.", "he", "sees", "his sister"],
-  ["👦 Biz erkek kardeşimizi görüyoruz.", "we", "see", "our brother"],
-  ["👫 Onlar arkadaşlarıyla oynuyor.", "they", "play", "with their friends"],
-  ["🎂 Ben doğum günü kutluyorum.", "i", "celebrate", "a birthday"],
-  ["🎁 O hediye veriyor.", "she", "gives", "a gift"],
-  ["📞 O arkadaşını arıyor.", "he", "calls", "his friend"],
-  ["👨‍👩‍👧 Biz aileyi seviyoruz.", "we", "love", "our family"],
-  ["👫 Onlar birlikte oynuyor.", "they", "play", "together"],
-
-  // Ev tekrarları
-  ["🚪 Ben kapıyı kapatıyorum.", "i", "close", "the door"],
-  ["🪟 O pencereyi açıyor.", "she", "opens", "the window"],
-  ["🛋️ O koltuğa oturuyor.", "he", "sits on", "the sofa"],
-  ["🏠 Biz evi boyuyoruz.", "we", "paint", "the house"],
-  ["🍽️ Onlar masayı siliyoruz.", "they", "wipe", "the table"],
-  ["🛏️ Ben yatıyorum.", "i", "go to", "bed"],
-  ["🚿 O duş alıyor.", "she", "takes", "a shower"],
-  ["🏠 O ışığı yakıyor.", "he", "turns on", "the light"],
-  ["🛋️ Biz televizyon izliyoruz.", "we", "watch", "television"],
-  ["🍽️ Onlar kahvaltı yapıyor.", "they", "have", "breakfast"],
-
-  // Teknoloji tekrarları
-  ["📱 Ben telefonu şarj ediyorum.", "i", "charge", "the phone"],
-  ["💻 O bilgisayarı açıyor.", "she", "turns on", "the computer"],
-  ["📺 O televizyonu kapatıyor.", "he", "turns off", "the television"],
-  ["📱 Biz fotoğrafa bakıyoruz.", "we", "look at", "the photo"],
-  ["💻 Onlar oyun yüklüyor.", "they", "install", "a game"],
-  ["📱 Ben mesajı okuyorum.", "i", "read", "the message"],
-  ["📺 O kanala bakıyor.", "she", "watches", "the channel"],
-  ["💻 O ekrana bakıyor.", "he", "looks at", "the screen"],
-  ["📱 Biz fotoğraf alıyoruz.", "we", "take", "a photo"],
-  ["💻 Onlar müzik yüklüyor.", "they", "download", "music"],
-
-  // Müzik tekrarları
-  ["🎵 Ben şarkı öğreniyorum.", "i", "learn", "a song"],
-  ["🎸 O gitar çalıyor.", "she", "plays", "the guitar"],
-  ["🎹 O piyano öğreniyor.", "he", "learns", "piano"],
-  ["🎙️ Biz konser izliyoruz.", "we", "watch", "a concert"],
-  ["🎵 Onlar müzik açıyor.", "they", "play", "music"],
-  ["🎸 Ben şarkı söylüyorum.", "i", "sing", "a song"],
-  ["🎵 O albüm alıyor.", "she", "buys", "an album"],
-  ["🎹 O nota okuyor.", "he", "reads", "music notes"],
-  ["🎙️ Biz şarkı söylüyoruz.", "we", "sing", "together"],
-  ["🎵 Onlar dans ediyor.", "they", "dance", null],
-
-  // Doğa tekrarları
-  ["🌸 Ben çiçeğe bakıyorum.", "i", "look at", "the flower"],
-  ["🌳 O ağacın altında oturuyor.", "she", "sits under", "the tree"],
-  ["☀️ O güneşin altında oturuyor.", "he", "sits in", "the sun"],
-  ["🌧️ Biz yağmurda yürüyoruz.", "we", "walk in", "the rain"],
-  ["❄️ Onlar karda oynuyor.", "they", "play in", "the snow"],
-  ["🌸 Ben gülü kokluyor.", "i", "smell", "the rose"],
-  ["🌳 O parkta yürüyor.", "she", "walks in", "the park"],
-  ["🌻 O ayçiçeği görüyor.", "he", "sees", "a sunflower"],
-  ["🌳 Biz ormanı seviyoruz.", "we", "love", "the forest"],
-  ["🌸 Onlar çiçeği suluyoruz.", "they", "water", "the flowers"],
-
-  // Sağlık tekrarları
-  ["💊 Ben hapı yutuyorum.", "i", "swallow", "the pill"],
-  ["🩺 O doktorla konuşuyor.", "she", "talks to", "the doctor"],
-  ["🏃 O spor yapıyor.", "he", "does", "sports"],
-  ["😴 Biz erken yatıyoruz.", "we", "go to bed", null],
-  ["💊 Onlar vitamin alıyor.", "they", "take", "vitamins"],
-  ["🩺 Ben kontrole gidiyorum.", "i", "go for", "a checkup"],
-  ["🏃 O yürüyüşe çıkıyor.", "she", "goes for", "a walk"],
-  ["💊 O ilacını içiyor.", "he", "takes", "his medicine"],
-  ["😴 Biz iyi uyuyoruz.", "we", "sleep", null],
-  ["🩺 Onlar hastaneye gidiyor.", "they", "go to", "the hospital"],
-
-  // Seyahat tekrarları
-  ["✈️ Ben seyahat ediyorum.", "i", "travel", null],
-  ["🚂 O tren alıyor.", "she", "takes", "the train"],
-  ["🚌 O otobüs alıyor.", "he", "takes", "the bus"],
-  ["🏨 Biz otel arıyoruz.", "we", "look for", "a hotel"],
-  ["📸 Onlar hatıra fotoğrafı çekiyor.", "they", "take", "a photo"],
-  ["✈️ Ben pasaportumu alıyorum.", "i", "take", "my passport"],
-  ["🗺️ O şehri geziyor.", "she", "explores", "the city"],
-  ["🏖️ O plajı seviyor.", "he", "loves", "the beach"],
-  ["🏨 Biz odayı alıyoruz.", "we", "book", "the room"],
-  ["✈️ Onlar valizi taşıyor.", "they", "carry", "the suitcase"],
-
-  // Ekstra basit A1 cümleler
-  ["🌟 Ben mutluyum.", "i", "feel", "happy"],
-  ["😊 O güzel görüyor.", "she", "looks", "beautiful"],
-  ["🌟 O iyi hissediyor.", "he", "feels", "good"],
-  ["😊 Biz hazırız.", "we", "are", "ready"],
-  ["🌟 Onlar yorgun.", "they", "are", "tired"],
-
-  // Son 10 — tam 500
-  ["🍎 Ben bir elma istiyorum.", "i", "want", "an apple"],
-  ["💧 O su istiyor.", "she", "wants", "water"],
-  ["📚 O yeni kitap istiyor.", "he", "wants", "a new book"],
-  ["🎮 Biz oyun istiyoruz.", "we", "want", "a game"],
-  ["🍕 Onlar pizza istiyor.", "they", "want", "pizza"],
-  ["😊 Ben yardım ediyorum.", "i", "help", "my friend"],
-  ["👫 O arkadaşına yardım ediyor.", "she", "helps", "her friend"],
-  ["📚 O öğrenciye yardım ediyor.", "he", "helps", "the student"],
-  ["🌟 Biz birbirimize yardım ediyoruz.", "we", "help", "each other"],
-  ["😊 Onlar komşuya yardım ediyor.", "they", "help", "the neighbor"],
+  // Son 31
+  ["🌟","Ben güzel bir gün istiyorum.","i","want","a good day"],
+  ["😊","O gülümsüyor.","she","has","a smile"],
+  ["🌟","Biz sabah kahvaltı yapıyoruz.","we","have","breakfast"],
+  ["🎒","Ben okul çantamı taşıyorum.","i","carry","my school bag"],
+  ["📚","O ders notlarını alıyor.","she","takes","class notes"],
+  ["🍎","Biz her gün meyve yiyoruz.","we","eat","fruit every day"],
+  ["💧","Onlar su alıyor.","they","drink","water"],
+  ["🐱","O kedisini besliyor.","she","feeds","her cat"],
+  ["⚽","Ben topu seviyorum.","i","love","the ball"],
+  ["🎵","Biz müzik açıyoruz.","we","play","music"],
+  ["📱","Onlar telefon kullanıyor.","they","use","a phone"],
+  ["🏠","Ben evi seviyorum.","i","love","my house"],
+  ["🛒","O süt ve ekmek alıyor.","she","buys","milk and bread"],
+  ["🚗","Biz arabayı kullanıyoruz.","we","drive","the car"],
+  ["✈️","Onlar seyahati seviyor.","they","love","travel"],
+  ["🎬","Ben yeni film izliyorum.","i","watch","a new movie"],
+  ["🍵","O sıcak çay içiyor.","she","drinks","hot tea"],
+  ["📖","Biz kitap seviyoruz.","we","love","books"],
+  ["🐶","Onlar köpeği seviyor.","they","love","the dog"],
+  ["🌸","Ben bahçeyi seviyorum.","i","love","the garden"],
+  ["☀️","O güzel hava seviyor.","she","loves","nice weather"],
+  ["🎨","Biz renkleri seviyoruz.","we","love","colors"],
+  ["🏃","Onlar sporcu.","they","love","sports"],
+  ["💊","Ben sağlıklıyım.","i","feel","healthy"],
+  ["🌍","O dünyayı seviyor.","she","loves","the world"],
+  ["📝","Biz not alıyoruz.","we","take","notes"],
+  ["🎮","Onlar oyunu bitiriyor.","they","finish","the game"],
+  ["🌟","Ben her gün çalışıyorum.","i","study","every day"],
+  ["🍕","Biz akşam yemeği yapıyoruz.","we","make","dinner"],
+  ["📚","Onlar kütüphaneye gidiyor.","they","go to","the library"],
+  ["😊","Ben mutlu hissediyorum.","i","feel","happy"],
 ];
 
-// Shuffle
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
-let queue = shuffle(sentences);
-let current = 0;
-let correct = 0;
-let wrong = 0;
-let answered = false;
+// ─── State ──────────────────────────────────────────────────────────────────
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
 
-function norm(s) {
-  return s.trim().toLowerCase().replace(/[^a-z0-9\s']/g, '').replace(/\s+/g, ' ');
-}
+let queue = shuffle(ALL);
+let cur = 0, correctCount = 0, wrongCount = 0, answered = false;
+let zoneData = [null, null, null]; // which chipId is in each zone
+let chipData = {}; // chipId -> {word, type, zoneOrNull}
+let dragSrc = null;
+let tapSelected = null; // chipId currently selected for tap-to-place
 
-// Accept multiple valid forms
-function acceptableAnswers(raw) {
-  const base = norm(raw);
-  const alts = [base];
-  // common contractions / variants
-  if (base === "i") alts.push("i");
-  return alts;
-}
-
-function loadQuestion() {
-  if (current >= queue.length) {
-    showSummary();
-    return;
-  }
+// ─── Load question ───────────────────────────────────────────────────────────
+function loadQ(){
+  if(cur >= queue.length){ showSummary(); return; }
   answered = false;
-  const [tr, subj, verb, obj] = queue[current];
-  const isIntrans = obj === null;
+  zoneData = [null, null, null];
+  chipData = {};
+  dragSrc = null;
+  tapSelected = null;
 
-  document.getElementById('q-number').textContent = `SORU ${current + 1} / ${queue.length}`;
+  const [emoji, tr, subj, verb, obj] = queue[cur];
+  const hasObj = obj !== null;
 
-  // Extract leading emoji for the icon display
-  const emojiMatch = tr.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u);
-  document.getElementById('q-icon').textContent = emojiMatch ? emojiMatch[0] : '';
+  // Header
+  document.getElementById('q-num').textContent = `SORU ${cur+1} / ${queue.length}`;
+  document.getElementById('q-emoji').textContent = emoji;
+  document.getElementById('tr-sentence').textContent = tr;
 
-  document.getElementById('sentence-tr').textContent = tr;
-  document.getElementById('hint-text').textContent = `Bu cümleyi İngilizce'ye çevir — parçalara bölerek yaz`;
+  // Zone 2 visibility
+  const zone2 = document.getElementById('zone-2');
+  zone2.style.display = hasObj ? '' : 'none';
 
-  // Intransitive
-  document.getElementById('intrans-tag').style.display = isIntrans ? 'flex' : 'none';
-  document.getElementById('group-o').style.display = isIntrans ? 'none' : 'flex';
+  // Reset zones
+  for(let i=0;i<3;i++){
+    const z = document.getElementById(`zone-${i}`);
+    z.className = 'drop-zone';
+    document.getElementById(`zone-word-${i}`).textContent = '';
+    document.getElementById(`zone-hint-${i}`).style.display = '';
+    z.style.cursor = '';
+  }
+  // Zone color labels
+  const labels = ['s','v','o'];
+  for(let i=0;i<3;i++) document.getElementById(`zone-${i}`).querySelector('.zone-label').className = `zone-label ${labels[i]}`;
 
-  // Reset inputs
-  ['input-s','input-v','input-o'].forEach(id => {
-    const el = document.getElementById(id);
-    el.value = '';
-    el.classList.remove('correct','wrong');
-    el.disabled = false;
+  // Build shuffled word bank
+  const words = [
+    {id:'s', word: subj, type:'type-s'},
+    {id:'v', word: verb, type:'type-v'},
+  ];
+  if(hasObj) words.push({id:'o', word: obj, type:'type-o'});
+
+  // Add 1-2 distractor words (same type variety)
+  const distractors = ["she","he","they","we","i","the dog","the cat",
+    "eats","drinks","opens","reads","buys","watches","loves","takes",
+    "a book","the door","music","water","a phone","the ball","a sandwich","tea","coffee"];
+  const used = [subj, verb, obj].map(w=>w&&w.toLowerCase());
+  const dPool = shuffle(distractors.filter(d => !used.includes(d.toLowerCase())));
+  for(let i=0;i<2;i++) if(dPool[i]) words.push({id:`d${i}`, word:dPool[i], type:'type-d'});
+
+  shuffle(words).forEach(w => { chipData[w.id] = {word:w.word, type:w.type, zone:null}; });
+
+  // Render bank
+  const bank = document.getElementById('word-bank');
+  bank.innerHTML = '';
+  Object.entries(chipData).forEach(([id, data]) => {
+    const el = document.createElement('div');
+    el.className = `word-chip ${data.type}`;
+    el.id = `chip-${id}`;
+    el.textContent = data.word;
+    el.draggable = true;
+    el.addEventListener('dragstart', e => onDragStart(e, id));
+    el.addEventListener('dragend', e => onDragEnd(e, id));
+    el.addEventListener('click', () => onChipClick(id));
+    bank.appendChild(el);
   });
 
+  // Feedback & buttons
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('btn-next').className = 'btn-next';
-  document.getElementById('btn-check').disabled = false;
+  document.getElementById('btn-check').disabled = true;
 
   updateStats();
   updateProgress();
-
-  // Focus first input
-  setTimeout(() => document.getElementById('input-s').focus(), 50);
 }
 
-function checkAnswer() {
-  if (answered) return;
-  const [tr, subj, verb, obj] = queue[current];
-  const isIntrans = obj === null;
+// ─── Drag & Drop ─────────────────────────────────────────────────────────────
+function onDragStart(e, id){
+  dragSrc = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(()=> document.getElementById(`chip-${id}`)?.classList.add('dragging'), 10);
+}
+function onDragEnd(e, id){
+  document.getElementById(`chip-${id}`)?.classList.remove('dragging');
+}
+function onDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over'); }
 
-  const sVal = norm(document.getElementById('input-s').value);
-  const vVal = norm(document.getElementById('input-v').value);
-  const oVal = isIntrans ? null : norm(document.getElementById('input-o').value);
+function onDrop(e, zoneIdx){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(dragSrc === null) return;
+  placeChip(dragSrc, zoneIdx);
+  dragSrc = null;
+}
 
-  const sOk = sVal === norm(subj);
-  const vOk = vVal === norm(verb);
-  const oOk = isIntrans ? true : (oVal === norm(obj));
+// ─── Tap to place ─────────────────────────────────────────────────────────────
+function onChipClick(id){
+  if(answered) return;
+  const chip = document.getElementById(`chip-${id}`);
+  // If chip is already in a zone, return it to bank
+  const inZone = chipData[id].zone;
+  if(inZone !== null){
+    removeFromZone(inZone);
+    // Deselect
+    tapSelected = null;
+    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
+    return;
+  }
+  // Select/deselect
+  if(tapSelected === id){
+    tapSelected = null;
+    chip.style.outline = '';
+  } else {
+    tapSelected = id;
+    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
+    chip.style.outline = `3px solid var(--accent)`;
+  }
+}
 
+function onZoneClick(zoneIdx){
+  if(answered) return;
+  if(tapSelected !== null){
+    placeChip(tapSelected, zoneIdx);
+    tapSelected = null;
+    document.querySelectorAll('.word-chip').forEach(c=>c.style.outline='');
+  } else {
+    // Return zone's chip to bank
+    if(zoneData[zoneIdx] !== null) removeFromZone(zoneIdx);
+  }
+}
+
+// ─── Place chip in zone ───────────────────────────────────────────────────────
+function placeChip(chipId, zoneIdx){
+  if(answered) return;
+  // If zone already has a chip, swap back to bank
+  if(zoneData[zoneIdx] !== null){
+    const prev = zoneData[zoneIdx];
+    chipData[prev].zone = null;
+    document.getElementById(`chip-${prev}`)?.classList.remove('placed');
+  }
+  // If chip was in another zone, clear that zone
+  const prevZone = chipData[chipId].zone;
+  if(prevZone !== null){
+    zoneData[prevZone] = null;
+    renderZone(prevZone, null);
+  }
+  // Place
+  zoneData[zoneIdx] = chipId;
+  chipData[chipId].zone = zoneIdx;
+  document.getElementById(`chip-${chipId}`)?.classList.add('placed');
+  renderZone(zoneIdx, chipId);
+  checkIfReady();
+}
+
+function removeFromZone(zoneIdx){
+  const chipId = zoneData[zoneIdx];
+  if(!chipId) return;
+  chipData[chipId].zone = null;
+  document.getElementById(`chip-${chipId}`)?.classList.remove('placed');
+  zoneData[zoneIdx] = null;
+  renderZone(zoneIdx, null);
+  checkIfReady();
+}
+
+function renderZone(zoneIdx, chipId){
+  const z = document.getElementById(`zone-${zoneIdx}`);
+  const wordEl = document.getElementById(`zone-word-${zoneIdx}`);
+  const hintEl = document.getElementById(`zone-hint-${zoneIdx}`);
+  const typeMap = {0:'filled-s', 1:'filled-v', 2:'filled-o'};
+  z.classList.remove('filled-s','filled-v','filled-o','correct-zone','wrong-zone');
+  if(chipId){
+    wordEl.textContent = chipData[chipId].word;
+    hintEl.style.display = 'none';
+    z.classList.add(typeMap[zoneIdx]);
+    z.style.cursor = 'pointer';
+  } else {
+    wordEl.textContent = '';
+    hintEl.style.display = '';
+    z.style.cursor = '';
+  }
+}
+
+function checkIfReady(){
+  const [,,,,obj] = queue[cur];
+  const needed = obj !== null ? 3 : 2;
+  const filled = zoneData.slice(0, needed).filter(x=>x!==null).length;
+  document.getElementById('btn-check').disabled = (filled < needed);
+}
+
+// ─── Drag over zone feedback ──────────────────────────────────────────────────
+document.querySelectorAll('.drop-zone').forEach(z=>{
+  z.addEventListener('dragleave', e => e.currentTarget.classList.remove('drag-over'));
+});
+
+// ─── Check answer ─────────────────────────────────────────────────────────────
+function checkAnswer(){
+  if(answered) return;
+  const [emoji, tr, subj, verb, obj] = queue[cur];
+  const hasObj = obj !== null;
+
+  const sChip = zoneData[0] ? chipData[zoneData[0]].word : null;
+  const vChip = zoneData[1] ? chipData[zoneData[1]].word : null;
+  const oChip = zoneData[2] ? chipData[zoneData[2]].word : null;
+
+  const norm = s => s?.trim().toLowerCase();
+  const sOk = norm(sChip) === norm(subj);
+  const vOk = norm(vChip) === norm(verb);
+  const oOk = hasObj ? norm(oChip) === norm(obj) : true;
   const allOk = sOk && vOk && oOk;
 
-  // Mark inputs
-  markInput('input-s', sOk);
-  markInput('input-v', vOk);
-  if (!isIntrans) markInput('input-o', oOk);
+  // Color zones
+  colorZone(0, sOk);
+  colorZone(1, vOk);
+  if(hasObj) colorZone(2, oOk);
 
   // Feedback
   const fb = document.getElementById('feedback');
@@ -1215,88 +1357,80 @@ function checkAnswer() {
   const msg = document.getElementById('fb-msg');
   const ans = document.getElementById('fb-answer');
 
-  if (allOk) {
-    fb.className = 'feedback correct-fb show';
+  if(allOk){
+    fb.className = 'feedback ok show';
     icon.textContent = '✅';
-    msg.textContent = 'Harika! Doğru cevap!';
-    ans.innerHTML = `<span style="color:var(--subject-color)">${subj}</span> <span style="color:var(--verb-color)">${verb}</span>${isIntrans ? '' : ` <span style="color:var(--object-color)">${obj}</span>`}`;
-    correct++;
+    msg.textContent = 'Mükemmel! Doğru sıra!';
+    ans.innerHTML = `<span style="color:var(--s-color)">${subj}</span> + <span style="color:var(--v-color)">${verb}</span>${hasObj ? ` + <span style="color:var(--o-color)">${obj}</span>` : ''}`;
+    correctCount++;
+    document.getElementById('q-card').classList.add('celebrate');
+    setTimeout(()=>document.getElementById('q-card').classList.remove('celebrate'),300);
   } else {
-    fb.className = 'feedback wrong-fb show';
+    fb.className = 'feedback bad show';
     icon.textContent = '❌';
-    msg.textContent = 'Yanlış! Doğru cevap:';
-    ans.innerHTML = `Subject: <span>${subj}</span> · Verb: <span>${verb}</span>${isIntrans ? '' : ` · Object: <span>${obj}</span>`}`;
-    wrong++;
+    msg.textContent = 'Yanlış sıra. Doğrusu:';
+    ans.innerHTML = `<span style="color:var(--s-color)">${subj}</span> + <span style="color:var(--v-color)">${verb}</span>${hasObj ? ` + <span style="color:var(--o-color)">${obj}</span>` : ''}`;
+    wrongCount++;
   }
 
   answered = true;
   document.getElementById('btn-check').disabled = true;
   document.getElementById('btn-next').className = 'btn-next show';
-
-  // Disable inputs
-  ['input-s','input-v','input-o'].forEach(id => {
-    document.getElementById(id).disabled = true;
-  });
-
   updateStats();
 }
 
-function markInput(id, ok) {
-  const el = document.getElementById(id);
-  el.classList.remove('correct','wrong');
-  el.classList.add(ok ? 'correct' : 'wrong');
+function colorZone(idx, ok){
+  const z = document.getElementById(`zone-${idx}`);
+  z.classList.remove('filled-s','filled-v','filled-o');
+  z.classList.add(ok ? 'correct-zone' : 'wrong-zone');
 }
 
-function nextQuestion() {
-  current++;
-  loadQuestion();
+function nextQuestion(){
+  cur++;
+  loadQ();
 }
 
-function updateStats() {
-  document.getElementById('stat-correct').textContent = correct;
-  document.getElementById('stat-wrong').textContent = wrong;
+function updateStats(){
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrongCount;
 }
 
-function updateProgress() {
-  const pct = Math.round((current / queue.length) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-text').textContent = `${current} / ${queue.length}`;
-  document.getElementById('progress-pct').textContent = pct + '%';
+function updateProgress(){
+  const pct = Math.round((cur / queue.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = `${cur} / ${queue.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
 }
 
-function showSummary() {
-  document.getElementById('quiz-card').style.display = 'none';
-  const sum = document.getElementById('summary');
-  sum.className = 'summary show';
-  const pct = Math.round((correct / queue.length) * 100);
-  document.getElementById('final-score').textContent = `${pct}%`;
-  document.getElementById('summary-text').textContent =
-    `${queue.length} sorudan ${correct} doğru, ${wrong} yanlış yaptın!`;
-
-  // Update progress to 100%
-  document.getElementById('progress-fill').style.width = '100%';
-  document.getElementById('progress-text').textContent = `${queue.length} / ${queue.length}`;
-  document.getElementById('progress-pct').textContent = '100%';
+function showSummary(){
+  document.getElementById('q-card').style.display = 'none';
+  const pct = Math.round((correctCount / queue.length) * 100);
+  document.getElementById('sum-score').textContent = pct + '%';
+  document.getElementById('sum-text').textContent = `${queue.length} sorudan ${correctCount} doğru, ${wrongCount} yanlış!`;
+  document.getElementById('sum-emoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '💪' : '📚';
+  document.getElementById('summary').className = 'summary show';
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-txt').textContent = `${queue.length} / ${queue.length}`;
+  document.getElementById('prog-pct').textContent = '100%';
 }
 
-function restart() {
-  queue = shuffle(sentences);
-  current = 0; correct = 0; wrong = 0; answered = false;
-  document.getElementById('quiz-card').style.display = 'block';
+function restart(){
+  queue = shuffle(ALL);
+  cur = 0; correctCount = 0; wrongCount = 0; answered = false;
+  document.getElementById('q-card').style.display = 'block';
   document.getElementById('summary').className = 'summary';
-  loadQuestion();
+  loadQ();
 }
 
-// Enter key support
+// Enter = check or next
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (!answered) checkAnswer();
-    else nextQuestion();
+  if(e.key === 'Enter'){
+    if(!answered && !document.getElementById('btn-check').disabled) checkAnswer();
+    else if(answered) nextQuestion();
   }
 });
 
-// Init
-loadQuestion();
+loadQ();
 </script>
 </body>
 </html>
