@@ -25,6 +25,9 @@
   --v-bg: #fde8e8;
   --o-color: #7b2d8b;
   --o-bg: #f3d9fa;
+  --hint-bg: #fffbf0;
+  --hint-border: #f0c040;
+  --hint-text: #5a4000;
   --shadow: 0 2px 12px rgba(0,0,0,0.08);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
   --radius: 14px;
@@ -496,21 +499,134 @@ h1 {
 /* ── FEEDBACK ── */
 .feedback {
   margin-top: 14px;
-  padding: 14px 16px;
   border-radius: var(--radius);
   font-size: 13px;
   font-weight: 600;
   display: none;
-  align-items: flex-start;
-  gap: 10px;
-  line-height: 1.5;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
 }
 .feedback.show { display: flex; }
-.feedback.ok { background: var(--green-light); border: 1.5px solid var(--green); color: var(--green); }
-.feedback.bad { background: var(--red-light); border: 1.5px solid var(--red); color: var(--red); }
+.feedback.ok { border: 1.5px solid var(--green); }
+.feedback.bad { border: 1.5px solid var(--red); }
+
+/* ── FEEDBACK TOP ROW ── */
+.fb-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  line-height: 1.5;
+}
+.feedback.ok .fb-top { background: var(--green-light); color: var(--green); }
+.feedback.bad .fb-top { background: var(--red-light); color: var(--red); }
 .fb-icon { font-size: 20px; flex-shrink: 0; }
 .fb-body { flex: 1; }
 .fb-correct { font-size: 12px; margin-top: 4px; color: var(--text); font-weight: 400; opacity: 0.8; }
+
+/* ── OXFORD HINT BOX ── */
+.oxford-hint {
+  display: none;
+  padding: 14px 18px;
+  background: var(--hint-bg);
+  border-top: 1.5px solid var(--hint-border);
+}
+.oxford-hint.show { display: block; }
+
+.oxford-hint-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.oxford-badge {
+  background: var(--accent);
+  color: var(--yellow);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.oxford-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hint-text);
+}
+
+.hint-rule {
+  background: #fff9e6;
+  border-left: 3px solid var(--hint-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+.hint-rule-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #8a6800;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.hint-rule-body {
+  font-size: 12.5px;
+  color: var(--hint-text);
+  line-height: 1.6;
+  font-weight: 400;
+}
+.hint-rule-body strong {
+  color: #3a2800;
+  font-weight: 700;
+}
+.hint-rule-body em {
+  font-style: italic;
+  color: #5a4000;
+}
+
+.hint-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.hint-ex {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+}
+.hint-ex.wrong-ex { background: #fce4e4; color: #c1121f; text-decoration: line-through; }
+.hint-ex.right-ex { background: var(--green-light); color: var(--green); }
+
+.hint-compare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.hint-compare-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+.hint-compare-arrow { color: var(--muted); font-size: 14px; }
+
+.hint-footer {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-family: 'DM Mono', monospace;
+}
 
 /* ── SUMMARY ── */
 .summary {
@@ -553,6 +669,12 @@ h1 {
 @keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)} }
 .celebrate { animation: pop 0.28s ease; }
 
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.oxford-hint.show { animation: slideDown 0.25s ease; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 580px) {
   .q-card { padding: 18px; }
@@ -560,6 +682,7 @@ h1 {
   .drop-row { gap: 7px; }
   .mode-btn { min-width: 70px; padding: 8px 6px; }
   .cloze-opt { padding: 8px 14px; font-size: 13px; }
+  .oxford-hint { padding: 12px 14px; }
 }
 </style>
 </head>
@@ -678,11 +801,21 @@ h1 {
 
     <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>KONTROL ET →</button>
 
+    <!-- FEEDBACK — yeni yapı: üst satır + oxford hint -->
     <div class="feedback" id="feedback">
-      <span class="fb-icon" id="fb-icon"></span>
-      <div class="fb-body">
-        <div id="fb-msg"></div>
-        <div class="fb-correct" id="fb-correct"></div>
+      <div class="fb-top">
+        <span class="fb-icon" id="fb-icon"></span>
+        <div class="fb-body">
+          <div id="fb-msg"></div>
+          <div class="fb-correct" id="fb-correct"></div>
+        </div>
+      </div>
+      <div class="oxford-hint" id="oxford-hint">
+        <div class="oxford-hint-header">
+          <span class="oxford-badge">OXFORD NOTE</span>
+          <span class="oxford-title" id="oxford-title">Gramer Notu</span>
+        </div>
+        <div id="oxford-content"></div>
       </div>
     </div>
 
@@ -701,12 +834,8 @@ h1 {
 </div>
 
 <script>
-// ─── 500 CÜMLE VERİ TABANI — DÜZELTİLMİŞ VERSİYON ──────────────────────────
-// FORMAT: [emoji, Türkçe, Subject, Verb, Object]
-// KURAL: Türkçe fiil ↔ İngilizce fiil tam eşleşmeli, article (a/an/the) doğru olmalı
-
+// ─── 500 CÜMLE VERİ TABANI ───────────────────────────────────────────────────
 const ALL = [
-  // ── YİYECEK / IÇECEK ──────────────────────────────────────────────────────
   ["🍎","Ben elma yiyorum.","I","eat","an apple"],
   ["🍕","Ben pizza yiyorum.","I","eat","pizza"],
   ["🍞","Ben ekmek yiyorum.","I","eat","bread"],
@@ -727,8 +856,6 @@ const ALL = [
   ["🥗","Onlar salata yiyor.","They","eat","salad"],
   ["🍚","Ben pirinç pişiriyorum.","I","cook","rice"],
   ["🥪","Biz sandviç yapıyoruz.","We","make","sandwiches"],
-
-  // ── İÇECEK ────────────────────────────────────────────────────────────────
   ["💧","Ben su içiyorum.","I","drink","water"],
   ["🍵","O çay içiyor.","She","drinks","tea"],
   ["☕","O kahve içiyor.","He","drinks","coffee"],
@@ -740,8 +867,6 @@ const ALL = [
   ["☕","Onlar kahve içiyor.","They","drink","coffee"],
   ["🍵","Biz çay içiyoruz.","We","drink","tea"],
   ["💧","O su içiyor.","She","drinks","water"],
-
-  // ── MUTFAK / PİŞİRME ──────────────────────────────────────────────────────
   ["☕","Ben kahve yapıyorum.","I","make","coffee"],
   ["🥪","O sandviç yapıyor.","He","makes","a sandwich"],
   ["🍳","Biz yumurta pişiriyoruz.","We","cook","eggs"],
@@ -754,8 +879,6 @@ const ALL = [
   ["🍳","O yumurta pişiriyor.","He","cooks","eggs"],
   ["🍞","O ekmek yapıyor.","He","makes","bread"],
   ["🍊","O meyve suyu yapıyor.","She","makes","juice"],
-
-  // ── OKUMA / YAZMA / ÖĞRENME ───────────────────────────────────────────────
   ["📚","Ben kitap okuyorum.","I","read","a book"],
   ["📖","O ders kitabı okuyor.","She","reads","a textbook"],
   ["✏️","O not yazıyor.","He","writes","notes"],
@@ -783,8 +906,6 @@ const ALL = [
   ["🖊️","Ben kelime öğreniyorum.","I","learn","a new word"],
   ["✏️","O tahtayı siliyor.","He","cleans","the board"],
   ["📝","O not kaybediyor.","She","loses","a note"],
-
-  // ── TEKNOLOJİ ─────────────────────────────────────────────────────────────
   ["📱","Ben telefonu kullanıyorum.","I","use","the phone"],
   ["📱","O mesaj gönderiyor.","She","sends","a message"],
   ["💻","O bilgisayar kullanıyor.","He","uses","a computer"],
@@ -809,8 +930,6 @@ const ALL = [
   ["📱","O uygulamayı kullanıyor.","He","uses","the app"],
   ["💻","Ben oyun oynuyorum.","I","play","a game"],
   ["📱","Ben aramayı kapatıyorum.","I","end","the call"],
-
-  // ── EV İŞLERİ ─────────────────────────────────────────────────────────────
   ["🚪","Ben kapıyı açıyorum.","I","open","the door"],
   ["🪟","O pencereyi açıyor.","She","opens","the window"],
   ["🚪","O kapıyı kapatıyor.","He","closes","the door"],
@@ -837,8 +956,6 @@ const ALL = [
   ["🚿","O suyu açıyor.","She","turns on","the water"],
   ["🏠","O ışığı kapatıyor.","He","turns off","the light"],
   ["🏠","Ben evi seviyorum.","I","love","my house"],
-
-  // ── HAYVANLAR ─────────────────────────────────────────────────────────────
   ["🐱","Kedi süt içiyor.","The cat","drinks","milk"],
   ["🐶","Köpek et yiyor.","The dog","eats","meat"],
   ["🐦","Kuş ekmek yiyor.","The bird","eats","bread"],
@@ -858,8 +975,6 @@ const ALL = [
   ["🐶","O köpeği seviyor.","She","loves","the dog"],
   ["🐶","Onlar köpeği seviyor.","They","love","the dog"],
   ["🐱","O kedisini besliyor.","She","feeds","her cat"],
-
-  // ── SPOR ──────────────────────────────────────────────────────────────────
   ["⚽","Ben futbol oynuyorum.","I","play","football"],
   ["🎾","O tenis oynuyor.","She","plays","tennis"],
   ["🏀","O basketbol oynuyor.","He","plays","basketball"],
@@ -885,8 +1000,6 @@ const ALL = [
   ["🎾","O tenis topu alıyor.","He","buys","a tennis ball"],
   ["🏀","Ben basketbol izliyorum.","I","watch","basketball"],
   ["⚽","Ben topu seviyorum.","I","love","the ball"],
-
-  // ── ALIŞVERİŞ ─────────────────────────────────────────────────────────────
   ["🛒","Ben süt alıyorum.","I","buy","milk"],
   ["🛒","O ekmek alıyor.","She","buys","bread"],
   ["🛒","O elma alıyor.","He","buys","apples"],
@@ -914,8 +1027,6 @@ const ALL = [
   ["🛒","O süt ve ekmek alıyor.","She","buys","milk and bread"],
   ["✏️","Ben kalem alıyorum.","I","buy","a pen"],
   ["🥛","Ben süt alıyorum.","I","buy","milk"],
-
-  // ── BAHÇE / DOĞA ──────────────────────────────────────────────────────────
   ["🌸","Ben çiçek suluyorum.","I","water","the flowers"],
   ["🌸","O çiçek topluyor.","He","picks","flowers"],
   ["🌳","Biz ağaç dikiyoruz.","We","plant","a tree"],
@@ -946,8 +1057,6 @@ const ALL = [
   ["☀️","O güneşi seviyor.","He","loves","the sun"],
   ["🌸","Ben bahçeyi seviyorum.","I","love","the garden"],
   ["☀️","O güzel havayı seviyor.","She","loves","nice weather"],
-
-  // ── AİLE / SOSYAL HAYAT ───────────────────────────────────────────────────
   ["👨","Ben babamı seviyorum.","I","love","my father"],
   ["👩","Ben annemi arıyorum.","I","call","my mum"],
   ["👧","O kız kardeşini seviyor.","He","loves","his sister"],
@@ -974,8 +1083,6 @@ const ALL = [
   ["👫","O arkadaşına yardım ediyor.","She","helps","her friend"],
   ["📚","O öğrenciye yardım ediyor.","He","helps","the student"],
   ["😊","Onlar komşuya yardım ediyor.","They","help","the neighbour"],
-
-  // ── ULAŞIM ────────────────────────────────────────────────────────────────
   ["🚗","Ben arabaya biniyorum.","I","get in","the car"],
   ["🚌","O otobüse biniyor.","She","takes","the bus"],
   ["🚂","O trene biniyor.","He","takes","the train"],
@@ -1003,8 +1110,6 @@ const ALL = [
   ["🚴","Biz bisikletle gidiyoruz.","We","go by","bike"],
   ["🚗","Biz arabayı kullanıyoruz.","We","drive","the car"],
   ["✈️","Onlar seyahati seviyor.","They","love","travel"],
-
-  // ── MÜZİK / SANAT / EĞLENCE ───────────────────────────────────────────────
   ["🎵","Ben müzik dinliyorum.","I","listen to","music"],
   ["🎸","O gitar çalıyor.","She","plays","the guitar"],
   ["🎹","O piyano çalıyor.","He","plays","the piano"],
@@ -1032,8 +1137,6 @@ const ALL = [
   ["🎵","Ben müziği seviyorum.","I","love","music"],
   ["🎬","Onlar filmleri seviyor.","They","love","films"],
   ["📺","O film izliyor.","She","watches","a film"],
-
-  // ── SABAH RUTINI / GİYİNME ────────────────────────────────────────────────
   ["🦷","O dişini fırçalıyor.","She","brushes","her teeth"],
   ["🚿","O duş alıyor.","He","takes","a shower"],
   ["🍳","Onlar kahvaltı yapıyor.","They","have","breakfast"],
@@ -1063,8 +1166,6 @@ const ALL = [
   ["🥛","Biz kahvaltıyı seviyoruz.","We","love","breakfast"],
   ["🌅","Ben pencereyi açıyorum.","I","open","the window"],
   ["🌅","Onlar sabah yürüyüşü yapıyor.","They","go for","a morning walk"],
-
-  // ── YER / MEKÂN ───────────────────────────────────────────────────────────
   ["🏫","Ben okula gidiyorum.","I","go to","school"],
   ["🏥","O hastaneye gidiyor.","She","goes to","the hospital"],
   ["🏪","O markete gidiyor.","He","goes to","the market"],
@@ -1081,8 +1182,6 @@ const ALL = [
   ["🏫","O okuldan çıkıyor.","She","leaves","school"],
   ["🌳","O parkı seviyor.","He","loves","the park"],
   ["📚","Onlar kütüphaneye gidiyor.","They","go to","the library"],
-
-  // ── SAĞLIK ────────────────────────────────────────────────────────────────
   ["💊","Ben ilaç içiyorum.","I","take","medicine"],
   ["🩺","O doktoru ziyaret ediyor.","She","visits","the doctor"],
   ["💊","O vitamin alıyor.","He","takes","vitamins"],
@@ -1104,8 +1203,6 @@ const ALL = [
   ["🩺","O doktoru dinliyor.","She","listens to","the doctor"],
   ["💊","Biz sağlıklı yiyoruz.","We","eat","healthy food"],
   ["💊","Ben sağlıklı hissediyorum.","I","feel","healthy"],
-
-  // ── SEYAHAT ───────────────────────────────────────────────────────────────
   ["✈️","Ben çantamı hazırlıyorum.","I","pack","my bag"],
   ["🗺️","O haritaya bakıyor.","She","looks at","the map"],
   ["📸","O fotoğraf çekiyor.","He","takes","a photo"],
@@ -1129,8 +1226,6 @@ const ALL = [
   ["🗺️","Biz şehri geziyoruz.","We","explore","the city"],
   ["📸","Onlar fotoğraf albümü yapıyor.","They","make","a photo album"],
   ["🏨","Ben odayı beğeniyorum.","I","like","the room"],
-
-  // ── SANAT / RESİM ─────────────────────────────────────────────────────────
   ["🎨","Ben resim yapıyorum.","I","draw","a picture"],
   ["✂️","O kağıt kesiyor.","She","cuts","the paper"],
   ["🎨","O renkleri karıştırıyor.","He","mixes","the colours"],
@@ -1143,8 +1238,6 @@ const ALL = [
   ["📸","Onlar video izliyor.","They","watch","a video"],
   ["🎨","Biz renkleri seviyoruz.","We","love","colours"],
   ["🎨","O çizmeyi seviyor.","He","loves","drawing"],
-
-  // ── RESTORAN / YEMEK SİPARİŞİ ─────────────────────────────────────────────
   ["🍽️","Ben sipariş veriyorum.","I","order","food"],
   ["🍕","O pizza sipariş ediyor.","She","orders","pizza"],
   ["🍽️","Ben menüye bakıyorum.","I","look at","the menu"],
@@ -1153,8 +1246,6 @@ const ALL = [
   ["🍕","O garsonu çağırıyor.","She","calls","the waiter"],
   ["🍔","O hesabı istiyor.","He","asks for","the bill"],
   ["🍽️","Onlar akşam yemeği yiyor.","They","have","dinner"],
-
-  // ── OFİS / EŞYALAR ────────────────────────────────────────────────────────
   ["📦","Ben kutuyu açıyorum.","I","open","the box"],
   ["🎒","O çantayı açıyor.","She","opens","the bag"],
   ["🎒","Biz çantayı taşıyoruz.","We","carry","the bag"],
@@ -1169,8 +1260,6 @@ const ALL = [
   ["💙","O mavi kalem alıyor.","He","buys","a blue pen"],
   ["🟢","Biz yeşil elma yiyoruz.","We","eat","green apples"],
   ["⭐","Onlar sarı çiçekleri seviyor.","They","love","yellow flowers"],
-
-  // ── İSTEK / HİS ───────────────────────────────────────────────────────────
   ["🌟","Ben mutlu hissediyorum.","I","feel","happy"],
   ["🍎","Ben bir elma istiyorum.","I","want","an apple"],
   ["💧","O su istiyor.","She","wants","water"],
@@ -1181,8 +1270,6 @@ const ALL = [
   ["🍔","O hamburger istiyor.","He","wants","a burger"],
   ["🌟","Ben İngilizce öğreniyorum.","I","learn","English"],
   ["🌍","O dünyayı seviyor.","She","loves","the world"],
-
-  // ── İNGİLİZCE ÖĞRENİMİ ───────────────────────────────────────────────────
   ["📚","O İngilizce çalışıyor.","She","studies","English"],
   ["✏️","O alıştırma yapıyor.","He","does","an exercise"],
   ["🌟","Biz pratik yapıyoruz.","We","practise","English"],
@@ -1201,8 +1288,6 @@ const ALL = [
   ["📚","Ben okumayı seviyorum.","I","love","reading"],
   ["🏃","Biz koşmayı seviyoruz.","We","love","running"],
   ["🌍","Biz seyahati seviyoruz.","We","love","travel"],
-
-  // ── GENEL / KARIŞTIRMA ────────────────────────────────────────────────────
   ["🐱","O telefona bakıyor.","He","looks at","the phone"],
   ["📱","Onlar telefon kullanıyor.","They","use","a phone"],
   ["🎵","Biz müzik açıyoruz.","We","play","music"],
@@ -1226,6 +1311,304 @@ const ALL = [
   ["🌟","Ben her gün pratik yapıyorum.","I","practise","every day"]
 ];
 
+// ─── OXFORD FEEDBACK ENGINE ───────────────────────────────────────────────────
+// Kullanıcının yanlış cevabını analiz ederek öğretici not üretir
+
+function buildOxfordHint(userRaw, correct, s, v, o, mode) {
+  const user = (userRaw || '').trim().toLowerCase();
+  const cor  = correct.trim().toLowerCase();
+  if (!userRaw || user === cor) return null;
+
+  // Tüm olası hintler
+  const hints = [];
+
+  // ── 1. ARTICLE hatası: a/an/the/∅ ──────────────────────────────────────
+  const articleHint = detectArticleError(user, cor, correct);
+  if (articleHint) hints.push(articleHint);
+
+  // ── 2. Büyük/küçük harf ──────────────────────────────────────────────────
+  if (!articleHint && user === cor.toLowerCase() && userRaw[0] === userRaw[0].toLowerCase() && correct[0] === correct[0].toUpperCase()) {
+    hints.push({
+      title: 'Büyük Harf Kuralı',
+      rule: 'İngilizce cümlelere her zaman <strong>büyük harfle</strong> başlanır. Özel isimler (I, Tom, London) her zaman büyük yazılır.',
+      examples: [
+        { text: correct.toLowerCase(), type: 'wrong' },
+        { text: correct, type: 'right' }
+      ]
+    });
+  }
+
+  // ── 3. Özne hatası: I vs Me, He vs Him ───────────────────────────────────
+  const subjectHint = detectSubjectError(user, cor);
+  if (subjectHint && !hints.length) hints.push(subjectHint);
+
+  // ── 4. Üçüncü tekil şahıs -s ──────────────────────────────────────────
+  const thirdPersonHint = detectThirdPersonError(user, cor, s, v);
+  if (thirdPersonHint && hints.length < 2) hints.push(thirdPersonHint);
+
+  // ── 5. Sıra hatası ────────────────────────────────────────────────────────
+  const orderHint = detectWordOrderError(user, cor, s, v, o);
+  if (orderHint && !hints.length) hints.push(orderHint);
+
+  // ── 6. Genel eksik kelime ─────────────────────────────────────────────────
+  if (!hints.length) {
+    const missing = findMissingParts(user, cor, s, v, o);
+    if (missing) hints.push(missing);
+  }
+
+  if (!hints.length) return null;
+  return hints;
+}
+
+function detectArticleError(user, cor, correct) {
+  const articles = ['a', 'an', 'the'];
+
+  // the → a  veya  a → the  veya  an → the  gibi karışıklıklar
+  const corWords = cor.split(/\s+/);
+  const userWords = user.split(/\s+/);
+
+  let errorType = null;
+  let wrongArticle = null;
+  let rightArticle = null;
+  let theNoun = null;
+
+  for (let i = 0; i < corWords.length; i++) {
+    const cw = corWords[i];
+    const uw = userWords[i];
+    if (!uw) continue;
+    if (articles.includes(cw) && articles.includes(uw) && cw !== uw) {
+      wrongArticle = uw;
+      rightArticle = cw;
+      theNoun = corWords[i + 1] || '';
+      // hangi yönde hata?
+      if (rightArticle === 'the' && (wrongArticle === 'a' || wrongArticle === 'an')) {
+        errorType = 'indefinite_to_definite';
+      } else if ((rightArticle === 'a' || rightArticle === 'an') && wrongArticle === 'the') {
+        errorType = 'definite_to_indefinite';
+      } else if (rightArticle === 'an' && wrongArticle === 'a') {
+        errorType = 'a_to_an';
+      } else if (rightArticle === 'a' && wrongArticle === 'an') {
+        errorType = 'an_to_a';
+      } else {
+        errorType = 'generic_article';
+      }
+      break;
+    }
+    // kullanıcı article yazmadı, doğruda var
+    if (articles.includes(cw) && !articles.includes(uw) && uw !== cw) {
+      const restCor = corWords.slice(i).join(' ');
+      const restUser = userWords.slice(i).join(' ');
+      if (restCor.replace(cw + ' ', '') === restUser || restUser === corWords.slice(i + 1).join(' ')) {
+        wrongArticle = '(boş)';
+        rightArticle = cw;
+        theNoun = corWords[i + 1] || '';
+        errorType = 'missing_article';
+        break;
+      }
+    }
+  }
+
+  if (!errorType) return null;
+
+  if (errorType === 'a_to_an') {
+    return {
+      title: '"a" mı, "an" mı?',
+      rule: '<strong>"An"</strong> kullanımı: kelime <em>sesli harfle (a, e, i, o, u)</em> başlıyorsa "an" kullanılır. Sessiz harfle başlıyorsa "a" kullanılır. <em>Yazılışa değil, <strong>sese</strong> bakılır!</em>',
+      examples: [
+        { text: `a ${theNoun}`, type: 'wrong' },
+        { text: `an ${theNoun}`, type: 'right' }
+      ],
+      extra: 'Örnekler: <em>an apple, an egg, an orange</em> ✓ — <em>a university</em> (u = "yu" sesi, sessiz) ✓'
+    };
+  }
+
+  if (errorType === 'an_to_a') {
+    return {
+      title: '"a" mı, "an" mı?',
+      rule: '<strong>"A"</strong> kullanımı: kelime <em>sessiz sesle</em> başlıyorsa "a" kullanılır. Sesli ses ile başlıyorsa "an" kullanılır.',
+      examples: [
+        { text: `an ${theNoun}`, type: 'wrong' },
+        { text: `a ${theNoun}`, type: 'right' }
+      ],
+      extra: 'Örnekler: <em>a book, a car, a dog</em> ✓ — <em>an hour</em> ("h" sessiz ama telaffuz yok, "an" olur) ✓'
+    };
+  }
+
+  if (errorType === 'missing_article') {
+    if (rightArticle === 'the') {
+      return {
+        title: '"The" — Belirli Tanımlık',
+        rule: '<strong>"The"</strong> konuşulan iki tarafın da bildiği, <em>özgül ve belirli</em> bir nesneyi işaret eder. Türkçede karşılığı yoktur ama "<em>o / bu (belli olan)</em>" anlamı taşır.',
+        examples: [
+          { text: `I open door`, type: 'wrong' },
+          { text: `I open the door`, type: 'right' }
+        ],
+        extra: '"The door" = ikimiz de hangi kapı olduğunu biliyoruz. "A door" = herhangi bir kapı, ilk defa bahsediyoruz.'
+      };
+    }
+    return {
+      title: 'Tanımlık Eksik',
+      rule: `İngilizce'de sayılabilen tekil isimler genellikle <strong>"a"</strong> veya <strong>"an"</strong> ile kullanılır. Bunlar "<em>herhangi bir</em>" anlamına gelir.`,
+      examples: [
+        { text: `I eat ${theNoun}`, type: 'wrong' },
+        { text: `I eat ${rightArticle} ${theNoun}`, type: 'right' }
+      ]
+    };
+  }
+
+  if (errorType === 'indefinite_to_definite') {
+    return {
+      title: '"The" — Belirli mi, Belirsiz mi?',
+      rule: '<strong>"The"</strong> = belli, özgül, bilinen bir nesne. Bir şeyi <em>ilk defa</em> söylerken "a/an", zaten bilinen şeyi kastederken <strong>"the"</strong> kullanılır. Türkçe'de bu ayrım yoktur, bu yüzden kafa karıştırıcı olabilir!',
+      examples: [
+        { text: `${wrongArticle} ${theNoun}`, type: 'wrong' },
+        { text: `the ${theNoun}`, type: 'right' }
+      ],
+      extra: '💡 Kural: "I have <em>a</em> cat." (ilk söz) → "I love <em>the</em> cat." (aynı kedi) ✓'
+    };
+  }
+
+  if (errorType === 'definite_to_indefinite') {
+    return {
+      title: '"A/An" — Belirsiz Tanımlık',
+      rule: '<strong>"A / An"</strong> = herhangi bir, belirli olmayan. İlk defa bahsettiğimiz ya da hangi tane olduğu önemli olmayan nesneler için kullanılır. Türkçe\'deki "<em>bir</em>" ile çoğunlukla örtüşür.',
+      examples: [
+        { text: `the ${theNoun}`, type: 'wrong' },
+        { text: `${rightArticle} ${theNoun}`, type: 'right' }
+      ],
+      extra: '📌 Cansız varlıklar ve ilk kez bahsedilen nesnelerde genellikle "a/an" gelir.'
+    };
+  }
+
+  return null;
+}
+
+function detectSubjectError(user, cor) {
+  const subjectPairs = [
+    ['me', 'i', 'Özne olarak "I" kullanılır, "me" değil. "Me" nesnede (object) kullanılır.', 'Me eat', 'I eat'],
+    ['him', 'he', '"Him" nesne zamiridir. Özne (subject) olarak "He" kullanılır.', 'Him reads', 'He reads'],
+    ['her', 'she', '"Her" nesne zamiridir. Özne (subject) olarak "She" kullanılır.', 'Her loves', 'She loves'],
+    ['us', 'we', '"Us" nesne zamiridir. Özne olarak "We" kullanılır.', 'Us go', 'We go'],
+    ['them', 'they', '"Them" nesne zamiridir. Özne olarak "They" kullanılır.', 'Them eat', 'They eat'],
+  ];
+
+  const userWords = user.split(/\s+/);
+  const corWords = cor.split(/\s+/);
+
+  for (const [wrong, right, explanation, exWrong, exRight] of subjectPairs) {
+    if (userWords[0] === wrong && corWords[0] === right) {
+      return {
+        title: 'Özne Zamiri (Subject Pronoun)',
+        rule: explanation + ' İngilizce\'de zamirler <strong>cümledeki konuma</strong> göre değişir.',
+        examples: [
+          { text: exWrong, type: 'wrong' },
+          { text: exRight, type: 'right' }
+        ],
+        extra: '📌 Özne (kim yapıyor?): I, you, he, she, it, we, they — Nesne (kime/neyi?): me, you, him, her, it, us, them'
+      };
+    }
+  }
+  return null;
+}
+
+function detectThirdPersonError(user, cor, s, v) {
+  if (!s || !v) return null;
+  const subjects3rd = ['she', 'he', 'it', 'the cat', 'the dog', 'the bird', 'the fish', 'the hamster', 'the sun', 'the rain', 'the snow', 'the wind'];
+  const subjectLow = s.toLowerCase();
+  const is3rd = subjects3rd.some(p => subjectLow === p || subjectLow.startsWith('the '));
+
+  if (!is3rd) return null;
+
+  const corWords = cor.split(/\s+/);
+  const userWords = user.split(/\s+/);
+
+  // Fiil index — ilk non-özne kelime
+  // Eğer kullanıcı fiili -s'siz yazmışsa
+  const verbIndex = corWords.findIndex(w => w === v.toLowerCase().split(/\s+/)[0]);
+  if (verbIndex < 0) return null;
+
+  const corVerb = corWords[verbIndex];
+  const userVerb = userWords[verbIndex];
+
+  if (userVerb && corVerb && userVerb !== corVerb) {
+    // Kontrol: userVerb corVerb'in -s'siz hali mi?
+    if (corVerb === userVerb + 's' || corVerb === userVerb + 'es') {
+      return {
+        title: 'Üçüncü Tekil Şahıs — "-s" Kuralı',
+        rule: 'He / She / It ile kullanılan fiillere <strong>"-s" veya "-es"</strong> eklenir. Bu İngilizce geniş zamanın temel kuralıdır!',
+        examples: [
+          { text: `She ${userVerb} coffee`, type: 'wrong' },
+          { text: `She ${corVerb} coffee`, type: 'right' }
+        ],
+        extra: '📌 I eat · You eat · <strong>He/She/It eat<em>s</em></strong> · We eat · They eat'
+      };
+    }
+  }
+  return null;
+}
+
+function detectWordOrderError(user, cor, s, v, o) {
+  if (!s || !v) return null;
+  const corWords = cor.toLowerCase().split(/\s+/).filter(Boolean);
+  const userWords = user.toLowerCase().split(/\s+/).filter(Boolean);
+
+  if (corWords.length !== userWords.length) return null;
+
+  // Aynı kelimeler ama farklı sırada mı?
+  const corSorted = [...corWords].sort().join(',');
+  const userSorted = [...userWords].sort().join(',');
+  if (corSorted !== userSorted) return null;
+
+  return {
+    title: 'SVO — Cümle Sırası',
+    rule: 'İngilizce\'de temel cümle sırası <strong>Subject → Verb → Object</strong> şeklindedir. Türkçe\'nin aksine fiil sona gelmez!',
+    examples: [
+      { text: user, type: 'wrong' },
+      { text: cor, type: 'right' }
+    ],
+    extra: `📌 Türkçe: "${s} ${o ? o + ' ' : ''}${v}" → İngilizce: "${s} ${v}${o ? ' ' + o : ''}"`
+  };
+}
+
+function findMissingParts(user, cor, s, v, o) {
+  if (!o) return null;
+  const corWords = cor.toLowerCase().split(/\s+/);
+  const userWords = user.toLowerCase().split(/\s+/);
+
+  if (userWords.length < corWords.length - 1) {
+    return {
+      title: 'Eksik Kelime Grubu',
+      rule: 'Bu cümle <strong>S + V + O</strong> yapısında tamamlanmalıdır. Object (nesne) kısmı eksik kalmış.',
+      examples: [
+        { text: `${s} ${v}`, type: 'wrong' },
+        { text: cor, type: 'right' }
+      ],
+      extra: `📌 Nesne sorusu: "${v} what? / ${v} whom?" → Cevap: <strong>${o}</strong>`
+    };
+  }
+  return null;
+}
+
+// ─── Hint HTML render ─────────────────────────────────────────────────────────
+function renderOxfordHints(hints) {
+  if (!hints || !hints.length) return '';
+  return hints.map(h => {
+    let examplesHtml = '';
+    if (h.examples && h.examples.length) {
+      examplesHtml = `<div class="hint-examples">
+        ${h.examples.map(e => `<span class="hint-ex ${e.type === 'wrong' ? 'wrong-ex' : 'right-ex'}">${e.type === 'wrong' ? '✗ ' : '✓ '}${e.text}</span>`).join('')}
+      </div>`;
+    }
+    let extraHtml = h.extra ? `<div class="hint-footer">${h.extra}</div>` : '';
+    return `<div class="hint-rule">
+      <div class="hint-rule-title">${h.title}</div>
+      <div class="hint-rule-body">${h.rule}</div>
+      ${examplesHtml}
+      ${extraHtml}
+    </div>`;
+  }).join('');
+}
+
 // ─── Yardımcılar ──────────────────────────────────────────────────────────────
 function shuffle(a) {
   const b = [...a];
@@ -1242,16 +1625,9 @@ let queue = shuffle(ALL);
 let cur = 0, correctCount = 0, wrongCount = 0, streak = 0, answered = false;
 let currentMode = 0;
 
-// Mode 0: Drag & Drop
 let zoneData = [null, null, null], chipData = {}, dragSrc = null, tapSelected = null;
-
-// Mode 1: Cloze
 let clozeTarget = null, clozeSelected = null;
-
-// Mode 2: Type step-by-step
 let typeStep = 0, typeAnswers = [], typeParts = [];
-
-// Mode 3: Full translate
 let trFull = '';
 
 const DESCS = [
@@ -1285,6 +1661,7 @@ function loadQ() {
   document.getElementById('btn-next').className = 'btn-next';
   document.getElementById('btn-check').disabled = true;
   document.getElementById('svo-formula').style.display = currentMode === 0 ? 'flex' : 'none';
+  document.getElementById('oxford-hint').className = 'oxford-hint';
 
   ['mode0','mode1','mode2','mode3'].forEach((id, i) => {
     document.getElementById(id).style.display = i === currentMode ? '' : 'none';
@@ -1423,7 +1800,6 @@ function checkDragReady() {
   document.getElementById('btn-check').disabled = filled < need;
 }
 
-// Drop zone dragleave
 document.querySelectorAll('.drop-zone').forEach(z => {
   z.addEventListener('dragleave', e => e.currentTarget.classList.remove('drag-over'));
 });
@@ -1541,6 +1917,7 @@ function checkAnswer() {
   if (answered) return;
   const [, , s, v, o] = queue[cur];
   let ok = false;
+  let userAnswer = '';
 
   if (currentMode === 0) {
     const sOk = norm(zoneData[0] ? chipData[zoneData[0]].word : null) === norm(s);
@@ -1553,9 +1930,15 @@ function checkAnswer() {
       const partOk = i === 0 ? sOk : i === 1 ? vOk : oOk;
       z.classList.add(partOk ? 'correct-zone' : 'wrong-zone');
     }
+    // Drag için user answer birleştir
+    const zw0 = zoneData[0] ? chipData[zoneData[0]].word : '';
+    const zw1 = zoneData[1] ? chipData[zoneData[1]].word : '';
+    const zw2 = zoneData[2] ? chipData[zoneData[2]].word : '';
+    userAnswer = [zw0, zw1, zw2].filter(Boolean).join(' ');
   } else if (currentMode === 1) {
     const tgt = clozeTarget === 's' ? s : clozeTarget === 'v' ? v : o;
     ok = norm(clozeSelected) === norm(tgt);
+    userAnswer = clozeSelected || '';
     document.querySelectorAll('.cloze-opt').forEach(btn => {
       if (norm(btn.textContent) === norm(tgt)) btn.classList.add('right-ans');
       else if (btn.classList.contains('selected') && !ok) btn.classList.add('wrong-ans');
@@ -1570,11 +1953,12 @@ function checkAnswer() {
     const inp = document.getElementById('type-input');
     inp.disabled = true;
     inp.className = 'type-input ' + (ok ? 'right-input' : 'wrong-input');
+    userAnswer = typeAnswers.join(' ');
   } else {
-    const userAns = document.getElementById('tr-input').value.trim();
-    const exactOk = norm(userAns) === norm(trFull);
+    userAnswer = document.getElementById('tr-input').value.trim();
+    const exactOk = norm(userAnswer) === norm(trFull);
     const wordsCorrect = trFull.toLowerCase().split(' ');
-    const wordsUser = userAns.toLowerCase().split(' ');
+    const wordsUser = userAnswer.toLowerCase().split(' ');
     const overlap = wordsUser.filter(w => wordsCorrect.some(c => c.includes(w) || w.includes(c)));
     ok = exactOk || (overlap.length >= Math.ceil(wordsCorrect.length * 0.75) && Math.abs(wordsUser.length - wordsCorrect.length) <= 1);
     document.getElementById('tr-input').className = 'type-input ' + (ok ? 'right-input' : 'wrong-input');
@@ -1583,12 +1967,42 @@ function checkAnswer() {
   answered = true;
   if (ok) { correctCount++; streak++; } else { wrongCount++; streak = 0; queue.push(queue[cur]); }
 
+  const correctFull = o ? `${s} ${v} ${o}` : `${s} ${v}`;
+
+  // Feedback üst satır
   const fb = document.getElementById('feedback');
   fb.className = `feedback show ${ok ? 'ok' : 'bad'}`;
   document.getElementById('fb-icon').textContent = ok ? '✅' : '❌';
   document.getElementById('fb-msg').textContent = ok ? 'Mükemmel! Doğru!' : 'Yanlış — doğrusu:';
   document.getElementById('fb-correct').innerHTML =
     `<span style="color:var(--s-color);font-weight:600">${s}</span> + <span style="color:var(--v-color);font-weight:600">${v}</span>${o ? ` + <span style="color:var(--o-color);font-weight:600">${o}</span>` : ''}`;
+
+  // Oxford hint — sadece yanlış cevaplarda
+  if (!ok) {
+    const hints = buildOxfordHint(userAnswer, correctFull, s, v, o, currentMode);
+    const hintEl = document.getElementById('oxford-hint');
+    const contentEl = document.getElementById('oxford-content');
+    if (hints && hints.length) {
+      contentEl.innerHTML = renderOxfordHints(hints);
+      document.getElementById('oxford-title').textContent =
+        hints.length === 1 ? hints[0].title : `${hints.length} Gramer Notu`;
+      hintEl.className = 'oxford-hint show';
+    } else {
+      // Genel profesör notu
+      contentEl.innerHTML = renderOxfordHints([{
+        title: 'Dikkatli Ol!',
+        rule: `Doğru cevap: <strong>${correctFull}</strong>. İngilizce\'de <strong>S + V + O</strong> sırası sabittir. Bir sonraki soruda bu yapıyı aklında tut.`,
+        examples: [
+          { text: userAnswer || '(boş)', type: 'wrong' },
+          { text: correctFull, type: 'right' }
+        ]
+      }]);
+      document.getElementById('oxford-title').textContent = 'Tekrar Bak';
+      hintEl.className = 'oxford-hint show';
+    }
+  } else {
+    document.getElementById('oxford-hint').className = 'oxford-hint';
+  }
 
   if (ok) {
     document.getElementById('q-card').classList.add('celebrate');
